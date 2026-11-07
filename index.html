@@ -156,6 +156,12 @@ th{color:var(--muted);font-size:15px}
 .graf.small .gstack span{font-size:20px}
 .gbtns{display:flex;gap:6px}.gbtns button{width:32px;height:32px;border:0;border-radius:10px;background:#F1ECFF;font-weight:900;font-size:18px;cursor:pointer}
 .glbl{font-weight:800;font-size:15px;text-align:center}
+.bookwrap{background:#fff;border-radius:24px;padding:12px;box-shadow:0 6px 0 rgba(43,42,76,.07)}
+.booknav{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:10px}
+.booknav select{font:inherit;font-weight:700;border:3px solid var(--line);border-radius:12px;padding:8px 10px;max-width:360px}
+.bkpg{display:flex;align-items:center;gap:6px;font-weight:800}.bkpg input{width:64px;font:inherit;font-weight:800;border:3px solid var(--line);border-radius:10px;padding:6px;text-align:center}
+.bookpage{overflow:auto;max-height:calc(100vh - 230px);text-align:center;background:#F3EAD8;border-radius:16px;padding:6px}
+#bkc{box-shadow:0 4px 16px rgba(0,0,0,.15);border-radius:6px;background:#fff}
 .upd{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:#2B2A4C;color:#fff;padding:12px 18px;border-radius:99px;font-weight:900;font-size:17px;display:flex;gap:12px;align-items:center;z-index:60;box-shadow:0 8px 24px rgba(0,0,0,.25);animation:pop .3s}
 .gwrap{position:relative;background:#fff;border-radius:32px;padding:12px;box-shadow:0 6px 0 rgba(43,42,76,.07)}
 .gq{text-align:center;font-size:38px;font-weight:900;min-height:48px;letter-spacing:1px}
@@ -198,7 +204,7 @@ const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { c
 let VIEW = 'home';
 
 /* ---------- kayıt ---------- */
-const APP_VERSION = '20261107.1917';
+const APP_VERSION = '20261107.1932';
 const KEY = 'odev-arkadasi-v1';
 function load() { try { return JSON.parse(localStorage.getItem(KEY)) || null; } catch (e) { return null; } }
 let S = Object.assign({ name: '', unit: {}, stars: 0, goal: 10, day: '', dayStars: 0, stats: {}, mistakes: [], sound: true, rate: 1.15, autoRead: true, voice: '' }, load() || {});
@@ -546,6 +552,7 @@ function home() {
     <button class="card c-orange" data-a="menu" data-v="tr"><div class="emo">🔤</div><div><h3>Türkçe</h3><p>Hece sıralama, doğru yazım</p></div></button>
     <button class="card c-green" data-a="menu" data-v="bilgi"><div class="emo">🏡</div><div><h3>Hayat Bilgisi</h3><p>Okul, sağlık, güvenlik, ülkemiz</p></div></button>
     <button class="card c-blue" data-a="menu" data-v="ing"><div class="emo">🇬🇧</div><div><h3>İngilizce</h3><p>Kitaptaki kelimeler: dinle, oku, söyle</p></div></button>
+    <button class="card c-blue" data-a="books"><div class="emo">📘</div><div><h3>Kitaplarım</h3><p>Ders kitabının sayfaları; istediğin sayfayı Bilge'ye sor</p></div></button>
     <button class="card c-pink" data-a="review" ${n ? '' : 'disabled'}><div class="emo">📕</div><div><h3>Hata Defterim ${n ? `(${n})` : ''}</h3><p>${n ? 'Yanlış yaptıklarını tekrar et, defterden sil!' : 'Defterin boş. Süpersin! ✨'}</p></div></button>
   </div>`;
   const nm = $('#nm'); if (nm) { nm.focus(); nm.addEventListener('keydown', e => { if (e.key === 'Enter') A.setname(); }); }
@@ -721,6 +728,62 @@ function wsNext() {
     <div class="qcard"><div class="qtext big">${esc(it.prompt)}</div><div id="wsh"></div><div id="wsnext"></div></div>`;
   autoSpeak(it.prompt);
   wsFor(it.prompt, $('#wsh'), () => { addStar(); stat('math', true); WSR.i++; $('#wsnext').innerHTML = `<div class="row center"><button class="btn primary" id="wsn">Sıradaki ➜</button></div>`; $('#wsn').onclick = wsNext; });
+}
+
+/* ---------- Kitaplarım: PDF'ler bu bilgisayarda (IndexedDB) saklanır, sayfalar uygulama içinde görüntülenir ---------- */
+const BOOKS = [
+  { id: 'mat1', ad: 'Matematik 1. Kitap', emo: '🔢', temalar: [['1. Tema: Nesnelerin Geometrisi (1)', 10], ['Geometrik Cisimler', 12], ['Geometrik Cisim Modelleri', 22], ['Geometrik Şekil Modelleri', 27], ['Biçimsel Özellikler', 35], ['Sıvı Miktarını Tahmin Etme', 42], ['2. Tema: Sayılar ve Nicelikler (1)', 54], ['Sayılar', 56], ['Sayıları Çözümleme', 72], ['Sayıların Sırası', 90], ['Ritmik Sayma', 103], ['Sayı ve Şekil Örüntüleri', 116], ['Nesne Sayısını Tahmin Etme', 121], ['3. Tema: İşlemlerden Cebirsel Düşünmeye', 132], ['Toplama-Çıkarma Problemleri', 134], ['Tahmin ve Zihinden İşlem', 146], ['Toplama-Çıkarma İlişkisi', 154], ['Sözlük', 160]] },
+  { id: 'mat2', ad: 'Matematik 2. Kitap', emo: '🔢', temalar: [['3. Tema (devam): Çarpma ve Bölme', 12], ['Çarpma-Bölme Tahmin ve Zihinden', 32], ['Dört İşlemde Eşitlik', 42], ['4. Tema: Sayılar ve Nicelikler (2)', 54], ['Kesirler', 56], ['Paralarımız', 66], ['Zaman Ölçme', 80], ['Uzunluk ve Kütle Ölçme', 100], ['Uzunluk ve Kütlede Tahmin', 122], ['5. Tema: Nesnelerin Geometrisi (2)', 136], ['Yer ve Yön Bulma', 138], ['Simetri', 148], ['6. Tema: Veriye Dayalı Araştırma', 160], ['Veriyle Çalışma', 162], ['Sözlük', 188]] },
+  { id: 'ing', ad: 'İngilizce Ders Kitabı', emo: '🇬🇧', temalar: [['Theme 1: School Life', 11], ['Theme 2: Classroom Life', 27], ['Theme 3: Personal Life', 43], ['Theme 4: Family Life', 59], ['Theme 5: Homes & Houses', 75], ['Theme 6: Life in the City', 91], ['Glossary', 129]] },
+  { id: 'ingck', ad: 'İngilizce Çalışma Kitabı', emo: '🇬🇧', temalar: [['Theme 1', 9], ['Theme 2', 17], ['Theme 3', 25], ['Theme 4', 33], ['Theme 5', 41], ['Theme 6', 49]] },
+  { id: 'tr', ad: 'Türkçe Ders Kitabı', emo: '🔤', temalar: [] },
+  { id: 'hb', ad: 'Hayat Bilgisi Ders Kitabı', emo: '🏡', temalar: [] },
+];
+function bookDB() { return new Promise((res, rej) => { const q = indexedDB.open('odev-kitap', 1); q.onupgradeneeded = () => q.result.createObjectStore('pdf'); q.onsuccess = () => res(q.result); q.onerror = () => rej(q.error); }); }
+async function bookPut(id, buf) { const db = await bookDB(); return new Promise((res, rej) => { const t = db.transaction('pdf', 'readwrite'); t.objectStore('pdf').put(buf, id); t.oncomplete = res; t.onerror = () => rej(t.error); }); }
+async function bookGet(id) { const db = await bookDB(); return new Promise((res, rej) => { const r = db.transaction('pdf').objectStore('pdf').get(id); r.onsuccess = () => res(r.result || null); r.onerror = () => rej(r.error); }); }
+async function bookDel(id) { const db = await bookDB(); return new Promise((res, rej) => { const t = db.transaction('pdf', 'readwrite'); t.objectStore('pdf').delete(id); t.oncomplete = res; t.onerror = () => rej(t.error); }); }
+async function bookList() { try { const db = await bookDB(); return await new Promise((res, rej) => { const r = db.transaction('pdf').objectStore('pdf').getAllKeys(); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); }); } catch (e) { return []; } }
+let pdfjsP = null;
+function loadPdfjs() {
+  if (window.pdfjsLib) return Promise.resolve(window.pdfjsLib);
+  if (!pdfjsP) pdfjsP = new Promise((res, rej) => { const sc = document.createElement('script'); sc.src = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js'; sc.onload = () => { window.pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js'; res(window.pdfjsLib); }; sc.onerror = () => rej(new Error('pdf.js yüklenemedi')); document.head.appendChild(sc); });
+  return pdfjsP;
+}
+let BK = null;
+async function booksHome() {
+  VIEW = 'books'; app.classList.remove('wide'); stopSpeak();
+  const have = await bookList();
+  app.innerHTML = `<div class="rtop"><button class="btn soft sm" data-a="home">← Ana sayfa</button><div class="rtitle">📘 Kitaplarım</div></div>
+  <div class="grid three">${BOOKS.map(b => `<button class="card ${have.includes(b.id) ? 'c-blue' : ''}" data-a="openbook" data-v="${b.id}" ${have.includes(b.id) ? '' : 'disabled'}><div class="emo">${b.emo}</div><div><h3>${esc(b.ad)}</h3><p>${have.includes(b.id) ? 'Açmak için tıkla' : 'Veli Köşesi\'nden yükleyin'}</p></div></button>`).join('')}</div>
+  ${have.length ? '' : '<p class="muted" style="margin-top:16px">Henüz kitap yok. ⚙️ Veli Köşesi › Kitaplar bölümünden PDF\'leri yükleyin; kitaplar yalnızca bu bilgisayarda saklanır.</p>'}`;
+}
+async function openBook(id, page) {
+  const meta = BOOKS.find(b => b.id === id); VIEW = 'book'; app.classList.add('wide'); stopSpeak();
+  app.innerHTML = `<div class="rtop"><button class="btn soft sm" data-a="books">← Kitaplar</button><div class="rtitle">${meta.emo} ${esc(meta.ad)}</div><span class="muted" id="bkstat">Yükleniyor…</span></div>
+   <div class="bookwrap"><div class="booknav"><select id="bkjump"><option value="">Konuya git…</option>${meta.temalar.map(([n, p]) => `<option value="${p}">${esc(n)} (s.${p})</option>`).join('')}</select>
+     <div class="bkpg"><button class="btn soft sm" id="bkprev">◀</button><input id="bkno" type="number" min="1" value="1"> / <span id="bktot">?</span><button class="btn soft sm" id="bknext">▶</button></div>
+     <button class="btn green sm" id="bkask">🦉 Bu sayfayı Bilge'ye sor</button><button class="btn soft sm" id="bkzoom">🔍</button></div>
+   <div class="bookpage"><canvas id="bkc"></canvas></div></div>`;
+  try {
+    const buf = await bookGet(id); if (!buf) throw new Error('Kitap bulunamadı');
+    const lib = await loadPdfjs(); const doc = await lib.getDocument({ data: buf }).promise;
+    BK = { id, doc, page: Math.min(Math.max(1, page || S.bookPage?.[id] || 1), doc.numPages), zoom: 1 };
+    $('#bktot').textContent = doc.numPages; $('#bkno').max = doc.numPages; $('#bkstat').textContent = '';
+    const go = n => { BK.page = Math.min(Math.max(1, n), doc.numPages); S.bookPage = S.bookPage || {}; S.bookPage[id] = BK.page; save(); bookRender(); };
+    $('#bkprev').onclick = () => go(BK.page - 1); $('#bknext').onclick = () => go(BK.page + 1);
+    $('#bkno').onchange = e => go(+e.target.value); $('#bkjump').onchange = e => { if (e.target.value) go(+e.target.value + 1); e.target.value = ''; };
+    $('#bkzoom').onclick = () => { BK.zoom = BK.zoom >= 1.6 ? 1 : BK.zoom + .3; bookRender(); };
+    $('#bkask').onclick = async () => { const c = $('#bkc'); const blob = await new Promise(r => c.toBlob(r, 'image/jpeg', .85)); pending = { blob, url: URL.createObjectURL(blob) }; chat = []; chatImg = null; R = null; help(`${meta.ad} ${BK.page}. sayfadaki etkinlikte bana yardım eder misin?`); };
+    document.onkeydown = null; bookRender();
+  } catch (e) { $('#bkstat').textContent = 'Açılamadı: ' + (e.message || e); }
+}
+async function bookRender() {
+  if (!BK) return; $('#bkno').value = BK.page;
+  const pg = await BK.doc.getPage(BK.page); const c = $('#bkc'); if (!c) return;
+  const wrap = c.parentElement; const base = pg.getViewport({ scale: 1 }); const scale = Math.min((wrap.clientWidth - 8) / base.width, (innerHeight - 230) / base.height) * BK.zoom * (window.devicePixelRatio || 1);
+  const vp = pg.getViewport({ scale }); c.width = vp.width; c.height = vp.height; c.style.width = (vp.width / (window.devicePixelRatio || 1)) + 'px';
+  await pg.render({ canvasContext: c.getContext('2d'), viewport: vp }).promise;
 }
 
 /* ---------- Saat Atölyesi ---------- */
@@ -1224,6 +1287,10 @@ function settings() {
     <p class="muted small">Seçilen üniteler ana sayfada kısayol olur; Bilge Baykuş o ünitenin kavram ve kazanımlarını bilerek anlatır. Ünite bitince burayı güncelleyin.</p>
     <div id="unitinfo" class="muted small"></div>
   </div>
+  <div class="panel"><h2>📘 Kitaplar</h2>
+    <p class="muted small">MEB ders kitaplarının PDF'lerini (EBA'dan indirilen) buradan yükleyin. Dosyalar yalnızca bu bilgisayarın tarayıcısında saklanır, internete gönderilmez; "Kitaplarım"dan sayfa sayfa açılır.</p>
+    <div id="booklist" class="muted small">Yükleniyor…</div>
+  </div>
   <div class="panel"><h2>🦉 Bilge Baykuş bağlantısı</h2>
     ${window.claude && window.claude.use ? '<p class="muted">Bu sayfa claude.ai üzerinden açık: Bilge, hesabınızla çalışıyor; anahtar gerekmez. ✅</p>' : `
     <p class="muted">Bu sayfa dosya olarak açıldığı için Bilge'nin konuşabilmesi için bir <b>Anthropic API anahtarı</b> gerekir. Anahtar yalnızca bu bilgisayarın tarayıcısında saklanır.</p>
@@ -1258,6 +1325,10 @@ function settings() {
   document.querySelectorAll('[data-unit]').forEach(sel => sel.addEventListener('change', e => { S.unit = S.unit || {}; S.unit[e.target.dataset.unit] = +e.target.value; save(); showUnitInfo(); }));
   const showUnitInfo = () => { $('#unitinfo').innerHTML = Object.keys(MEB2).map(k => { const t = unitOf(k); return t ? `<p><b>${DERS_AD[k]} ${t.no}. tema — ${esc(t.ad)}</b> (${esc(t.sure)}${t.kitap ? ', ' + esc(t.kitap) + (t.sayfa ? ' s.' + t.sayfa : '') : ''})<br>${t.konular ? 'Konular: ' + t.konular.map(esc).join(' · ') + '<br>' : ''}Kavramlar: ${esc(t.kavramlar.join(', '))}${t.kazanimlar ? '<br>Kazanımlar: ' + t.kazanimlar.slice(0, 4).map(esc).join(' · ') + (t.kazanimlar.length > 4 ? ' …' : '') : ''}</p>` : ''; }).join(''); };
   showUnitInfo();
+  const renderBooks = async () => { const have = await bookList(); const el = $('#booklist'); if (!el) return; el.innerHTML = BOOKS.map(b => `<div class="field">${b.emo} <b>${esc(b.ad)}</b>: ${have.includes(b.id) ? `<span style="color:var(--green)">✅ yüklü</span> <button class="btn danger sm" data-bdel="${b.id}">Kaldır</button>` : `<label class="btn soft sm" style="cursor:pointer">PDF seç<input type="file" accept="application/pdf" data-bup="${b.id}" hidden></label>`}</div>`).join('');
+    el.querySelectorAll('[data-bup]').forEach(inp => inp.addEventListener('change', async e => { const f = e.target.files[0]; if (!f) return; e.target.parentElement.textContent = 'Yükleniyor…'; try { await bookPut(inp.dataset.bup, await f.arrayBuffer()); } catch (err) { alert('Kaydedilemedi: ' + err.message); } renderBooks(); }));
+    el.querySelectorAll('[data-bdel]').forEach(b => b.onclick = async () => { await bookDel(b.dataset.bdel); renderBooks(); }); };
+  renderBooks();
   const sk = $('#sKey'); if (sk) { sk.addEventListener('input', e => { S.apiKey = e.target.value.trim(); save(); resetSample(); }); $('#sModel').addEventListener('change', e => { S.model = e.target.value; save(); }); }
   $('#sAuto').addEventListener('change', e => { S.autoRead = e.target.checked; save(); });
   $('#sRate').addEventListener('change', e => { S.rate = +e.target.value; save(); speak('Merhaba! Ben Bilge Baykuş. Bu hızda konuşuyorum.'); });
@@ -1285,6 +1356,7 @@ const A = {
   stopv: () => stopSpeak(),
   reload: () => location.reload(),
   ws: () => { const it = cur(); stopSpeak(); const h = $('#wsh'); if (!h || h.children.length) return; wsFor(it.prompt, h, () => { addStar(); }); h.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); },
+  books: () => booksHome(), openbook: v => openBook(v),
   balloon: () => balloonStart(), bgo: () => balloonGo(), car: () => carStart(), cgo: () => carGo(),
   cmode: v => { S.carMode = v; save(); carStart(); },
   unitplay: k => {
@@ -1322,6 +1394,7 @@ document.addEventListener('click', e => { const el = e.target.closest('[data-a]'
 document.addEventListener('keyup', e => { if (!C) return; const k = { ArrowLeft: 'left', ArrowRight: 'right', ArrowUp: 'up', ArrowDown: 'down', a: 'left', d: 'right', w: 'up', s: 'down', A: 'left', D: 'right', W: 'up', S: 'down' }[e.key]; if (k) C.keys[k] = false; });
 window.addEventListener('resize', () => { if (VIEW === 'balloon') { balloonResize(); balloonDraw(); } if (VIEW === 'car') { carResize(); carDraw(); } });
 document.addEventListener('keydown', e => {
+  if (VIEW === 'book' && BK && !/INPUT|SELECT/.test(document.activeElement.tagName)) { if (e.key === 'ArrowRight') $('#bknext').click(); if (e.key === 'ArrowLeft') $('#bkprev').click(); return; }
   if (VIEW === 'car' && C) { const k = { ArrowLeft: 'left', ArrowRight: 'right', ArrowUp: 'up', ArrowDown: 'down', a: 'left', d: 'right', w: 'up', s: 'down', A: 'left', D: 'right', W: 'up', S: 'down' }[e.key]; if (k) { e.preventDefault(); C.keys[k] = true; C.target = null; } else if (e.key === 'Enter' && !C.running && C.light < 0) carGo(); return; }
   if (VIEW === 'balloon' && G) { const n = +e.key; if (G.running && n >= 1 && n <= 5) { const b = G.balloons.find(b => b.key === n); if (b) balloonHit(b); } else if (e.key === 'Enter' && !G.running) balloonGo(); return; }
   if (VIEW !== 'round' || /INPUT|TEXTAREA/.test(document.activeElement.tagName)) return;
