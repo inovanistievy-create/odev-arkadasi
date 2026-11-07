@@ -194,6 +194,9 @@ table.ayir{margin:14px auto;font-size:26px;font-weight:900}table.ayir td{padding
 table.ayir tr.res td{border-top:4px solid var(--ink)}
 .ayin{width:52px;height:46px;font:inherit;font-size:24px;text-align:center;border:3px solid var(--line);border-radius:10px;background:#FFFDF8;padding:0}
 .ayin.ok{border-color:var(--green);background:#EFFAF4}.ayin.no{border-color:var(--pink);background:#FFE1EA}
+.msub{font-size:14px;text-transform:none;letter-spacing:0;color:var(--purple)}
+.gtag{display:inline-block;margin-top:6px;background:#F1ECFF;color:var(--purple);border-radius:99px;padding:3px 10px;font-weight:900;font-size:13px}.gtag.on{background:#D8F5E8;color:#0E7A4C}
+.walletbar{height:18px;background:#F3EAD8;border-radius:99px;overflow:hidden;max-width:420px;margin:12px auto}.walletbar>i{display:block;height:100%;background:linear-gradient(90deg,var(--yellow),var(--orange))}
 .msec{font-size:17px;font-weight:900;color:var(--muted);margin:22px 0 10px;text-transform:uppercase;letter-spacing:.5px}
 .grid.four{grid-template-columns:repeat(4,1fr)}
 .card.mini{flex-direction:column;justify-content:center;text-align:center;gap:8px;padding:18px 10px}.card.mini .emo{width:72px;height:72px;font-size:40px}.card.mini h3{font-size:21px}
@@ -201,6 +204,8 @@ table.ayir tr.res td{border-top:4px solid var(--ink)}
 .mchips{display:flex;flex-wrap:wrap;gap:10px}
 .mchip{border:3px solid var(--line);background:#fff;border-radius:99px;padding:10px 18px;font-weight:800;font-size:17px;cursor:pointer}.mchip:hover{background:#FFF1C9}
 @media (max-width:760px){.grid.four{grid-template-columns:1fr 1fr}}
+.zbadge{position:absolute;top:14px;right:18px;font-size:18px;background:#FFF7EA;border-radius:99px;padding:2px 10px}
+.zor{display:inline-block;background:#FFE1EA;color:#B3123F;border-radius:99px;padding:2px 12px;font-size:17px;vertical-align:middle}.zor.orta{background:#FFF1C9;color:#9A6B00}
 .upd{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:#2B2A4C;color:#fff;padding:12px 18px;border-radius:99px;font-weight:900;font-size:17px;display:flex;gap:12px;align-items:center;z-index:60;box-shadow:0 8px 24px rgba(0,0,0,.25);animation:pop .3s}
 .gwrap{position:relative;background:#fff;border-radius:32px;padding:12px;box-shadow:0 6px 0 rgba(43,42,76,.07)}
 .gq{text-align:center;font-size:38px;font-weight:900;min-height:48px;letter-spacing:1px}
@@ -243,25 +248,38 @@ const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { c
 let VIEW = 'home';
 
 /* ---------- kayıt ---------- */
-const APP_VERSION = '20261107.2127';
+const APP_VERSION = '20261107.2134';
 const KEY = 'odev-arkadasi-v1';
 function load() { try { return JSON.parse(localStorage.getItem(KEY)) || null; } catch (e) { return null; } }
-let S = Object.assign({ name: '', unit: {}, stars: 0, goal: 10, day: '', dayStars: 0, stats: {}, mistakes: [], sound: true, rate: 1.15, autoRead: true, voice: '' }, load() || {});
+let S = Object.assign({ name: '', unit: {}, wallet: 0, gameCost: 5, gameLock: true, stars: 0, goal: 10, day: '', dayStars: 0, stats: {}, mistakes: [], sound: true, rate: 1.15, autoRead: true, voice: '' }, load() || {});
 function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
 function today() { const d = new Date(); return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate(); }
 function rollDay() { if (S.day !== today()) { S.day = today(); S.dayStars = 0; save(); } }
-function addStar() { rollDay(); S.stars++; S.dayStars++; save(); updateHeader(); if (S.dayStars === S.goal) setTimeout(() => { confetti(); sfx('win'); }, 300); }
+function addStar(fromGame, n) { n = Math.max(1, n || 1); rollDay(); const d0 = S.dayStars, w0 = S.wallet || 0; S.stars += n; S.dayStars += n; if (!fromGame) { S.wallet = w0 + n; if (S.gameLock && w0 < S.gameCost && S.wallet >= S.gameCost) toast('🎮 Oyun hakkı kazandın! Oyunlar seni bekliyor.'); } save(); updateHeader(); if (d0 < S.goal && S.dayStars >= S.goal) setTimeout(() => { confetti(); sfx('win'); }, 300); }
+const ZPTS = z => z >= 3 ? 3 : z === 2 ? 2 : 1;
 function stat(mod, ok) { const s = S.stats[mod] || (S.stats[mod] = { c: 0, w: 0 }); ok ? s.c++ : s.w++; save(); }
 function addMistake(it) { if (!S.mistakes.some(m => m.key === it.key)) { S.mistakes.unshift(JSON.parse(JSON.stringify(it))); S.mistakes = S.mistakes.slice(0, 60); save(); } }
 function removeMistake(key) { S.mistakes = S.mistakes.filter(m => m.key !== key); save(); }
 function updateHeader() {
   rollDay();
-  $('#starPill').textContent = '⭐ ' + S.stars;
+  $('#starPill').textContent = '⭐ ' + (S.gameLock ? (S.wallet || 0) : S.stars); $('#starPill').title = S.gameLock ? 'Harcanabilir yıldızların (oyun için)' : 'Toplam yıldız';
   const done = Math.min(S.dayStars, S.goal);
   $('#goalTxt').textContent = S.dayStars >= S.goal ? `Bugünkü hedef tamam! 🎉 (${S.dayStars} ⭐)` : `Bugünkü hedef: ${done} / ${S.goal} ⭐`;
   $('#goalBar').style.width = (done / S.goal * 100) + '%';
 }
 
+function toast(msg) { const d = document.createElement('div'); d.className = 'upd'; d.style.bottom = '80px'; d.textContent = msg; document.body.appendChild(d); try { speak(msg); } catch (e) {} setTimeout(() => d.remove(), 3500); }
+function payGame(start, name) {
+  if (!S.gameLock) return start();
+  const w = S.wallet || 0, c = S.gameCost;
+  if (w >= c) { S.wallet = w - c; save(); updateHeader(); sfx('win'); return start(); }
+  VIEW = 'locked'; stopSpeak(); app.classList.remove('wide');
+  app.innerHTML = `<div class="endcard center"><div class="bigemo">🔒</div><h2>${esc(name)} için ${c} ⭐ gerekli</h2>
+    <p>Sende <b>${w} ⭐</b> var. <b>${c - w} ⭐</b> daha kazan, oyun açılsın! <br><span class="muted small">Kolay soru 1 ⭐ · orta soru 2 ⭐ · zor soru 3 ⭐</span></p>
+    <div class="walletbar"><i style="width:${Math.round(w / c * 100)}%"></i></div>
+    <div class="row center"><button class="btn primary" data-a="play" data-v="bank:matematik:0">📖 Matematik Kitap Soruları</button><button class="btn green" data-a="play" data-v="bank:turkce:0">📖 Türkçe Kitap Soruları</button><button class="btn soft" data-a="menu" data-v="fas">📙 Fasikül Alıştırmaları</button><button class="btn soft" data-a="home">Ana sayfa 🏠</button></div></div>`;
+  speak(`${name} için ${c} yıldız gerekli. ${c - w} yıldız daha kazan! Zor sorular daha çok yıldız getirir.`);
+}
 /* ---------- ses, konuşma, konfeti ---------- */
 let AC;
 function sfx(t) {
@@ -606,7 +624,8 @@ function mathItem(mode) {
     const c = rand(25, 99); a = rand(5, c - 4); b = c - a; ans = b; prompt = `${a} + ▢ = ${c}`;
     explain = `**Verilmeyen toplananı** bulmak için toplamdan bilinen toplananı çıkar: ${c} − ${a} = ${b}.\nKontrol et: ${a} + ${b} = ${c} ✔️ (toplama ile çıkarma kardeş işlemlerdir)`;
   }
-  return { kind: 'mcq', mod: 'math', prompt, options: /daha büyük/.test(prompt) ? shuffle([String(a), String(b)]) : makeOpts(ans), answer: String(ans), explain, visual, key: 'm:' + prompt };
+  const pts = mode === 'esitlik' ? 3 : mode === 'bol' || mode === 'eksik' ? 2 : mode === 'topla' ? ((a % 10) + (b % 10) >= 10 ? 2 : 1) : mode === 'cikar' ? ((a % 10) < (b % 10) ? 2 : 1) : 1;
+  return { kind: 'mcq', mod: 'math', pts, prompt, options: /daha büyük/.test(prompt) ? shuffle([String(a), String(b)]) : makeOpts(ans), answer: String(ans), explain, visual, key: 'm:' + prompt };
 }
 function heceItem(w) {
   const [s, emoji] = w.split('|'); const parts = s.split('-'); const word = parts.join('');
@@ -621,6 +640,7 @@ function bilgiItem([q, ok, wrong, ex, emo]) {
 }
 
 /* ---------- ana sayfa ---------- */
+function gameTag() { if (!S.gameLock) return ''; const ok = (S.wallet || 0) >= S.gameCost; return `<span class="gtag ${ok ? 'on' : ''}">${ok ? '🎮 ' + S.gameCost + ' ⭐ ile oyna' : '🔒 ' + (S.gameCost - (S.wallet || 0)) + ' ⭐ daha kazan'}</span>`; }
 function home() {
   VIEW = 'home'; app.classList.remove('wide');
   const n = S.mistakes.length;
@@ -639,10 +659,10 @@ function home() {
     <button class="card mini c-green" data-a="menu" data-v="bilgi"><div class="emo">🏡</div><h3>Hayat Bilgisi</h3></button>
     <button class="card mini c-purple" data-a="menu" data-v="ing"><div class="emo">🇬🇧</div><h3>İngilizce</h3></button>
   </div>
-  <h3 class="msec">Oyunlar</h3>
+  <h3 class="msec">Oyunlar ${S.gameLock ? `<span class="msub">· her oyun ${S.gameCost} ⭐ · sende ${S.wallet || 0} ⭐ · kolay soru 1, orta 2, zor 3 ⭐</span>` : ''}</h3>
   <div class="grid">
-    <button class="card c-yellow" data-a="balloon"><div class="emo">🎈</div><div><h3>Balon Avı</h3><p>Doğru balonu patlat! ${S.best ? `Rekor: ${S.best}` : ''}</p></div></button>
-    <button class="card c-pink" data-a="car"><div class="emo">🚗</div><div><h3>Hece Yarışı</h3><p>Doğru heceyi topla! ${S.bestCar ? `Rekor: ${S.bestCar}` : ''}</p></div></button>
+    <button class="card c-yellow" data-a="balloon"><div class="emo">🎈</div><div><h3>Balon Avı</h3><p>Doğru balonu patlat! ${S.best ? `Rekor: ${S.best}` : ''}</p>${gameTag()}</div></button>
+    <button class="card c-pink" data-a="car"><div class="emo">🚗</div><div><h3>Hece Yarışı</h3><p>Doğru heceyi topla! ${S.bestCar ? `Rekor: ${S.bestCar}` : ''}</p>${gameTag()}</div></button>
   </div>
   <h3 class="msec">Benim köşem</h3>
   <div class="grid">
@@ -714,14 +734,14 @@ function renderQ() {
   if (it.kind === 'hece') {
     R.pos = 0; R.miss = false;
     let sh = shuffle(it.parts); let g = 0; while (sh.join() === it.parts.join() && g++ < 10) sh = shuffle(it.parts);
-    app.innerHTML = roundTop() + `<div class="qcard"><div class="qemo">${it.emoji}</div>
+    app.innerHTML = roundTop() + `<div class="qcard" style="position:relative"><div class="zbadge" title="Bu soru kaç yıldız getirir">${R.review ? '⭐' : '⭐'.repeat(ZPTS(it.zorluk || it.pts || 1))}</div><div class="qemo">${it.emoji}</div>
       <div class="qtext">${esc(it.label || 'Heceleri sırayla seç!')} <button class="iconbtn sm" data-a="${it.en ? 'speaken' : 'speak'}" data-t="${esc(it.word)}" title="Sesli oku">🔊</button></div>
       <div class="slots">${it.parts.map((_, i) => `<span class="slot" id="s${i}"></span>`).join('')}</div>
       <div class="opts sylls">${sh.map(p => `<button class="opt syl" data-a="syl" data-p="${esc(p)}">${esc(p)}</button>`).join('')}</div>
       <div id="fb"></div></div>`;
     if (it.en) { if (S.autoRead) speak('Kelimeleri sırala, cümleyi kur.'); setTimeout(() => speakEN(it.en), 1200); } else autoSpeak('Heceleri sırayla seç. Kelime: ' + it.word);
   } else {
-    app.innerHTML = roundTop() + `<div class="qcard">
+    app.innerHTML = roundTop() + `<div class="qcard" style="position:relative"><div class="zbadge" title="Bu soru kaç yıldız getirir">${R.review ? '⭐' : '⭐'.repeat(ZPTS(it.zorluk || it.pts || 1))}</div>
       ${it.emoji ? `<div class="qemo">${it.emoji}</div>` : ''}
       <div class="qtext ${it.mod === 'math' && it.prompt.length < 22 ? 'big' : ''}">${md(it.prompt)}${it.listen ? `<button class="btn primary sm" data-a="speaken" data-t="${esc(it.listen)}" style="margin-left:10px">🎧 Dinle</button>` : it.en ? `<button class="iconbtn sm" data-a="speaken" data-t="${esc(it.en)}" title="İngilizce dinle">🔊</button>` : `<button class="iconbtn sm" data-a="speak" data-t="${esc(it.prompt)}" title="Sesli oku">🔊</button>`}</div>
       <div class="opts n${it.options.length}">${it.options.map((o, i) => `<button class="opt" data-a="opt" data-v="${i}"><span class="k">${it.abc ? 'ABC'[i] : i + 1}</span>${esc(o)}</button>`).join('')}</div>
@@ -766,9 +786,9 @@ function pickSyl(el) {
   }
 }
 function win() {
-  const it = cur(); R.ok++; R.res[R.i] = 'ok'; addStar(); stat(it.mod, true); sfx('ok'); if (R.bankMod) lvlBump(R.bankMod, true);
+  const it = cur(); const pts = R.review ? 1 : ZPTS(it.zorluk || it.pts || 1); R.ok++; R.res[R.i] = 'ok'; addStar(false, pts); stat(it.mod, true); sfx('ok'); if (R.bankMod) lvlBump(R.bankMod, true);
   if (R.review) removeMistake(it.key);
-  const pr = pick(PRAISE); $('#fb').innerHTML = `<div class="praise">${pr} +1 ⭐</div>`; if (it.en) { speakEN(it.en); } else autoSpeak(pr);
+  const pr = pick(PRAISE); $('#fb').innerHTML = `<div class="praise">${pr} +${pts} ⭐${pts === 3 ? ' <span class="zor">Zor soru! 💪</span>' : pts === 2 ? ' <span class="zor orta">Orta soru</span>' : ''}</div>`; if (it.en) { speakEN(it.en); } else autoSpeak(pr);
   const tok = R; setTimeout(() => { if (R === tok && VIEW === 'round' && R.res[R.i] === 'ok') next(); }, 1200);
 }
 function next() { stopSpeak(); R.i++; if (R.i >= R.items.length) endRound(); else renderQ(); }
@@ -902,7 +922,7 @@ function wsNext() {
   app.innerHTML = `<div class="rtop"><button class="btn soft sm" data-a="home">← Çık</button><div class="rtitle">${WSR.kind === 'math:atolye-cikar' ? '🧮 Çıkarma Atölyesi' : '🍪 Çarpma Atölyesi'}</div><div class="dots">${Array.from({ length: WSR.n }, (_, k) => `<i class="${k < WSR.i ? 'ok' : k === WSR.i ? 'now' : ''}"></i>`).join('')}</div></div>
     <div class="qcard"><div class="qtext big">${esc(it.prompt)}</div><div id="wsh"></div><div id="wsnext"></div></div>`;
   autoSpeak(it.prompt);
-  wsFor(it.prompt, $('#wsh'), () => { addStar(); stat('math', true); WSR.i++; $('#wsnext').innerHTML = `<div class="row center"><button class="btn primary" id="wsn">Sıradaki ➜</button></div>`; $('#wsn').onclick = wsNext; });
+  wsFor(it.prompt, $('#wsh'), () => { addStar(false, 2); stat('math', true); WSR.i++; $('#wsnext').innerHTML = `<div class="row center"><button class="btn primary" id="wsn">Sıradaki ➜</button></div>`; $('#wsn').onclick = wsNext; });
 }
 
 /* ---------- Kitaplarım: PDF'ler bu bilgisayarda (IndexedDB) saklanır, sayfalar uygulama içinde görüntülenir ---------- */
@@ -1171,6 +1191,7 @@ const FAS = {
     $('#fck', host).onclick = check;
   },
 };
+const FAS_PTS = { alt: 2, esle: 3, buyuk: 2, ayir: 2, problem: 3, hikaye: 3, tahmin: 3, beceri: 3 };
 const FAS_N = { alt: 6, esle: 3, buyuk: 5, problem: 3, hikaye: 2, tahmin: 3, beceri: 4, ayir: 5 };
 let FS = null;
 function fasPlay(kind) {
@@ -1182,7 +1203,7 @@ function fasNext() {
   if (FS.i >= FS.n) { VIEW = 'end'; const great = FS.ok / FS.n >= .7; if (great) { confetti(); sfx('win'); } app.innerHTML = `<div class="endcard center"><div class="bigemo">${FS.ok === FS.n ? '🏆' : great ? '🌟' : '💪'}</div><h2>${FS.n} alıştırmadan ${FS.ok} tanesi ilk denemede doğru!</h2><p>${great ? 'Fasikül ödevine hazırsın!' : 'Biraz daha çalışınca çok iyi olacak.'}</p><div class="row center"><button class="btn primary" data-a="play" data-v="fas:${FS.kind}">Tekrar 🔁</button><button class="btn soft" data-a="menu" data-v="fas">Diğer alıştırmalar 📙</button><button class="btn soft" data-a="home">Ana sayfa 🏠</button></div></div>`; return; }
   app.innerHTML = `<div class="rtop"><button class="btn soft sm" data-a="menu" data-v="fas">← Alıştırmalar</button><div class="rtitle">${meta[1]} ${esc(meta[2])}</div><div class="dots">${Array.from({ length: FS.n }, (_, k) => `<i class="${FS.res[k] || (k === FS.i ? 'now' : '')}"></i>`).join('')}</div></div><div class="qcard fas" id="fb0"></div>`;
   const host = $('#fb0');
-  FAS[FS.kind](host, ok => { FS.res[FS.i] = ok ? 'ok' : 'no'; if (ok) { FS.ok++; addStar(); } stat('math', ok); sfx(ok ? 'ok' : 'no'); const nx = document.createElement('div'); nx.className = 'row center'; nx.innerHTML = `<button class="btn primary" id="fasn">${FS.i + 1 >= FS.n ? 'Bitir 🏁' : 'Sıradaki ➜'}</button>`; host.appendChild(nx); const b = $('#fasn'); b.onclick = () => { FS.i++; fasNext(); }; setTimeout(() => b.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 100); });
+  FAS[FS.kind](host, ok => { FS.res[FS.i] = ok ? 'ok' : 'no'; if (ok) { FS.ok++; addStar(false, FAS_PTS[FS.kind] || 2); } stat('math', ok); sfx(ok ? 'ok' : 'no'); const nx = document.createElement('div'); nx.className = 'row center'; nx.innerHTML = `${ok ? `<div class="praise small">+${FAS_PTS[FS.kind] || 2} ⭐</div>` : ''}<button class="btn primary" id="fasn">${FS.i + 1 >= FS.n ? 'Bitir 🏁' : 'Sıradaki ➜'}</button>`; host.appendChild(nx); const b = $('#fasn'); b.onclick = () => { FS.i++; fasNext(); }; setTimeout(() => b.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 100); });
 }
 function fasTest() {
   const [k1, k2, k3] = shuffle(KISI); const gens = [
@@ -1197,7 +1218,7 @@ function fasTest() {
     () => { const a = rand(30, 60), b = rand(10, 20), c = rand(5, 15); return [`Bir terzinin ${a + b + c > 99 ? 90 : a + b + c} metre kumaşı vardı. Önce ${b} metresini, sonra ${c} metresini kullandı. Kaç metre kumaşı kaldı?`, (a + b + c > 99 ? 90 : a + b + c) - b - c, `Önce ${b}, sonra ${c} metre: toplam ${b + c} metre gitti. Kalan: **${(a + b + c > 99 ? 90 : a + b + c) - b - c}**`]; },
     () => { const k = rand(2, 4), e = rand(1, 9); return [`${k} deste ${e} kalem kaç kalemdir?`, k * 10 + e, `1 deste = 10. ${k} deste = ${k * 10}, + ${e} = **${k * 10 + e}**`]; },
   ];
-  const items = shuffle(gens).slice(0, 10).map(g => { const [q, a, ex] = g(); return { kind: 'mcq', mod: 'math', abc: true, prompt: q, options: opts3(a), answer: String(a), explain: ex, key: 'ft:' + q.slice(0, 50) }; });
+  const items = shuffle(gens).slice(0, 10).map(g => { const [q, a, ex] = g(); return { kind: 'mcq', mod: 'math', abc: true, zorluk: /yıl sonra|fazla kız|metresini|Toplananlardan|yuvarlanırsa/.test(q) ? 3 : 2, prompt: q, options: opts3(a), answer: String(a), explain: ex, key: 'ft:' + q.slice(0, 50) }; });
   startRound('📝 Ölçme ve İzleme', items, false, 'fas:test');
 }
 
@@ -1229,7 +1250,7 @@ function clockNext() {
     autoSpeak('Saat kaç?');
     app.querySelectorAll('[data-ck]').forEach(b => b.onclick = () => {
       app.querySelectorAll('[data-ck]').forEach(x => x.disabled = true);
-      if (b.dataset.ck === timeName(h, m)) { b.classList.add('ok'); CL.ok++; addStar(); stat('math', true); sfx('ok'); $('#fb').innerHTML = `<div class="praise">${pick(PRAISE)}</div>`; speak('Saat ' + timeName(h, m)); setTimeout(() => { CL.i++; clockNext(); }, 1300); }
+      if (b.dataset.ck === timeName(h, m)) { b.classList.add('ok'); CL.ok++; addStar(false, 2); stat('math', true); sfx('ok'); $('#fb').innerHTML = `<div class="praise">${pick(PRAISE)} +2 ⭐</div>`; speak('Saat ' + timeName(h, m)); setTimeout(() => { CL.i++; clockNext(); }, 1300); }
       else { b.classList.add('no'); stat('math', false); sfx('no'); app.querySelector(`[data-ck="${CSS.escape(timeName(h, m))}"]`).classList.add('ok'); $('#fb').innerHTML = `<div class="explain"><div class="exh">🦉 Bilge diyor ki:</div>${md(clockExplain(h, m))}<div class="row"><button class="btn primary" id="cn">Anladım, devam ➜</button></div></div>`; speak(strip(clockExplain(h, m))); $('#cn').onclick = () => { CL.i++; clockNext(); }; }
     });
   } else {
@@ -1244,7 +1265,7 @@ function clockNext() {
     svg.addEventListener('pointerup', () => dragging = null);
     $('#ccheck').onclick = () => {
       const good = (cur_.h % 12) === (h % 12) && cur_.m === m;
-      if (good) { CL.ok++; addStar(); stat('math', true); sfx('ok'); $('#fb').innerHTML = `<div class="praise">${pick(PRAISE)}</div>`; speak('Evet, saat ' + timeName(h, m)); $('#ccheck').disabled = true; setTimeout(() => { CL.i++; clockNext(); }, 1300); }
+      if (good) { CL.ok++; addStar(false, 2); stat('math', true); sfx('ok'); $('#fb').innerHTML = `<div class="praise">${pick(PRAISE)}</div>`; speak('Evet, saat ' + timeName(h, m)); $('#ccheck').disabled = true; setTimeout(() => { CL.i++; clockNext(); }, 1300); }
       else { sfx('no'); stat('math', false); const msg = cur_.m !== m ? `Yelkovan (turuncu, uzun) **${m === 0 ? '12' : m === 30 ? '6' : m === 15 ? '3' : '9'}**'yi göstermeli${m === 30 ? ' (buçuk = yarım tur)' : m === 15 ? ' (çeyrek geçiyor)' : m === 45 ? ' (çeyrek var)' : ' (tam saat)'}.` : `Akrep (siyah, kısa) **${h}**'${m >= 30 ? 'i geçmiş, ' + (h % 12 + 1) + "'e doğru" : 'yi göstermeli'}.`; $('#fb').innerHTML = `<div class="hint">${md(msg)} Tekrar dene! 💪</div>`; speak(strip(msg)); }
     };
   }
@@ -1284,7 +1305,7 @@ function grafRender() {
       <table class="ttab"><tr><th>${esc(set.ad)}</th><th>Çetele</th><th>Kişi sayısı</th></tr>${set.kat.map(([e, n], i) => `<tr><td>${e} ${n}</td><td class="tally">${tallyHTML(tally[i])}</td><td><div class="num"><button data-gm="${i}" data-d="-1">−</button><b id="gf${i}">${GR.freq[i] ?? 0}</b><button data-gm="${i}" data-d="1">+</button></div></td></tr>`).join('')}</table>
       <div class="row"><button class="btn primary" id="gcheck">Kontrol et ✔️</button><span id="gmsg" class="muted"></span></div></div>`;
     app.querySelectorAll('[data-gm]').forEach(b => b.onclick = () => { const i = +b.dataset.gm; GR.freq[i] = Math.max(0, (GR.freq[i] ?? 0) + +b.dataset.d); $('#gf' + i).textContent = GR.freq[i]; sfx('tick'); });
-    $('#gcheck').onclick = () => { const bad = set.kat.findIndex((_, i) => (GR.freq[i] ?? 0) !== tally[i]); if (bad < 0) { sfx('ok'); addStar(); GR.step = 3; speak('Tablo doğru! Şimdi grafiği çizelim.'); grafRender(); } else { sfx('no'); $('#gmsg').textContent = `${set.kat[bad][1]} satırını tekrar say: çizgileri beşerli grupla 👀`; speak(set.kat[bad][1] + ' satırını tekrar say.'); } };
+    $('#gcheck').onclick = () => { const bad = set.kat.findIndex((_, i) => (GR.freq[i] ?? 0) !== tally[i]); if (bad < 0) { sfx('ok'); addStar(false, 2); GR.step = 3; speak('Tablo doğru! Şimdi grafiği çizelim.'); grafRender(); } else { sfx('no'); $('#gmsg').textContent = `${set.kat[bad][1]} satırını tekrar say: çizgileri beşerli grupla 👀`; speak(set.kat[bad][1] + ' satırını tekrar say.'); } };
   } else if (step === 3) {
     const mx = Math.max(...tally);
     app.innerHTML = top + `<div class="ws"><div class="wsh">📊 <b>Nesne grafiği</b>: her sütuna tabloda yazdığın kadar nesne koy. (Her nesne 1 ${esc(set.birim)}i gösterir.)</div>
@@ -1292,7 +1313,7 @@ function grafRender() {
       <div class="row"><button class="btn primary" id="gcheck">Kontrol et ✔️</button><span id="gmsg" class="muted"></span></div></div>`;
     GR.bars = GR.bars || set.kat.map(() => 0);
     app.querySelectorAll('[data-gb]').forEach(b => b.onclick = () => { const i = +b.dataset.gb; GR.bars[i] = Math.max(0, Math.min(10, GR.bars[i] + +b.dataset.d)); sfx('tick'); grafRender(); });
-    $('#gcheck').onclick = () => { const bad = GR.bars.findIndex((v, i) => v !== tally[i]); if (bad < 0) { sfx('win'); addStar(); GR.step = 4; grafRender(); } else { sfx('no'); $('#gmsg').textContent = `${set.kat[bad][1]} sütununda ${tally[bad]} ${set.birim} olmalı.`; } };
+    $('#gcheck').onclick = () => { const bad = GR.bars.findIndex((v, i) => v !== tally[i]); if (bad < 0) { sfx('win'); addStar(false, 2); GR.step = 4; grafRender(); } else { sfx('no'); $('#gmsg').textContent = `${set.kat[bad][1]} sütununda ${tally[bad]} ${set.birim} olmalı.`; } };
   } else {
     const order = tally.map((v, i) => [v, i]).sort((a, b) => b[0] - a[0]);
     const qs = shuffle([
@@ -1382,7 +1403,7 @@ function balloonHit(b) {
   if (!G.running) return;
   if (b.v === G.q.a) {
     G.combo++; G.correct++; G.score += 10 + (G.combo >= 3 ? G.combo * 2 : 0); sfx('ok'); balloonPop(b, true); stat('math', true);
-    if (G.correct % 3 === 0) { addStar(); G.stars++; }
+    if (G.correct % 3 === 0) { addStar(true); G.stars++; }
     if (G.correct % 5 === 0 && G.level < BAL_LEVELS.length - 1) { G.level++; speak('Seviye atladın! ' + BAL_LEVELS[G.level].name); sfx('win'); }
     G.speed = 1 + Math.min(1.2, G.correct * .04);
     G.balloons = []; balloonHud(); setTimeout(() => { if (G && G.running) balloonNewQ(); }, 450);
@@ -1482,7 +1503,7 @@ function carCollect(k) {
     for (let i = 0; i < 18; i++) C.sparks.push({ x: k.x, y: k.y, vx: rand(-160, 160), vy: rand(-220, -40), c: '#20B072', life: .6 });
     carShowWord();
     if (C.pos >= C.word.parts.length) {
-      C.words++; carHud(); stat('turkce', !C.miss); if (!C.miss) { addStar(); if (C.mode === 'kelime') addStar(); } else addMistake(C.mode === 'kelime' ? { kind: 'hece', mod: 'turkce', word: C.word.text, parts: C.word.parts, emoji: C.word.emoji, label: 'Kelimeleri sırayla seç, cümleyi kur!', key: 'c:' + C.word.text, explain: `**${C.word.text}** — Cümle büyük harfle başlar, sonunda nokta olur. Kim? Ne yaptı? diye sorarak sırala 🧩` } : heceItem(C.word.parts.join('-') + '|' + C.word.emoji));
+      C.words++; carHud(); stat('turkce', !C.miss); if (!C.miss) { addStar(true); if (C.mode === 'kelime') addStar(true); } else addMistake(C.mode === 'kelime' ? { kind: 'hece', mod: 'turkce', word: C.word.text, parts: C.word.parts, emoji: C.word.emoji, label: 'Kelimeleri sırayla seç, cümleyi kur!', key: 'c:' + C.word.text, explain: `**${C.word.text}** — Cümle büyük harfle başlar, sonunda nokta olur. Kim? Ne yaptı? diye sorarak sırala 🧩` } : heceItem(C.word.parts.join('-') + '|' + C.word.emoji));
       speak(C.mode === 'kelime' ? C.word.text + ' ' + pick(PRAISE) : pick(PRAISE)); sfx('win');
       setTimeout(() => { if (C && C.running) { C.wait = false; carNewWord(); } }, C.mode === 'kelime' ? 2000 : 1300);
     } else setTimeout(() => { if (C && C.running) { C.wait = false; carSpawn(); } }, 400);
@@ -1695,6 +1716,7 @@ function settings() {
   <div class="panel"><h2>Ayarlar</h2>
     <div class="field">Çocuğun adı: <input id="sName" value="${esc(S.name)}" maxlength="20"></div>
     <div class="field">Günlük yıldız hedefi: <select id="sGoal">${[5, 10, 15, 20, 30].map(g => `<option ${g === S.goal ? 'selected' : ''}>${g}</option>`).join('')}</select></div>
+    <div class="field"><label><input type="checkbox" id="sLock" ${S.gameLock ? 'checked' : ''}> Oyunlar yıldızla açılsın</label> · Oyun başına: <select id="sCost">${[3, 5, 8, 10, 15].map(c => `<option ${c === S.gameCost ? 'selected' : ''}>${c}</option>`).join('')}</select> ⭐ · Harcanabilir: <b id="wv">${S.wallet || 0}</b> ⭐ <button class="btn soft sm" data-a="walletadd">+5 ⭐ ödül ver</button></div>
     <div class="field"><label><input type="checkbox" id="sSound" ${S.sound ? 'checked' : ''}> Ses efektleri</label></div>
   </div>
   <div class="panel"><h2>📚 Hangi ünitedeyiz? <span class="muted small">(MEB 2. sınıf programı)</span></h2>
@@ -1740,6 +1762,8 @@ function settings() {
   </div>`;
   $('#sName').addEventListener('input', e => { S.name = e.target.value.trim(); save(); });
   $('#sGoal').addEventListener('change', e => { S.goal = +e.target.value; save(); updateHeader(); });
+  $('#sLock').addEventListener('change', e => { S.gameLock = e.target.checked; save(); updateHeader(); });
+  $('#sCost').addEventListener('change', e => { S.gameCost = +e.target.value; save(); });
   $('#sSound').addEventListener('change', e => { S.sound = e.target.checked; save(); });
   document.querySelectorAll('[data-unit]').forEach(sel => sel.addEventListener('change', e => { S.unit = S.unit || {}; S.unit[e.target.dataset.unit] = +e.target.value; save(); showUnitInfo(); }));
   const showUnitInfo = () => { $('#unitinfo').innerHTML = Object.keys(MEB2).map(k => { const t = unitOf(k); return t ? `<p>${(FASIKUL[k] || []).filter(f => f.tema === t.no).map(f => `📙 Üçgen ${f.no}. fasikül: ${esc(f.ad)} (${f.haftalar[0]}–${f.haftalar[1]}. hafta)<br>`).join('')}<b>${DERS_AD[k]} ${t.no}. tema — ${esc(t.ad)}</b> (${esc(t.sure)}${t.kitap ? ', ' + esc(t.kitap) + (t.sayfa ? ' s.' + t.sayfa : '') : ''})<br>${t.konular ? 'Konular: ' + t.konular.map(esc).join(' · ') + '<br>' : ''}Kavramlar: ${esc(t.kavramlar.join(', '))}${t.kazanimlar ? '<br>Kazanımlar: ' + t.kazanimlar.slice(0, 4).map(esc).join(' · ') + (t.kazanimlar.length > 4 ? ' …' : '') : ''}</p>` : ''; }).join(''); };
@@ -1779,8 +1803,9 @@ const A = {
   autounit: () => { S.unit = S.unit || {}; Object.keys(FASIKUL).forEach(k => { const f = fasikulNow(k); if (f) S.unit[k] = f.tema; }); const w = schoolWeek(); if (!S.unit.turkce) S.unit.turkce = Math.min(8, Math.ceil(w / 4.5)); if (!S.unit.ingilizce) S.unit.ingilizce = Math.min(6, Math.ceil(w / 6)); save(); home(); },
   addlink: () => { const ad = $('#lnName').value.trim(), url = $('#lnUrl').value.trim(); if (!ad || !/^https:\/\//.test(url)) { $('#lnUrl').focus(); return; } S.links = S.links || []; S.links.push({ ad, url, emo: '🔗' }); save(); settings(); },
   dellink: v => { S.links = (S.links || []).filter((_, i) => i !== +v); save(); settings(); },
+  walletadd: () => { S.wallet = (S.wallet || 0) + 5; save(); updateHeader(); const w = $('#wv'); if (w) w.textContent = S.wallet; },
   books: () => booksHome(), openbook: v => openBook(v),
-  balloon: () => balloonStart(), bgo: () => balloonGo(), car: () => carStart(), cgo: () => carGo(),
+  balloon: () => balloonStart(), bgo: () => payGame(balloonGo, 'Balon Avı'), car: () => payGame(carStart, 'Hece Yarışı'), cgo: () => payGame(carGo, 'Hece Yarışı'),
   cmode: v => { S.carMode = v; save(); carStart(); },
   unitplay: async k => {
     const t = unitOf(k); if (!t) return;
