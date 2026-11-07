@@ -165,7 +165,7 @@ const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { c
 let VIEW = 'home';
 
 /* ---------- kayıt ---------- */
-const APP_VERSION = '20261107.1727';
+const APP_VERSION = '20261107.1729';
 const KEY = 'odev-arkadasi-v1';
 function load() { try { return JSON.parse(localStorage.getItem(KEY)) || null; } catch (e) { return null; } }
 let S = Object.assign({ name: '', stars: 0, goal: 10, day: '', dayStars: 0, stats: {}, mistakes: [], sound: true, rate: 1.15, autoRead: true, voice: '' }, load() || {});
@@ -632,7 +632,7 @@ function carLoop(t) {
   if (!C || !C.running || VIEW !== 'car') return;
   const dt = Math.min(.05, (t - C.last) / 1000); C.last = t;
   const H = C.canvas.height, v = (55 + C.spd * .9) * (C.gas ? 1.8 : C.brake ? .5 : 1); C.v += (v - C.v) * Math.min(1, dt * 4);
-  C.road = (C.road + v * dt) % 80;
+  C.road = (C.road + v * dt) % 56;
   const dx = carLaneX(C.lane) - C.carX; C.carX += dx * Math.min(1, dt * 8); C.tilt += ((Math.max(-1, Math.min(1, dx / 70)) * .45) - C.tilt) * Math.min(1, dt * 12);
   if (C.gate) {
     C.gate.y += v * dt;
@@ -668,10 +668,15 @@ function carResolve(got) {
 function carDraw() {
   const x = C.ctx, W = C.canvas.width, H = C.canvas.height, rw = Math.min(W * .7, 620), x0 = (W - rw) / 2;
   x.fillStyle = '#BFE6A8'; x.fillRect(0, 0, W, H);
-  x.fillStyle = '#5B5F6B'; x.fillRect(x0, 0, rw, H);
-  x.fillStyle = '#F6D56A'; x.fillRect(x0 - 6, 0, 6, H); x.fillRect(x0 + rw, 0, 6, H);
-  x.strokeStyle = '#fff'; x.lineWidth = 4; x.setLineDash([36, 44]); x.lineDashOffset = -C.road;
-  for (let l = 1; l < 3; l++) { x.beginPath(); x.moveTo(x0 + rw * l / 3, 0); x.lineTo(x0 + rw * l / 3, H); x.stroke(); } x.setLineDash([]);
+  // tek yol yukarıda üçe ayrılıyor: her hece kendi yolunda
+  const lw = rw / 3 - 44, fy = 150, mid = W / 2;
+  for (let l = 0; l < 3; l++) {
+    const lx = carLaneX(l);
+    const strip = (pad, col) => { x.fillStyle = col; x.beginPath(); x.moveTo(mid - lw / 2 - pad, -10); x.lineTo(mid + lw / 2 + pad, -10); x.bezierCurveTo(mid + lw / 2 + pad, fy * .6, lx + lw / 2 + pad, fy * .4, lx + lw / 2 + pad, fy); x.lineTo(lx + lw / 2 + pad, H); x.lineTo(lx - lw / 2 - pad, H); x.lineTo(lx - lw / 2 - pad, fy); x.bezierCurveTo(lx - lw / 2 - pad, fy * .4, mid - lw / 2 - pad, fy * .6, mid - lw / 2 - pad, -10); x.closePath(); x.fill(); };
+    strip(5, '#F6D56A'); strip(0, '#5B5F6B');
+  }
+  x.strokeStyle = '#fff'; x.lineWidth = 3; x.setLineDash([26, 30]); x.lineDashOffset = -C.road;
+  for (let l = 0; l < 3; l++) { const lx = carLaneX(l); x.beginPath(); x.moveTo(lx, fy + 10); x.lineTo(lx, H); x.stroke(); } x.setLineDash([]);
   if (C.gate) C.gate.opts.forEach((o, i) => {
     const cx = carLaneX(i), cy = C.gate.y, w = rw / 3 - 24, h = 58;
     x.fillStyle = '#FFF7EA'; x.strokeStyle = '#E06A1F'; x.lineWidth = 4; x.beginPath(); x.roundRect(cx - w / 2, cy - h / 2, w, h, 14); x.fill(); x.stroke();
