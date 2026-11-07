@@ -204,7 +204,7 @@ const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { c
 let VIEW = 'home';
 
 /* ---------- kayıt ---------- */
-const APP_VERSION = '20261107.2040';
+const APP_VERSION = '20261107.2047';
 const KEY = 'odev-arkadasi-v1';
 function load() { try { return JSON.parse(localStorage.getItem(KEY)) || null; } catch (e) { return null; } }
 let S = Object.assign({ name: '', unit: {}, stars: 0, goal: 10, day: '', dayStars: 0, stats: {}, mistakes: [], sound: true, rate: 1.15, autoRead: true, voice: '' }, load() || {});
@@ -841,6 +841,10 @@ function wsNext() {
 }
 
 /* ---------- Kitaplarım: PDF'ler bu bilgisayarda (IndexedDB) saklanır, sayfalar uygulama içinde görüntülenir ---------- */
+const LINKS = [
+  { ad: 'Üçgen Matematik Fasikülleri (1. Kitap)', emo: '📙', url: 'https://fliphtml5.com/bookcase/czynh/', not: 'Geometri · Sayılar · Toplama-Çıkarma' },
+  { ad: 'Üçgen Hayat Bilgisi Fasikülleri', emo: '📗', url: 'https://fliphtml5.com/bookcase/vpszg/', not: '6 fasikül, öğrenme alanlarına göre' },
+];
 const BOOKS = [
   { id: 'mat1', ad: 'Matematik 1. Kitap', emo: '🔢', temalar: [['1. Tema: Nesnelerin Geometrisi (1)', 10], ['Geometrik Cisimler', 12], ['Geometrik Cisim Modelleri', 22], ['Geometrik Şekil Modelleri', 27], ['Biçimsel Özellikler', 35], ['Sıvı Miktarını Tahmin Etme', 42], ['2. Tema: Sayılar ve Nicelikler (1)', 54], ['Sayılar', 56], ['Sayıları Çözümleme', 72], ['Sayıların Sırası', 90], ['Ritmik Sayma', 103], ['Sayı ve Şekil Örüntüleri', 116], ['Nesne Sayısını Tahmin Etme', 121], ['3. Tema: İşlemlerden Cebirsel Düşünmeye', 132], ['Toplama-Çıkarma Problemleri', 134], ['Tahmin ve Zihinden İşlem', 146], ['Toplama-Çıkarma İlişkisi', 154], ['Sözlük', 160]] },
   { id: 'mat2', ad: 'Matematik 2. Kitap', emo: '🔢', temalar: [['3. Tema (devam): Çarpma ve Bölme', 12], ['Çarpma-Bölme Tahmin ve Zihinden', 32], ['Dört İşlemde Eşitlik', 42], ['4. Tema: Sayılar ve Nicelikler (2)', 54], ['Kesirler', 56], ['Paralarımız', 66], ['Zaman Ölçme', 80], ['Uzunluk ve Kütle Ölçme', 100], ['Uzunluk ve Kütlede Tahmin', 122], ['5. Tema: Nesnelerin Geometrisi (2)', 136], ['Yer ve Yön Bulma', 138], ['Simetri', 148], ['6. Tema: Veriye Dayalı Araştırma', 160], ['Veriyle Çalışma', 162], ['Sözlük', 188]] },
@@ -876,6 +880,9 @@ async function booksHome() {
   const have = await bookList();
   app.innerHTML = `<div class="rtop"><button class="btn soft sm" data-a="home">← Ana sayfa</button><div class="rtitle">📘 Kitaplarım</div></div>
   <div class="grid three">${BOOKS.map(b => `<button class="card ${have.includes(b.id) ? 'c-blue' : ''}" data-a="openbook" data-v="${b.id}" ${have.includes(b.id) ? '' : 'disabled'}><div class="emo">${b.emo}</div><div><h3>${esc(bookName(b))}</h3><p>${have.includes(b.id) ? 'Açmak için tıkla' : 'Veli Köşesi\'nden yükleyin'}</p></div></button>`).filter((_, i) => have.includes(BOOKS[i].id) || !BOOKS[i].ek).join('')}</div>
+  <h2 style="margin:26px 0 10px;font-weight:900">🔗 Öğretmenin ödev kitapları</h2>
+  <div class="grid three">${[...LINKS, ...(S.links || [])].map(l => `<a class="card c-yellow" href="${esc(l.url)}" target="_blank" rel="noopener" style="text-decoration:none;color:inherit"><div class="emo">${l.emo || '🔗'}</div><div><h3>${esc(l.ad)}</h3><p>${esc(l.not || 'Yayıncının sitesinde açılır')}</p></div></a>`).join('')}</div>
+  <p class="muted small" style="margin-top:8px">Bu kitaplar yayıncının sitesinde açılır. Ödev sayfasında takılınca 🦉 Bilge'ye o sayfanın fotoğrafını gönder.</p>
   ${have.length ? '' : '<p class="muted" style="margin-top:16px">Henüz kitap yok. ⚙️ Veli Köşesi › Kitaplar bölümünden PDF\'leri yükleyin; kitaplar yalnızca bu bilgisayarda saklanır.</p>'}`;
 }
 async function openBook(id, page) {
@@ -1423,6 +1430,9 @@ function settings() {
   <div class="panel"><h2>📘 Kitaplar</h2>
     <p class="muted small">MEB ders kitaplarının PDF'lerini (EBA'dan indirilen) buradan yükleyin. Dosyalar yalnızca bu bilgisayarın tarayıcısında saklanır, internete gönderilmez; "Kitaplarım"dan sayfa sayfa açılır.</p>
     <div id="booklist" class="muted small">Yükleniyor…</div>
+    <h3 style="margin:16px 0 6px">🔗 Ödev kitabı bağlantıları</h3>
+    <div id="linklist">${(S.links || []).map((l, i) => `<div class="field">🔗 ${esc(l.ad)} <span class="muted small">${esc(l.url)}</span> <button class="btn danger sm" data-a="dellink" data-v="${i}">Sil</button></div>`).join('') || '<p class="muted small">Hazır: Üçgen Matematik ve Hayat Bilgisi fasikülleri. Başka kitap eklemek için:</p>'}</div>
+    <div class="field"><input id="lnName" placeholder="Kitap adı (ör. Üçgen Türkçe)" style="min-width:220px"><input id="lnUrl" placeholder="https://..." style="min-width:300px"><button class="btn soft sm" data-a="addlink">Ekle</button></div>
   </div>
   <div class="panel"><h2>🦉 Bilge Baykuş bağlantısı</h2>
     ${window.claude && window.claude.use ? '<p class="muted">Bu sayfa claude.ai üzerinden açık: Bilge, hesabınızla çalışıyor; anahtar gerekmez. ✅</p>' : `
@@ -1492,6 +1502,8 @@ const A = {
   reload: () => location.reload(),
   ws: () => { const it = cur(); stopSpeak(); const h = $('#wsh'); if (!h || h.children.length) return; wsFor(it.prompt, h, () => { addStar(); }); h.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); },
   autounit: () => { S.unit = S.unit || {}; Object.keys(FASIKUL).forEach(k => { const f = fasikulNow(k); if (f) S.unit[k] = f.tema; }); const w = schoolWeek(); if (!S.unit.turkce) S.unit.turkce = Math.min(8, Math.ceil(w / 4.5)); if (!S.unit.ingilizce) S.unit.ingilizce = Math.min(6, Math.ceil(w / 6)); save(); home(); },
+  addlink: () => { const ad = $('#lnName').value.trim(), url = $('#lnUrl').value.trim(); if (!ad || !/^https:\/\//.test(url)) { $('#lnUrl').focus(); return; } S.links = S.links || []; S.links.push({ ad, url, emo: '🔗' }); save(); settings(); },
+  dellink: v => { S.links = (S.links || []).filter((_, i) => i !== +v); save(); settings(); },
   books: () => booksHome(), openbook: v => openBook(v),
   balloon: () => balloonStart(), bgo: () => balloonGo(), car: () => carStart(), cgo: () => carGo(),
   cmode: v => { S.carMode = v; save(); carStart(); },
