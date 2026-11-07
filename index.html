@@ -681,7 +681,7 @@ const A = {
     const r = $('#tkr'); if (!S.apiKey) { r.textContent = 'Önce anahtarı girin.'; return; }
     el.disabled = true; r.textContent = 'Deneniyor…'; resetSample();
     try { const s = await getSample(); const out = await s([{ role: 'user', content: 'Sadece "Merhaba, ben Bilge Baykuş!" yaz.' }], {}); r.textContent = '✅ Bağlandı: ' + out.text.slice(0, 60); }
-    catch (e) { r.textContent = '❌ ' + (e.code === 'not_granted' ? 'Anahtar geçersiz.' : e.message || 'Bağlanamadı.'); }
+    catch (e) { r.textContent = '❌ ' + (e.code === 'not_granted' ? 'Anahtar kabul edilmedi' : 'Bağlanamadı') + (e.message ? ' — ' + e.message : '') + ` (anahtar ${S.apiKey.length} karakter, "${S.apiKey.slice(0, 11)}…" ile başlıyor)`; }
     el.disabled = false;
   },
   ask: () => {
