@@ -165,7 +165,7 @@ const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { c
 let VIEW = 'home';
 
 /* ---------- kayıt ---------- */
-const APP_VERSION = '20261107.1723';
+const APP_VERSION = '20261107.1724';
 const KEY = 'odev-arkadasi-v1';
 function load() { try { return JSON.parse(localStorage.getItem(KEY)) || null; } catch (e) { return null; } }
 let S = Object.assign({ name: '', stars: 0, goal: 10, day: '', dayStars: 0, stats: {}, mistakes: [], sound: true, rate: 1.15, autoRead: true, voice: '' }, load() || {});
@@ -594,13 +594,13 @@ function carGo() {
   carHud(); $('#cWord').textContent = 'Hazır ol…'; $('#cHint').textContent = 'Işık yeşile dönünce yarış başlar! ← → şerit, ↑ gaz, ↓ fren.';
   const tok = {}; C.tok = tok;
   const step = (n, msg) => { if (C.tok !== tok || VIEW !== 'car') return; C.light = n; carDraw(); if (msg) speak(msg, { rate: 1.3 }); sfx(n === 2 ? 'win' : 'tick'); };
-  step(0, 'Kırmızı'); setTimeout(() => step(1, 'Sarı'), 1100); setTimeout(() => step(2, 'Yeşil! Gaza bas!'), 2200);
+  step(0); setTimeout(() => step(1), 1100); setTimeout(() => step(2, 'Başla!'), 2200);
   setTimeout(() => { if (C.tok !== tok || VIEW !== 'car') return; C.light = -1; C.running = true; carNewWord(); C.last = performance.now(); requestAnimationFrame(carLoop); }, 3000);
 }
 function carHud() { $('#cScore').textContent = C.words + ' kelime'; }
 function carNewWord() {
   const [s, emoji] = pick(WORDS).split('|'); C.word = { parts: s.split('-'), emoji, text: s.replace(/-/g, '') }; C.pos = 0; C.miss = false;
-  carShowWord(); speak('Yeni kelime: ' + C.word.text); carNewGate();
+  carShowWord(); speak(C.word.text); carNewGate();
 }
 function carShowWord() {
   const w = C.word; $('#cWord').innerHTML = `${w.emoji} ` + w.parts.map((p, i) => i < C.pos ? `<span style="color:var(--green)">${esc(p)}</span>` : i === C.pos ? `<span style="color:var(--orange);border-bottom:4px solid var(--orange)">?</span>` : '<span style="color:#CCC">?</span>').join('<span style="color:#CCC"> · </span>');
@@ -641,13 +641,13 @@ function carResolve(got) {
     carShowWord();
     if (C.pos >= C.word.parts.length) {
       C.words++; carHud(); stat('turkce', !C.miss); if (!C.miss) addStar(); else addMistake(heceItem(C.word.parts.join('-') + '|' + C.word.emoji));
-      speak(C.word.text + '! ' + pick(PRAISE)); sfx('win');
+      speak(pick(PRAISE)); sfx('win');
       setTimeout(() => { if (C && C.running) carNewWord(); }, 1300);
-    } else { speak(need); setTimeout(() => { if (C && C.running) carNewGate(); }, 500); }
+    } else { setTimeout(() => { if (C && C.running) carNewGate(); }, 500); }
   } else {
     C.miss = true; C.spd -= 20; C.bump = .4; sfx('no'); stat('turkce', false);
     for (let i = 0; i < 16; i++) C.smoke.push({ x: C.carX + rand(-10, 10), y: C.canvas.height - 70, vx: rand(-30, 30), vy: rand(40, 120), r: rand(8, 14), life: rand(.8, 1.4) });
-    $('#cHint').textContent = `"${got}" değil! ${C.word.text} kelimesini yavaşça söyle: ${C.word.parts.join(' · ')}`; speak('Olmadı. ' + C.word.parts.join(', ') + '. Sıradaki hece: ' + need);
+    $('#cHint').textContent = `"${got}" değil! ${C.word.text} kelimesini yavaşça söyle: ${C.word.parts.join(' · ')}`; speak(C.word.parts.join(', '));
     if (C.spd <= 0) { C.spd = 0; carEnd(); return; }
     setTimeout(() => { if (C && C.running) carNewGate(); }, 1500);
   }
