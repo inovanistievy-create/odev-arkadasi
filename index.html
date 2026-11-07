@@ -165,7 +165,7 @@ const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { c
 let VIEW = 'home';
 
 /* ---------- kayıt ---------- */
-const APP_VERSION = '20261107.1710';
+const APP_VERSION = '20261107.1716';
 const KEY = 'odev-arkadasi-v1';
 function load() { try { return JSON.parse(localStorage.getItem(KEY)) || null; } catch (e) { return null; } }
 let S = Object.assign({ name: '', stars: 0, goal: 10, day: '', dayStars: 0, stats: {}, mistakes: [], sound: true, rate: 1.15, autoRead: true, voice: '' }, load() || {});
@@ -615,7 +615,7 @@ function carSteer(d) { if (!C.running) return; C.lane = Math.max(0, Math.min(2, 
 function carLoop(t) {
   if (!C || !C.running || VIEW !== 'car') return;
   const dt = Math.min(.05, (t - C.last) / 1000); C.last = t;
-  const H = C.canvas.height, v = (150 + C.words * 10) * C.speed;
+  const H = C.canvas.height, v = (85 + Math.min(60, C.words * 6)) * C.speed;
   C.road = (C.road + v * dt) % 80;
   C.carX += (carLaneX(C.lane) - C.carX) * Math.min(1, dt * 10);
   if (C.gate && !C.gate.done) {
@@ -636,7 +636,7 @@ function carResolve(got) {
     carShowWord();
     if (C.pos >= C.word.parts.length) {
       C.words++; carHud(); stat('turkce', !C.miss); if (!C.miss) addStar(); else addMistake(heceItem(C.word.parts.join('-') + '|' + C.word.emoji));
-      speak(C.word.text + '! ' + pick(PRAISE)); sfx('win'); C.speed = 1 + Math.min(1, C.words * .06);
+      speak(C.word.text + '! ' + pick(PRAISE)); sfx('win'); C.speed = 1 + Math.min(.5, C.words * .03);
       setTimeout(() => { if (C && C.running) carNewWord(); }, 1300);
     } else { speak(need); setTimeout(() => { if (C && C.running) carNewGate(); }, 500); }
   } else {
