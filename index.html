@@ -204,7 +204,7 @@ const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { c
 let VIEW = 'home';
 
 /* ---------- kayıt ---------- */
-const APP_VERSION = '20261107.2047';
+const APP_VERSION = '20261107.2048';
 const KEY = 'odev-arkadasi-v1';
 function load() { try { return JSON.parse(localStorage.getItem(KEY)) || null; } catch (e) { return null; } }
 let S = Object.assign({ name: '', unit: {}, stars: 0, goal: 10, day: '', dayStars: 0, stats: {}, mistakes: [], sound: true, rate: 1.15, autoRead: true, voice: '' }, load() || {});
@@ -856,10 +856,10 @@ const BOOKS = [
   { id: 'ek1', ad: 'Ek kitap 1 (ör. Üçgen Matematik)', emo: '📙', temalar: [], ek: true },
   { id: 'ek2', ad: 'Ek kitap 2', emo: '📙', temalar: [], ek: true },
   { id: 'ek3', ad: 'Ek kitap 3', emo: '📙', temalar: [], ek: true },
-  { id: 'muzik', ad: 'Müzik Ders Kitabı', emo: '🎵', temalar: [] },
-  { id: 'x1', ad: 'Diğer kitap 1 (ödev/yardımcı)', emo: '📙', temalar: [] },
-  { id: 'x2', ad: 'Diğer kitap 2', emo: '📙', temalar: [] },
-  { id: 'x3', ad: 'Diğer kitap 3', emo: '📙', temalar: [] },
+  { ek: true, id: 'muzik', ad: 'Müzik Ders Kitabı', emo: '🎵', temalar: [] },
+  { ek: true, id: 'x1', ad: 'Diğer kitap 1 (ödev/yardımcı)', emo: '📙', temalar: [] },
+  { ek: true, id: 'x2', ad: 'Diğer kitap 2', emo: '📙', temalar: [] },
+  { ek: true, id: 'x3', ad: 'Diğer kitap 3', emo: '📙', temalar: [] },
   { id: 'hb2', ad: 'Hayat Bilgisi 2. Kitap', emo: '🏡', temalar: [['4. Öğrenme Alanı: Yaşadığım Yer ve Ülkem', 10], ['Belirli Gün ve Haftalar', 12], ['Tarihin ve Doğanın İzinde', 14], ['Yönetim Birimlerini Tanıyorum', 20], ['Mustafa Kemal Atatürk Nasıl Bir Öğrenciydi?', 26], ['Bayramlarımızla Gururluyuz', 32], ['Bayram Gelince', 38], ['Tekrar Zamanı (4. alan)', 44], ['5. Öğrenme Alanı: Doğa ve Çevre', 48], ['Hava Olayları ve Mevsimler', 52], ['Doğadan Yararlanarak Yön Bulma', 60], ['Afetlere Karşı Alınacak Önlemler', 68], ['Tasarruf Bizim İşimiz', 76], ['Tekrar Zamanı (5. alan)', 84], ['6. Öğrenme Alanı: Bilim, Teknoloji ve Sanat', 88], ['Bilim İnsanları İyi ki Var', 92], ['Eskisi, Yenisi', 100], ['Hayat Sanatla Güzel', 106], ['Tekrar Zamanı (6. alan)', 114], ['Sözlük', 125]] },
 ];
 function bookName(b) { return (S.bookNames || {})[b.id] || b.ad; }
