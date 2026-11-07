@@ -162,6 +162,38 @@ th{color:var(--muted);font-size:15px}
 .bkpg{display:flex;align-items:center;gap:6px;font-weight:800}.bkpg input{width:64px;font:inherit;font-weight:800;border:3px solid var(--line);border-radius:10px;padding:6px;text-align:center}
 .bookpage{overflow:auto;max-height:calc(100vh - 230px);text-align:center;background:#F3EAD8;border-radius:16px;padding:6px}
 #bkc{box-shadow:0 4px 16px rgba(0,0,0,.15);border-radius:6px;background:#fff}
+.vwrap{display:flex;justify-content:center;margin:14px 0}
+.vt,table.ayir,.ttab.tahmin{width:auto}.vt td,table.ayir td{border-bottom:none}
+.vt{border-collapse:collapse;font-size:38px;font-weight:900;font-variant-numeric:tabular-nums}
+.vt td{width:46px;height:52px;text-align:center;padding:0}
+.vt td.op{width:38px;color:var(--orange)}
+.vt tr.res td:not(:first-child){border-top:4px solid var(--ink)}
+.vt input.dg{width:42px;height:48px;font:inherit;text-align:center;border:3px solid var(--line);border-radius:10px;background:#FFFDF8;color:var(--ink);padding:0}
+.vt input.dg:focus{border-color:var(--purple);outline:none}
+.vt input.dg.ok{border-color:var(--green);background:#EFFAF4;color:#0E7A4C}.vt input.dg.no{border-color:var(--pink);background:#FFE1EA}
+.vt tr.elde td{height:30px}.vt input.eb{width:28px;height:26px;font-size:16px;font-weight:900;text-align:center;border:2px dashed #D9C9A8;border-radius:6px;color:var(--purple);background:transparent;padding:0}
+.esle{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin:14px 0}
+.ecard{background:#fff;border:3px solid var(--line);border-radius:16px;padding:6px 12px;cursor:pointer;color:var(--ink)}
+.ecard .vt{font-size:24px}.ecard .vt td{width:24px;height:30px}.ecard .vt td.op{width:20px}
+.ecard.sel{border-color:var(--purple);box-shadow:0 0 0 4px #E6DEFF}
+.eres{min-width:90px;font-size:28px;font-weight:900;padding:12px;border:3px solid var(--line);border-radius:14px;background:#FFF7EA;cursor:pointer;color:var(--ink)}
+.story{background:#FFF7EA;border:3px dashed #E6D3AE;border-radius:18px;padding:16px 18px;text-align:left;font-size:21px;font-weight:700;line-height:1.6;margin:12px 0}
+.story.zincir{text-align:center;font-size:28px;font-weight:900;line-height:1.8}
+.steps .step{margin-top:16px;text-align:left;border-left:5px solid var(--line);padding:4px 0 4px 14px;animation:pop .25s}
+.schip{display:inline-block;border-radius:99px;padding:4px 12px;font-weight:900;color:#fff;background:var(--blue);font-size:15px}
+.schip.s-oku{background:#3D9BFF}.schip.s-planla{background:#8E6CEF}.schip.s-uygula{background:#20B072}.schip.s-kontrolet{background:#FF8A3D}.schip.s-tahmin{background:#8E6CEF}.schip.s-gerçek{background:#20B072}
+.sq{font-size:21px;font-weight:800;margin:8px 0}
+.sopts{margin-top:6px}.sopts .opt{font-size:20px;padding:12px}
+.shint{color:var(--purple);font-weight:800;margin-top:8px;font-size:18px;line-height:1.5}
+.ttab.tahmin{margin:10px auto;font-size:22px}.ttab.tahmin td{text-align:center;padding:8px 16px;border:2px solid var(--line)}
+.kare{display:grid;grid-template-columns:repeat(3,66px) 70px;gap:6px;justify-content:center;font-size:28px;font-weight:900;margin:14px 0}
+.kare .c{background:#fff;border:3px solid var(--blue);border-radius:10px;height:62px;display:grid;place-items:center}
+.kare .c.q{background:#FFF1C9;color:var(--orange);border-color:var(--orange)}
+.kare .s{color:var(--muted);font-size:17px;display:grid;place-items:center}
+table.ayir{margin:14px auto;font-size:26px;font-weight:900}table.ayir td{padding:6px 8px}
+table.ayir tr.res td{border-top:4px solid var(--ink)}
+.ayin{width:52px;height:46px;font:inherit;font-size:24px;text-align:center;border:3px solid var(--line);border-radius:10px;background:#FFFDF8;padding:0}
+.ayin.ok{border-color:var(--green);background:#EFFAF4}.ayin.no{border-color:var(--pink);background:#FFE1EA}
 .upd{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:#2B2A4C;color:#fff;padding:12px 18px;border-radius:99px;font-weight:900;font-size:17px;display:flex;gap:12px;align-items:center;z-index:60;box-shadow:0 8px 24px rgba(0,0,0,.25);animation:pop .3s}
 .gwrap{position:relative;background:#fff;border-radius:32px;padding:12px;box-shadow:0 6px 0 rgba(43,42,76,.07)}
 .gq{text-align:center;font-size:38px;font-weight:900;min-height:48px;letter-spacing:1px}
@@ -204,7 +236,7 @@ const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { c
 let VIEW = 'home';
 
 /* ---------- kayıt ---------- */
-const APP_VERSION = '20261107.2048';
+const APP_VERSION = '20261107.2117';
 const KEY = 'odev-arkadasi-v1';
 function load() { try { return JSON.parse(localStorage.getItem(KEY)) || null; } catch (e) { return null; } }
 let S = Object.assign({ name: '', unit: {}, stars: 0, goal: 10, day: '', dayStars: 0, stats: {}, mistakes: [], sound: true, rate: 1.15, autoRead: true, voice: '' }, load() || {});
@@ -604,7 +636,8 @@ function home() {
   const nm = $('#nm'); if (nm) { nm.focus(); nm.addEventListener('keydown', e => { if (e.key === 'Enter') A.setname(); }); }
 }
 const MENUS = {
-  math: { t: 'Matematik 🔢', items: [['bank:matematik:0','📖','Kitap Soruları','Kitaptaki alıştırma biçimleriyle, seviyen arttıkça zorlaşır','blue'],['math:topla','➕','Toplama',"100'e kadar, eldeli",'blue'],['math:cikar','➖','Çıkarma','Onluk bozarak','blue'],['math:carp','✖️','Çarpma','Kere kere, ritmik sayma','purple'],['math:bol','➗','Bölme','Eşit paylaştırma','pink'],['math:esitlik','⚖️','Eşitlik','İki taraf eşit olsun','yellow'],['math:eksik','🔍','Eksik Sayı','▢ yerine ne gelir?','green'],['math:geo','🧊','Geometri','Cisimler, şekiller, köşe-kenar','purple'],['math:olcme','📏','Ölçme & Kesirler','Yarım-çeyrek, para, saat, uzunluk, kütle','blue'],['math:saat','⏰','Saat Atölyesi','Akrep-yelkovanı çevir, saati oku','pink'],['math:grafik','📊','Grafik Atölyesi','Çetele → sıklık tablosu → grafik','green'],['math:veri','📊','Veri & Yön','Çetele, sıklık tablosu, grafik, sağ-sol','orange'],['math:sayilar','🧱','Sayılar','Onluk-birlik, çözümleme, deste-düzine, ritmik sayma','green'],['math:karisik','🎲','Karışık','Hepsinden biraz','orange'],['math:atolye-cikar','🧮','Çıkarma Atölyesi','Blokları çıkar, onluğu boz','pink'],['math:atolye-carp','🍪','Çarpma Atölyesi','Tabakları doldur, ritmik say','yellow']] },
+  fas: { t: '📙 Fasikül Alıştırmaları', items: [['fas:alt','✍️','Alt Alta İşlem','Toplama, üç sayı toplama, çıkarma; kutulara yaz','blue'],['fas:esle','🔗','İşlem–Sonuç Eşleştir','İşlemi yap, sonucuyla eşleştir','purple'],['fas:buyuk','⚖️','Hangisi Büyük?','Toplamı/farkı en büyük ya da en küçük olanı bul','orange'],['fas:ayir','🧱','Ayırarak Çıkarma','Onluk ve birliklerine ayırarak çıkar','green'],['fas:problem','🧩','Problemi Anlayalım, Çözelim','Oku → Planla → Uygula → Kontrol et','pink'],['fas:hikaye','📖','Oku – Anla – Bağlam Kur','Kısa hikâye + 6 soru','yellow'],['fas:tahmin','🎯','Sonucu Tahmin Et','Yakın onluğa yuvarla, tahmin ile gerçeği karşılaştır','blue'],['fas:beceri','🧠','Beceri Temelli Sorular','Sihirli kare, A−B=C işlem zinciri','purple'],['fas:test','📝','Ölçme ve İzleme','A/B/C şıklı 10 soruluk mini test','orange']] },
+  math: { t: 'Matematik 🔢', items: [['menu:fas','📙','Fasikül Alıştırmaları','Ödevdeki biçimler: alt alta, eşleştirme, adım adım problem, mini test','yellow'],['bank:matematik:0','📖','Kitap Soruları','Kitaptaki alıştırma biçimleriyle, seviyen arttıkça zorlaşır','blue'],['math:topla','➕','Toplama',"100'e kadar, eldeli",'blue'],['math:cikar','➖','Çıkarma','Onluk bozarak','blue'],['math:carp','✖️','Çarpma','Kere kere, ritmik sayma','purple'],['math:bol','➗','Bölme','Eşit paylaştırma','pink'],['math:esitlik','⚖️','Eşitlik','İki taraf eşit olsun','yellow'],['math:eksik','🔍','Eksik Sayı','▢ yerine ne gelir?','green'],['math:geo','🧊','Geometri','Cisimler, şekiller, köşe-kenar','purple'],['math:olcme','📏','Ölçme & Kesirler','Yarım-çeyrek, para, saat, uzunluk, kütle','blue'],['math:saat','⏰','Saat Atölyesi','Akrep-yelkovanı çevir, saati oku','pink'],['math:grafik','📊','Grafik Atölyesi','Çetele → sıklık tablosu → grafik','green'],['math:veri','📊','Veri & Yön','Çetele, sıklık tablosu, grafik, sağ-sol','orange'],['math:sayilar','🧱','Sayılar','Onluk-birlik, çözümleme, deste-düzine, ritmik sayma','green'],['math:karisik','🎲','Karışık','Hepsinden biraz','orange'],['math:atolye-cikar','🧮','Çıkarma Atölyesi','Blokları çıkar, onluğu boz','pink'],['math:atolye-carp','🍪','Çarpma Atölyesi','Tabakları doldur, ritmik say','yellow']] },
   tr: { t: 'Türkçe 🔤', items: [['bank:turkce:0','📖','Kitap Soruları','Sözcük hazinesi, yazım-noktalama, okuma-anlama, cümle kurma; seviyeli','purple'],['tr:hece','🧩','Hece Sırala','Heceleri doğru diz, kelimeyi bul','orange'],['tr:yazim','✍️','Doğru Yazım','Hangisi doğru yazılmış?','purple']] },
   ing: { t: 'İngilizce 🇬🇧', items: [['bank:ingilizce:0','📖','Kitap Soruları','Ders + çalışma kitabı etkinlikleri, seviyeli','blue'],['ing:0','🎲','Hepsi','Bütün temalardan karışık','blue'],['ing:1','🏫','School Life','okul, günler, selamlaşma','green'],['ing:2','🖍️','Classroom Life','sınıf eşyaları, renkler, komutlar','orange'],['ing:3','🧥','Personal Life','vücut, giysiler, hava','purple'],['ing:4','👨‍👩‍👧','Family Life','aile üyeleri','pink'],['ing:5','🏠','Homes & Houses','odalar, eşyalar, evcil hayvanlar','yellow'],['ing:6','🍎','Life in the City','yiyecekler, meyve-sebze','green']] },
   bilgi: { t: 'Hayat Bilgisi 🏡', items: [['bank:hayat_bilgisi:0','📖','Kitap Soruları','Kitaptaki etkinlik biçimleriyle, seviyeli','blue'],['bilgi:hayat','🏡','Hepsi','Okul, ev, sağlık, güvenlik, ülkemiz','green'],['bilgi:hb4','🗺️','Yaşadığım Yer ve Ülkem','Yönetim birimleri, bayramlar, Atatürk (2. Kitap)','orange'],['bilgi:hb5','🌦️','Doğa ve Çevre','Mevsimler, yön bulma, afet, tasarruf (2. Kitap)','blue'],['bilgi:hb6','🔬','Bilim, Teknoloji ve Sanat','Bilim insanları, eski-yeni (2. Kitap)','purple'],['ing:0','🇬🇧','İngilizce Kelime Avı','Kitaptaki tüm temalar — dinle, oku, söyle','blue'],['bilgi:mix','🎲','Karışık','Hayat Bilgisi + eski İngilizce seti','orange']] },
@@ -620,6 +653,7 @@ let R = null;
 function play(v) {
   const [m, mode] = v.split(':'); let items, title;
   if (v.startsWith('bank:')) { const [, ders, tema] = v.split(':'); return bankPlay(ders, +tema || 0, ders === 'matematik' ? 'math' : ders === 'turkce' ? 'turkce' : 'bilgi', '📖 ' + { matematik: 'Matematik', hayat_bilgisi: 'Hayat Bilgisi', ingilizce: 'İngilizce', turkce: 'Türkçe' }[ders] + ' Kitap Soruları'); }
+  if (v.startsWith('fas:')) return fasPlay(v.slice(4));
   if (v.startsWith('math:atolye')) return wsPlay(v);
   if (v === 'math:saat') return clockPlay();
   if (v === 'math:grafik') return grafPlay();
@@ -658,8 +692,8 @@ function renderQ() {
   } else {
     app.innerHTML = roundTop() + `<div class="qcard">
       ${it.emoji ? `<div class="qemo">${it.emoji}</div>` : ''}
-      <div class="qtext ${it.mod === 'math' ? 'big' : ''}">${esc(it.prompt)}${it.listen ? `<button class="btn primary sm" data-a="speaken" data-t="${esc(it.listen)}" style="margin-left:10px">🎧 Dinle</button>` : it.en ? `<button class="iconbtn sm" data-a="speaken" data-t="${esc(it.en)}" title="İngilizce dinle">🔊</button>` : `<button class="iconbtn sm" data-a="speak" data-t="${esc(it.prompt)}" title="Sesli oku">🔊</button>`}</div>
-      <div class="opts n${it.options.length}">${it.options.map((o, i) => `<button class="opt" data-a="opt" data-v="${i}"><span class="k">${i + 1}</span>${esc(o)}</button>`).join('')}</div>
+      <div class="qtext ${it.mod === 'math' && it.prompt.length < 22 ? 'big' : ''}">${md(it.prompt)}${it.listen ? `<button class="btn primary sm" data-a="speaken" data-t="${esc(it.listen)}" style="margin-left:10px">🎧 Dinle</button>` : it.en ? `<button class="iconbtn sm" data-a="speaken" data-t="${esc(it.en)}" title="İngilizce dinle">🔊</button>` : `<button class="iconbtn sm" data-a="speak" data-t="${esc(it.prompt)}" title="Sesli oku">🔊</button>`}</div>
+      <div class="opts n${it.options.length}">${it.options.map((o, i) => `<button class="opt" data-a="opt" data-v="${i}"><span class="k">${it.abc ? 'ABC'[i] : i + 1}</span>${esc(o)}</button>`).join('')}</div>
       <div id="fb"></div></div>`;
     if (it.listen) { setTimeout(() => speakEN(it.listen), 300); } else if (it.en) { if (S.autoRead) { speak(it.prompt.replace(/"[^"]+"/, m => m)); setTimeout(() => speakEN(it.en), 1400); } } else autoSpeak(it.mod === 'math' ? it.prompt : it.prompt + '. ' + it.options.map((o, i) => (i + 1) + ': ' + o).join('. '));
   }
@@ -924,6 +958,216 @@ async function bookRender() {
   const wrap = c.parentElement; const base = pg.getViewport({ scale: 1 }); const scale = Math.min((wrap.clientWidth - 8) / base.width, (innerHeight - 230) / base.height) * BK.zoom * (window.devicePixelRatio || 1);
   const vp = pg.getViewport({ scale }); c.width = vp.width; c.height = vp.height; c.style.width = (vp.width / (window.devicePixelRatio || 1)) + 'px';
   await pg.render({ canvasContext: c.getContext('2d'), viewport: vp }).promise;
+}
+
+/* ---------- Fasikül Alıştırmaları (fasikül biçimleri, özgün sayılarla) ---------- */
+const KISI = [['Leyla', "Leyla'nın", "Leyla'ya"], ['Ali', "Ali'nin", "Ali'ye"], ['Ece', "Ece'nin", "Ece'ye"], ['Mert', "Mert'in", "Mert'e"], ['Zeynep', "Zeynep'in", "Zeynep'e"], ['Can', "Can'ın", "Can'a"], ['Elif', "Elif'in", "Elif'e"], ['Arda', "Arda'nın", "Arda'ya"], ['Defne', "Defne'nin", "Defne'ye"], ['Kerem', "Kerem'in", "Kerem'e"]];
+const ESYA = [['bilye', 'bilyesi'], ['kalem', 'kalemi'], ['çiçek', 'çiçeği'], ['kurabiye', 'kurabiyesi'], ['çıkartma', 'çıkartması'], ['misket', 'misketi'], ['kitap', 'kitabı']];
+const deDa = n => /[aıou][^aeıioöuü]*$/i.test(n) ? 'da' : 'de';
+const opts3 = ans => shuffle([ans, ...makeOpts(ans).map(Number).filter(x => x !== ans && x >= 0).slice(0, 2)]).map(String);
+const ten = n => Math.round(n / 10) * 10;
+function vtable(rows, op, o) {
+  o = o || {}; const cols = o.cols || Math.max(2, ...rows.map(r => String(r).length), o.ans != null ? String(o.ans).length : 0);
+  const cells = n => { const s = n == null ? '' : String(n); return Array(cols - s.length).fill('').concat(s ? s.split('') : []); };
+  let h = '<table class="vt">';
+  if (o.elde) h += `<tr class="elde"><td></td>${Array.from({ length: cols }, (_, i) => `<td>${i < cols - 1 ? '<input class="eb" maxlength="1" inputmode="numeric" tabindex="-1" title="elde">' : ''}</td>`).join('')}</tr>`;
+  rows.forEach((r, i) => h += `<tr><td class="op">${i === rows.length - 1 ? op : ''}</td>${cells(r).map(d => `<td>${d}</td>`).join('')}</tr>`);
+  h += `<tr class="res"><td></td>${o.input ? Array.from({ length: cols }, (_, i) => `<td><input class="dg" maxlength="1" inputmode="numeric"></td>`).join('') : cells(o.ans).map(d => `<td>${d}</td>`).join('')}</tr></table>`;
+  return h;
+}
+function wireDigits(host, onEnter) {
+  const ins = [...host.querySelectorAll('input.dg')];
+  ins.forEach((inp, i) => {
+    inp.addEventListener('input', () => { inp.value = inp.value.replace(/\D/g, '').slice(-1); if (inp.value && i > 0) ins[i - 1].focus(); });
+    inp.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); onEnter(); } else if (e.key === 'Backspace' && !inp.value && i < ins.length - 1) ins[i + 1].focus(); else if (e.key === 'ArrowLeft' && i > 0) ins[i - 1].focus(); else if (e.key === 'ArrowRight' && i < ins.length - 1) ins[i + 1].focus(); });
+  });
+  host.querySelectorAll('input.eb').forEach(inp => inp.addEventListener('input', () => { inp.value = inp.value.replace(/\D/g, '').slice(-1); }));
+  setTimeout(() => ins.length && ins[ins.length - 1].focus(), 60);
+}
+function readDigits(host) { const s = [...host.querySelectorAll('input.dg')].map(i => i.value).join(''); return s === '' ? NaN : +s; }
+function fillDigits(host, n, cls) { const ins = [...host.querySelectorAll('input.dg')]; const s = String(n).padStart(ins.length, ' '); ins.forEach((inp, i) => { inp.value = s[i].trim(); inp.classList.add(cls); inp.disabled = true; }); }
+function askStep(box, chip, q, opts, correct, hint, onDone) {
+  let miss = 0; const el = document.createElement('div'); el.className = 'step'; box.appendChild(el);
+  el.innerHTML = `<span class="schip s-${chip.toLowerCase().replace(/[^a-zğüşıöç]/g, '')}">${esc(chip)}</span><div class="sq">${md(q)}</div><div class="opts sopts n${Math.min(opts.length, 4)}">${opts.map((o, i) => `<button class="opt" data-so="${i}">${esc(o)}</button>`).join('')}</div><div class="shint"></div>`;
+  autoSpeak(strip(q)); el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  el.querySelectorAll('[data-so]').forEach(b => b.onclick = () => {
+    if (opts[+b.dataset.so] === correct) { b.classList.add('ok'); el.querySelectorAll('[data-so]').forEach(x => x.disabled = true); sfx('tick'); setTimeout(() => onDone(miss === 0), 500); }
+    else { b.classList.add('no'); b.disabled = true; miss++; sfx('no'); el.querySelector('.shint').innerHTML = md(hint); speak(strip(hint)); }
+  });
+}
+function explain3(a, b, c) {
+  const u = a % 10 + b % 10 + c % 10, e = Math.floor(u / 10), t = Math.floor(a / 10) + Math.floor(b / 10) + Math.floor(c / 10) + e;
+  return `Önce **birler**: ${a % 10} + ${b % 10} + ${c % 10} = ${u}.${e ? ` ${u % 10} yaz, **elde ${e}** ✋.` : ''} Sonra **onlar**: ${Math.floor(a / 10)} + ${Math.floor(b / 10)} + ${Math.floor(c / 10)}${e ? ' + ' + e + ' (elde)' : ''} = ${t}.\n**Toplam: ${a + b + c}** 🎉`;
+}
+const FAS = {
+  alt(host, done) {
+    const t = pick(['topla', 'topla', 'topla3', 'cikar', 'cikar']); let rows, op, ans, ex;
+    if (t === 'topla') { const a = rand(15, 69), b = rand(12, 89 - a); rows = [a, b]; op = '+'; ans = a + b; ex = explainAdd(a, b); }
+    else if (t === 'topla3') { const a = rand(10, 45), b = rand(10, 30), c = rand(2, Math.min(25, 98 - a - b)); rows = [a, b, c]; op = '+'; ans = a + b + c; ex = explain3(a, b, c); }
+    else { const a = rand(30, 98), b = rand(11, a - 5); rows = [a, b]; op = '−'; ans = a - b; ex = explainSub(a, b); }
+    let tries = 0, fin = false;
+    host.innerHTML = `<div class="qtext">Alt alta ${op === '+' ? (rows.length === 3 ? 'üç sayıyı toplayalım' : 'toplayalım') : 'çıkaralım'} ✍️</div><div class="qsub">Birler basamağından başla! Sonucu kutulara yaz, Enter'a bas.${op === '+' ? ' Elde varsa üstteki küçük kutuya yazabilirsin.' : ''}</div><div class="vwrap">${vtable(rows, op, { input: true, elde: op === '+' })}</div><div class="row center"><button class="btn primary" id="fck">Kontrol et ✔️</button></div><div id="ffb"></div>`;
+    autoSpeak(rows.join(op === '+' ? ' artı ' : ' eksi ') + ' kaç eder?');
+    const check = () => {
+      if (fin) return; const v = readDigits(host); if (isNaN(v)) return;
+      if (v === ans) { fin = true; fillDigits(host, ans, 'ok'); $('#fck', host).disabled = true; $('#ffb', host).innerHTML = `<div class="praise">${pick(PRAISE)}</div>`; done(tries === 0); }
+      else if (++tries < 2) { sfx('no'); host.querySelectorAll('input.dg').forEach(i => { i.classList.add('no'); setTimeout(() => i.classList.remove('no'), 600); }); const h = op === '+' ? 'Birler basamağını tekrar topla; 10 ya da fazlaysa elde var! ✋' : 'Birler basamağına bak: üstteki sayı küçükse onluk bozmalısın ✂️'; $('#ffb', host).innerHTML = `<div class="hint">${h} Bir daha dene!</div>`; speak(h); }
+      else { fin = true; fillDigits(host, ans, 'no'); $('#fck', host).disabled = true; $('#ffb', host).innerHTML = explainBox({ explain: ex, visual: rows.length === 2 ? rows : null }, false); addMistake({ kind: 'mcq', mod: 'math', prompt: rows.join(` ${op} `) + ' = ?', options: makeOpts(ans), answer: String(ans), explain: ex, key: 'm:' + rows.join(op) }); done(false); }
+    };
+    wireDigits(host, check); $('#fck', host).onclick = check;
+  },
+  esle(host, done) {
+    const op = pick(['+', '−']), ops = [], used = new Set();
+    while (ops.length < 4) { let a, b, r; if (op === '+') { a = rand(12, 60); b = rand(11, 95 - a); r = a + b; } else { a = rand(40, 98); b = rand(11, a - 8); r = a - b; } if (used.has(r)) continue; used.add(r); ops.push({ a, b, r }); }
+    const res = shuffle(ops.map((o, i) => ({ r: o.r, i }))), cols = ['#FF8A3D', '#3D9BFF', '#20B072', '#8E6CEF']; let sel = null, matched = 0, err = 0;
+    host.innerHTML = `<div class="qtext">İşlemleri yap, sonuçlarıyla eşleştir 🔗</div><div class="qsub">Önce bir işleme, sonra onun sonucuna tıkla. Defterinde alt alta yapabilirsin!</div>
+      <div class="esle">${ops.map((o, i) => `<button class="ecard" data-eo="${i}">${vtable([o.a, o.b], op, { ans: null })}</button>`).join('')}</div>
+      <div class="esle">${res.map(x => `<button class="eres" data-er="${x.r}">${x.r}</button>`).join('')}</div><div id="ffb"></div>`;
+    autoSpeak('İşlemleri yap, sonuçlarıyla eşleştir.');
+    host.querySelectorAll('[data-eo]').forEach(b => b.onclick = () => { host.querySelectorAll('.ecard').forEach(x => x.classList.remove('sel')); sel = +b.dataset.eo; b.classList.add('sel'); sfx('tick'); });
+    host.querySelectorAll('[data-er]').forEach(b => b.onclick = () => {
+      if (sel == null) { $('#ffb', host).innerHTML = '<div class="hint">Önce yukarıdan bir işlem seç 👆</div>'; return; }
+      const o = ops[sel];
+      if (+b.dataset.er === o.r) { const c = cols[matched]; const card = host.querySelector(`[data-eo="${sel}"]`); card.style.borderColor = c; card.style.background = c + '22'; card.classList.remove('sel'); card.disabled = true; card.querySelector('tr.res').innerHTML = '<td></td>' + String(o.r).padStart(2, ' ').split('').map(d => `<td>${d.trim()}</td>`).join(''); b.style.borderColor = c; b.style.background = c + '22'; b.disabled = true; sel = null; matched++; sfx('ok');
+        if (matched === 4) { $('#ffb', host).innerHTML = `<div class="praise">${err ? 'Hepsini eşleştirdin! 👍' : pick(PRAISE)}</div>`; done(err === 0); } }
+      else { err++; b.classList.remove('shake'); void b.offsetWidth; b.classList.add('shake'); sfx('no'); const h = `${o.a} ${op} ${o.b} işlemini tekrar yap: önce birler (${o.a % 10} ${op} ${o.b % 10}), sonra onlar.`; $('#ffb', host).innerHTML = `<div class="hint">${h}</div>`; speak(h); }
+    });
+  },
+  buyuk(host, done) {
+    const op = pick(['+', '−']), mode = pick(['büyük', 'küçük']), ops = [], used = new Set();
+    while (ops.length < 3) { let a, b, r; if (op === '+') { a = rand(15, 60); b = rand(10, 95 - a); r = a + b; } else { a = rand(40, 98); b = rand(10, a - 5); r = a - b; } if (used.has(r)) continue; used.add(r); ops.push({ a, b, r }); }
+    const target = mode === 'büyük' ? Math.max(...ops.map(o => o.r)) : Math.min(...ops.map(o => o.r));
+    const q = `Hangisinin ${op === '+' ? 'toplamı' : 'farkı'} en **${mode}**?`;
+    host.innerHTML = `<div class="qtext">${md(q)} 🤔</div><div class="qsub">Her işlemi yap, sonuçları karşılaştır.</div><div class="opts n3">${ops.map((o, i) => `<button class="opt" data-bo="${i}">${o.a} ${op} ${o.b}<div class="small muted bres" style="min-height:22px"></div></button>`).join('')}</div><div id="ffb"></div>`;
+    autoSpeak(strip(q));
+    host.querySelectorAll('[data-bo]').forEach(b => b.onclick = () => {
+      const ok = ops[+b.dataset.bo].r === target;
+      host.querySelectorAll('[data-bo]').forEach((x, i) => { x.disabled = true; x.querySelector('.bres').textContent = '= ' + ops[i].r; if (ops[i].r === target) x.classList.add('ok'); });
+      if (!ok) b.classList.add('no');
+      $('#ffb', host).innerHTML = ok ? `<div class="praise">${pick(PRAISE)}</div>` : `<div class="hint">Sonuçlar: ${ops.map(o => o.r).join(', ')}. En ${mode} olan **${target}** 👀 Önce onlar basamağını karşılaştır!</div>`;
+      done(ok);
+    });
+  },
+  problem(host, done) {
+    const [k1, k2] = shuffle(KISI), e = pick(ESYA), kind = pick(['ver', 'al', 'grup', 'kitap']); let a, b, op, story, ist;
+    op = kind === 'ver' || kind === 'grup' ? '+' : '−';
+    if (op === '+') { a = rand(11, 60); b = rand(5, 95 - a); } else { a = rand(25, 95); b = rand(5, a - 6); }
+    const ans = op === '+' ? a + b : a - b;
+    if (kind === 'ver') { story = `${k1[1]} ${a} ${e[0]} vardı. ${k2[0]}, ${k1[2]} ${b} ${e[0]} daha verdi.`; ist = `${k1[1]} kaç ${e[1]} oldu?`; }
+    else if (kind === 'al') { story = `${k1[1]} ${a} ${e[0]} vardı. ${b} tanesini ${k2[2]} verdi.`; ist = `${k1[1]} kaç ${e[1]} kaldı?`; }
+    else if (kind === 'grup') { story = `Sınıfta ${a} kız, ${b} erkek öğrenci var.`; ist = 'Sınıfta toplam kaç öğrenci var?'; }
+    else { story = `${k1[0]}, ${a} sayfalık bir kitabın ${b} sayfasını okudu.`; ist = `${k1[1]} okuyacağı kaç sayfa kaldı?`; }
+    let err = 0;
+    host.innerHTML = `<div class="qtext">Problemi Anlayalım, Çözelim 🧩</div><div class="story">${esc(story)} <b>${esc(ist)}</b> <button class="iconbtn sm" data-a="speak" data-t="${esc(story + ' ' + ist)}">🔊</button></div><div class="steps" id="stp"></div>`;
+    autoSpeak(story + ' ' + ist); const box = $('#stp', host);
+    askStep(box, 'Oku', '**Verilenler** hangileri?', shuffle([`${a} ve ${b}`, `${a} ve ${ans}`, `${b} ve ${ans}`]), `${a} ve ${b}`, 'Problemde **yazan** sayılar verilenlerdir. Sonucu henüz bilmiyoruz!', f1 => { err += !f1;
+      askStep(box, 'Oku', '**İstenen** ne?', shuffle([ist, kind === 'grup' ? 'Kaç kız öğrenci var?' : `${k2[1]} kaç ${e[1]} var?`, 'Hangi sayı daha küçük?']), ist, 'İstenen, problemin **sorusu**dur: son cümleye bak ❓', f2 => { err += !f2;
+        askStep(box, 'Planla', 'Hangi işlemi yapmalıyız?', ['Toplama ➕', 'Çıkarma ➖'], op === '+' ? 'Toplama ➕' : 'Çıkarma ➖', op === '+' ? 'Sayılar **birleşiyor / artıyor** → toplama yaparız ➕' : 'Bir kısmı **gidiyor / azalıyor** → çıkarma yaparız ➖', f3 => { err += !f3;
+          const el = document.createElement('div'); el.className = 'step'; box.appendChild(el);
+          el.innerHTML = `<span class="schip s-uygula">Uygula</span><div class="sq">İşlemi alt alta yap:</div><div class="vwrap">${vtable([a, b], op, { input: true, elde: op === '+' })}</div><div class="row"><button class="btn primary sm" id="uck">Kontrol et ✔️</button></div><div class="shint"></div>`;
+          el.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); let tr = 0, fin = false;
+          const chk = () => { if (fin) return; const v = readDigits(el); if (isNaN(v)) return; if (v === ans) { fin = true; fillDigits(el, ans, 'ok'); sfx('tick'); next(); } else if (++tr < 2) { sfx('no'); el.querySelector('.shint').innerHTML = 'Birler basamağından başla, tekrar dene 💪'; } else { fin = true; err++; fillDigits(el, ans, 'no'); el.querySelector('.shint').innerHTML = md(op === '+' ? explainAdd(a, b) : explainSub(a, b)); next(); } };
+          wireDigits(el, chk); el.querySelector('#uck').onclick = chk;
+          function next() {
+            const good = op === '+' ? `${ans} − ${b} = ${a}` : `${ans} + ${b} = ${a}`;
+            const bad = op === '+' ? [`${a} + ${ans} = ${a + ans}`, `${b} + ${b} = ${b * 2}`] : [`${a} + ${b} = ${a + b}`, `${b} + ${b} = ${b * 2}`];
+            askStep(box, 'Kontrol Et', 'Sonucu **ters işlemle** kontrol edelim. Hangisi doğru kontrol?', shuffle([good, ...bad]), good, op === '+' ? 'Toplamayı **çıkarmayla** kontrol ederiz: toplamdan bir toplananı çıkar, diğeri kalmalı ✔️' : 'Çıkarmayı **toplamayla** kontrol ederiz: fark + çıkan = eksilen ✔️', f5 => { err += !f5;
+              const s = document.createElement('div'); s.className = 'praise'; s.textContent = err ? `Problemi çözdün! Cevap: ${ans} 👍` : pick(PRAISE) + ' Cevap: ' + ans; box.appendChild(s); speak(ist + ' Cevap: ' + ans); done(err === 0); });
+          }
+        });
+      });
+    });
+  },
+  hikaye(host, done) {
+    const [A, B, C] = shuffle(KISI).slice(0, 3), v = pick([{ ad: 'tabak', kap: 'tabağa', kaptan: 'tabaktan', kapta: 'Tabakta', n: 'kurabiye', f: 'alıp yedi', f2: 'yedi', emo: '🍪' }, { ad: 'sepet', kap: 'sepete', kaptan: 'sepetten', kapta: 'Sepette', n: 'elma', f: 'aldı', f2: 'aldı', emo: '🍎' }, { ad: 'kutu', kap: 'kutuya', kaptan: 'kutudan', kapta: 'Kutuda', n: 'boya kalemi', f: 'aldı', f2: 'aldı', emo: '🖍️' }]);
+    let x = rand(3, 12), y = rand(2, 11); while (y === x) y = rand(2, 11); const z = rand(2, Math.min(9, x + y - 2)), r = x + y - z;
+    const [big, small] = x > y ? [A, B] : [B, A];
+    const story = `Masada boş bir ${v.ad} vardı. ${A[0]}, ${v.kap} ${x} ${v.n} koydu. ${B[0]} ${deDa(B[0])} ${v.kap} ${y} ${v.n} koydu. Sonra ${C[0]}, ${v.kaptan} ${z} ${v.n} ${v.f}.`;
+    const qs = [[`${A[0]} ${v.kap} kaç ${v.n} koydu?`, x], [`${B[0]} ${v.kap} kaç ${v.n} koydu?`, y], [`${A[0]} ve ${B[0]} toplam kaç ${v.n} koydu?`, x + y], [`${C[0]} kaç ${v.n} ${v.f2}?`, z], [`${v.kapta} kaç ${v.n} kaldı?`, r], [`${big[1]} koyduğu ${v.n}, ${small[1]} koyduğundan kaç fazla?`, Math.abs(x - y)]];
+    let err = 0, qi = 0;
+    host.innerHTML = `<div class="qtext">Oku – Anla – Bağlam Kur 📖</div><div class="story">${v.emo} ${esc(story)} <button class="iconbtn sm" data-a="speak" data-t="${esc(story)}">🔊</button></div><div class="steps" id="stp"></div>`;
+    autoSpeak(story); const box = $('#stp', host);
+    const nextQ = () => { if (qi >= qs.length) { const s = document.createElement('div'); s.className = 'praise'; s.textContent = err ? 'Hikâyeyi bitirdin! 👍' : pick(PRAISE); box.appendChild(s); return done(err === 0); } const [q, a] = qs[qi]; askStep(box, (qi + 1) + '. soru', q, opts3(a), String(a), qi === 2 ? 'İkisinin koyduklarını **topla** ➕' : qi === 4 ? `Toplam ${x + y} idi, ${z} tanesi gitti: **çıkar** ➖` : qi === 5 ? 'Büyük sayıdan küçüğü **çıkar** ➖' : 'Hikâyeyi tekrar oku, sayıyı bul 🔍', f => { err += !f; qi++; nextQ(); }); };
+    nextQ();
+  },
+  tahmin(host, done) {
+    let a, b; do { a = rand(11, 79); b = rand(11, 49); } while (a % 10 === 0 || b % 10 === 0);
+    const op = a > b + 10 && Math.random() < .4 ? '−' : '+'; if (op === '+' && a + b > 99) { a = rand(11, 49); }
+    const ra = ten(a), rb = ten(b), est = op === '+' ? ra + rb : ra - rb, real = op === '+' ? a + b : a - b; let err = 0;
+    const row = () => `<table class="ttab tahmin"><tr><th>İşlem</th><th>Tahmini Sonuç</th><th>Gerçek Sonuç</th></tr><tr><td>${a} ${op} ${b}</td><td id="tE">?</td><td id="tR">?</td></tr></table>`;
+    host.innerHTML = `<div class="qtext">${op === '+' ? 'Toplama' : 'Çıkarma'} işleminin sonucunu tahmin edelim 🎯</div><div class="qsub">Sayıları <b>daha yakın oldukları onluğa</b> yuvarla. (Birler 5 ya da fazlaysa üst onluğa!)</div>${row()}<div class="steps" id="stp"></div>`;
+    const box = $('#stp', host); const near = n => [Math.floor(n / 10) * 10, Math.floor(n / 10) * 10 + 10].map(String);
+    askStep(box, 'Yuvarla', `**${a}** hangi onluğa daha yakın?`, near(a), String(ra), `${a}'nin birler basamağı ${a % 10}. ${a % 10 >= 5 ? '5 ya da fazla → **üst onluk**' : '5\'ten az → **alt onluk**'} 📏`, f1 => { err += !f1;
+      askStep(box, 'Yuvarla', `**${b}** hangi onluğa daha yakın?`, near(b), String(rb), `${b}'nin birler basamağı ${b % 10}. ${b % 10 >= 5 ? '5 ya da fazla → **üst onluk**' : '5\'ten az → **alt onluk**'} 📏`, f2 => { err += !f2;
+        askStep(box, 'Tahmin', `Tahmini sonuç: ${ra} ${op} ${rb} = ?`, opts3(est), String(est), `Onluklarla işlem kolay: ${ra / 10} onluk ${op === '+' ? '+' : '−'} ${rb / 10} onluk = **${est / 10} onluk = ${est}**`, f3 => { err += !f3; $('#tE', host).textContent = est;
+          askStep(box, 'Gerçek', `Gerçek sonuç: ${a} ${op} ${b} = ?`, opts3(real), String(real), op === '+' ? explainAdd(a, b) : explainSub(a, b), f4 => { err += !f4; $('#tR', host).textContent = real;
+            const s = document.createElement('div'); s.className = 'praise'; s.textContent = `Tahminin ${est}, gerçek sonuç ${real}. Fark sadece ${Math.abs(est - real)}! ${err ? '👍' : '🎯'}`; box.appendChild(s); done(err === 0); }); }); }); });
+  },
+  beceri(host, done) {
+    if (Math.random() < .5) {
+      const S = pick([20, 30, 30, 40]); let g; for (let t = 0; t < 200; t++) { const x1 = rand(2, S / 2), x2 = rand(2, S / 2), y1 = rand(2, S / 2), y2 = rand(2, S / 2); g = [[x1, x2, S - x1 - x2], [y1, y2, S - y1 - y2], [S - x1 - y1, S - x2 - y2, x1 + x2 + y1 + y2 - S]]; if (g.flat().every(v => v > 0 && v < S)) break; }
+      const hi = rand(0, 2), hj = rand(0, 2), ans = g[hi][hj];
+      host.innerHTML = `<div class="qtext">Beceri Temelli Soru 🧠</div><div class="qsub">Tablodaki sayılar soldan sağa ve yukarıdan aşağıya toplandığında hep <b>${S}</b> oluyor. <b>?</b> yerine hangi sayı gelmeli?</div>
+        <div class="kare">${g.map((r, i) => r.map((v, j) => `<div class="c ${i === hi && j === hj ? 'q' : ''}">${i === hi && j === hj ? '?' : v}</div>`).join('') + `<div class="s">→ ${S}</div>`).join('')}${[0, 1, 2].map(() => `<div class="s">↓ ${S}</div>`).join('')}<div></div></div><div class="steps" id="stp"></div>`;
+      const other = g[hi].filter((_, j) => j !== hj);
+      askStep($('#stp', host), 'Düşün', '? kaçtır?', opts3(ans), String(ans), `? olan satırdaki diğer sayıları topla: ${other.join(' + ')} = ${other[0] + other[1]}. ${S}'dan çıkar: ${S} − ${other[0] + other[1]} = **${ans}** 🧮`, f => { const s = document.createElement('div'); s.className = 'praise'; s.textContent = f ? pick(PRAISE) : 'Buldun! 👍'; $('#stp', host).appendChild(s); done(f); });
+    } else {
+      let A, p, q, B, r, s; do { A = rand(45, 95); p = rand(10, A - 15); q = A - p; B = rand(10, A - 8); r = rand(B + 10, 99); s = r - B; } while (r > 99);
+      const C = A - B; let err = 0;
+      host.innerHTML = `<div class="qtext">Beceri Temelli Soru 🧠</div><div class="qsub">Aşağıdaki işlemlerde A, B ve C birer sayıyı gösteriyor.</div><div class="story zincir">A − ${p} = ${q}<br>${r} − B = ${s}<br>A − B = C</div><div class="steps" id="stp"></div>`;
+      const box = $('#stp', host);
+      askStep(box, '1', '**A** kaçtır?', opts3(A), String(A), `A − ${p} = ${q} ise A'yı bulmak için **topla**: ${q} + ${p} = ${A} (çıkarmayı toplamayla kontrol ederiz)`, f1 => { err += !f1;
+        askStep(box, '2', '**B** kaçtır?', opts3(B), String(B), `${r} − B = ${s} ise B = ${r} − ${s} = ${B} (verilmeyen çıkanı bulmak için eksilenden farkı çıkarırız)`, f2 => { err += !f2;
+          askStep(box, '3', '**C** kaçtır?', opts3(C), String(C), `C = A − B = ${A} − ${B} = ${C}`, f3 => { err += !f3; const z = document.createElement('div'); z.className = 'praise'; z.textContent = err ? `A = ${A}, B = ${B}, C = ${C} 👍` : pick(PRAISE); box.appendChild(z); done(err === 0); }); }); });
+    }
+  },
+  ayir(host, done) {
+    let a, b; do { a = rand(35, 98); b = rand(11, a - 10); } while (a % 10 < b % 10);
+    const at = Math.floor(a / 10), ab = a % 10, bt = Math.floor(b / 10), bb = b % 10, ans = a - b; let tries = 0, fin = false;
+    const inp = (id, w) => `<input class="ayin" id="${id}" inputmode="numeric" maxlength="${w || 1}">`;
+    host.innerHTML = `<div class="qtext">Onluk ve birliklerine ayırarak çıkaralım 🧱</div><div class="qsub">Eksilen ve çıkanı onluk ve birliklerine ayır, sonra ayrı ayrı çıkar.</div>
+      <table class="ayir"><tr><td>${a}</td><td>→</td><td>${inp('a1')} onluk + ${inp('a2')} birlik</td></tr><tr><td>− ${b}</td><td>→</td><td>− ${inp('b1')} onluk + ${inp('b2')} birlik</td></tr><tr class="res"><td>${inp('r0', 2)}</td><td>→</td><td>${inp('r1')} onluk + ${inp('r2')} birlik = ${inp('r3', 2)}</td></tr></table>
+      <div class="row center"><button class="btn primary" id="fck">Kontrol et ✔️</button></div><div id="ffb"></div>`;
+    const want = { a1: at, a2: ab, b1: bt, b2: bb, r1: at - bt, r2: ab - bb, r3: ans, r0: ans };
+    const ins = Object.keys(want).map(k => $('#' + k, host)); ins.forEach(i => i.addEventListener('keydown', e => { if (e.key === 'Enter') check(); })); setTimeout(() => $('#a1', host).focus(), 60);
+    autoSpeak(`${a} eksi ${b}. Onluk ve birliklerine ayır.`);
+    function check() {
+      if (fin) return; let bad = 0; Object.entries(want).forEach(([k, v]) => { const el = $('#' + k, host); const ok = el.value !== '' && +el.value === v; el.classList.toggle('ok', ok); el.classList.toggle('no', !ok); if (!ok) bad++; });
+      if (!bad) { fin = true; $('#fck', host).disabled = true; $('#ffb', host).innerHTML = `<div class="praise">${pick(PRAISE)}</div>`; return done(tries === 0); }
+      if (++tries < 3) { sfx('no'); $('#ffb', host).innerHTML = `<div class="hint">Kırmızı kutuları düzelt. ${a} = ${at} onluk ${ab} birlik gibi düşün 🧱</div>`; }
+      else { fin = true; Object.entries(want).forEach(([k, v]) => { const el = $('#' + k, host); el.value = v; el.disabled = true; }); $('#fck', host).disabled = true; $('#ffb', host).innerHTML = `<div class="hint">${a} = ${at} onluk ${ab} birlik, ${b} = ${bt} onluk ${bb} birlik. Onluklar: ${at} − ${bt} = ${at - bt}, birlikler: ${ab} − ${bb} = ${ab - bb}. Sonuç **${ans}**</div>`; done(false); }
+    }
+    $('#fck', host).onclick = check;
+  },
+};
+const FAS_N = { alt: 6, esle: 3, buyuk: 5, problem: 3, hikaye: 2, tahmin: 3, beceri: 4, ayir: 5 };
+let FS = null;
+function fasPlay(kind) {
+  if (kind === 'test') return fasTest();
+  VIEW = 'fas'; app.classList.remove('wide'); stopSpeak(); FS = { kind, i: 0, n: FAS_N[kind] || 5, ok: 0, res: [] }; fasNext();
+}
+function fasNext() {
+  const meta = MENUS.fas.items.find(x => x[0] === 'fas:' + FS.kind);
+  if (FS.i >= FS.n) { VIEW = 'end'; const great = FS.ok / FS.n >= .7; if (great) { confetti(); sfx('win'); } app.innerHTML = `<div class="endcard center"><div class="bigemo">${FS.ok === FS.n ? '🏆' : great ? '🌟' : '💪'}</div><h2>${FS.n} alıştırmadan ${FS.ok} tanesi ilk denemede doğru!</h2><p>${great ? 'Fasikül ödevine hazırsın!' : 'Biraz daha çalışınca çok iyi olacak.'}</p><div class="row center"><button class="btn primary" data-a="play" data-v="fas:${FS.kind}">Tekrar 🔁</button><button class="btn soft" data-a="menu" data-v="fas">Diğer alıştırmalar 📙</button><button class="btn soft" data-a="home">Ana sayfa 🏠</button></div></div>`; return; }
+  app.innerHTML = `<div class="rtop"><button class="btn soft sm" data-a="menu" data-v="fas">← Alıştırmalar</button><div class="rtitle">${meta[1]} ${esc(meta[2])}</div><div class="dots">${Array.from({ length: FS.n }, (_, k) => `<i class="${FS.res[k] || (k === FS.i ? 'now' : '')}"></i>`).join('')}</div></div><div class="qcard fas" id="fb0"></div>`;
+  const host = $('#fb0');
+  FAS[FS.kind](host, ok => { FS.res[FS.i] = ok ? 'ok' : 'no'; if (ok) { FS.ok++; addStar(); } stat('math', ok); sfx(ok ? 'ok' : 'no'); const nx = document.createElement('div'); nx.className = 'row center'; nx.innerHTML = `<button class="btn primary" id="fasn">${FS.i + 1 >= FS.n ? 'Bitir 🏁' : 'Sıradaki ➜'}</button>`; host.appendChild(nx); const b = $('#fasn'); b.onclick = () => { FS.i++; fasNext(); }; setTimeout(() => b.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 100); });
+}
+function fasTest() {
+  const [k1, k2, k3] = shuffle(KISI); const gens = [
+    () => { const c = rand(30, 90), b = rand(5, c - 10), a = c - b; return [`▢ + ${b} = ${c}\nYukarıdaki toplama işleminde verilmeyen toplanan kaçtır?`, a, `Verilmeyen toplanan = toplam − bilinen toplanan: ${c} − ${b} = **${a}**`]; },
+    () => { const b = rand(10, 40), c = rand(10, 50), a = b + c; return [`▢ − ${b} = ${c}\nVerilmeyen eksilen kaçtır?`, a, `Eksilen = fark + çıkan: ${c} + ${b} = **${a}**`]; },
+    () => { const a = rand(40, 95), c = rand(10, a - 10), b = a - c; return [`${a} − ▢ = ${c}\nVerilmeyen çıkan kaçtır?`, b, `Çıkan = eksilen − fark: ${a} − ${c} = **${b}**`]; },
+    () => { let a, b; do { a = rand(11, 59); b = rand(11, 39); } while (a % 10 === 0 || b % 10 === 0); return [`${a} + ${b} işleminde toplananlar daha yakın oldukları onluklara göre yuvarlanırsa toplam kaç olur?`, ten(a) + ten(b), `${a} → ${ten(a)}, ${b} → ${ten(b)}. ${ten(a)} + ${ten(b)} = **${ten(a) + ten(b)}** 🎯`]; },
+    () => { const t = rand(12, 19), a = rand(3, t - 3); return [`İki doğal sayının toplamı ${t}'dir. Toplananlardan biri ${a} olduğuna göre diğer toplanan kaçtır?`, t - a, `${t} − ${a} = **${t - a}**`]; },
+    () => { const a = rand(12, 30), d = rand(2, 9); return [`Sınıfımızda ${a} erkek, erkeklerden ${d} fazla kız öğrenci vardır. Sınıfımızda toplam kaç öğrenci vardır?`, a + a + d, `Kızlar: ${a} + ${d} = ${a + d}. Toplam: ${a} + ${a + d} = **${2 * a + d}** (iki adımlı problem!)`]; },
+    () => { const y = rand(7, 10), d = rand(2, 6), n = rand(2, 4); return [`${k1[0]} ${y} yaşındadır. Ablası ondan ${d} yaş büyüktür. ${n} yıl sonra ikisinin yaşları toplamı kaç olur?`, (y + n) + (y + d + n), `${n} yıl sonra ${k1[0]}: ${y + n}, ablası: ${y + d + n}. Toplam **${2 * y + d + 2 * n}**`]; },
+    () => { const a = rand(15, 35), b = rand(15, 35), c = rand(10, Math.min(30, 98 - a - b)); return [`${k1[0]} ${a}, ${k2[0]} ${b}, ${k3[0]} ${c} kitap okudu. Üçünün okuduğu toplam kitap sayısı kaçtır?`, a + b + c, explain3(a, b, c)]; },
+    () => { const a = rand(30, 60), b = rand(10, 20), c = rand(5, 15); return [`Bir terzinin ${a + b + c > 99 ? 90 : a + b + c} metre kumaşı vardı. Önce ${b} metresini, sonra ${c} metresini kullandı. Kaç metre kumaşı kaldı?`, (a + b + c > 99 ? 90 : a + b + c) - b - c, `Önce ${b}, sonra ${c} metre: toplam ${b + c} metre gitti. Kalan: **${(a + b + c > 99 ? 90 : a + b + c) - b - c}**`]; },
+    () => { const k = rand(2, 4), e = rand(1, 9); return [`${k} deste ${e} kalem kaç kalemdir?`, k * 10 + e, `1 deste = 10. ${k} deste = ${k * 10}, + ${e} = **${k * 10 + e}**`]; },
+  ];
+  const items = shuffle(gens).slice(0, 10).map(g => { const [q, a, ex] = g(); return { kind: 'mcq', mod: 'math', abc: true, prompt: q, options: opts3(a), answer: String(a), explain: ex, key: 'ft:' + q.slice(0, 50) }; });
+  startRound('📝 Ölçme ve İzleme', items, false, 'fas:test');
 }
 
 /* ---------- Saat Atölyesi ---------- */
@@ -1482,9 +1726,9 @@ function settings() {
 
 /* ---------- olaylar ---------- */
 const A = {
-  home: () => { stopSpeak(); if (R) R.savedHTML = null; home(); }, help: () => { stopSpeak(); help(); }, menu: v => { stopSpeak(); menu(v); }, play: v => play(v),
+  home: () => { stopSpeak(); if (R) R.savedHTML = null; home(); }, help: () => { stopSpeak(); help(); }, menu: v => { stopSpeak(); menu(v); }, play: v => v.startsWith('menu:') ? menu(v.slice(5)) : play(v),
   opt: (v, el) => answerMCQ(el, v), syl: (v, el) => pickSyl(el), next: () => next(),
-  replay: () => R.replay === 'review' ? startReview() : play(R.replay), review: () => startReview(),
+  replay: () => R.replay === 'fas:test' ? fasTest() : R.replay === 'review' ? startReview() : play(R.replay), review: () => startReview(),
   speak: (v, el) => speak(el.dataset.t || ''), speaken: (v, el) => speakEN(el.dataset.t || ''), settings: () => { stopSpeak(); settings(); },
   testv: () => speak('Merhaba! Ben Bilge Baykuş. Üç artı beş kaç eder? Sekiz! Harikasın!'),
   chip: (v, el) => send(el.dataset.t), newchat: () => { chat = []; chatImg = null; pending = null; help(); },
