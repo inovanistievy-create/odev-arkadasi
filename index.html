@@ -645,8 +645,8 @@ function settings() {
     <div class="row"><button class="btn danger sm" data-a="clrm" ${S.mistakes.length ? '' : 'disabled'}>Defteri temizle</button><button class="btn danger sm" data-a="reset" id="rb">Tüm ilerlemeyi sıfırla</button></div>
   </div>
   <div class="panel"><h2>🖥️ iMac'te uygulama gibi kullanmak</h2>
-    <p class="muted">Bu sayfayı Safari'de açın → menüden <b>Dosya › Dock'a Ekle</b>. Ödev Arkadaşı Dock'ta kendi simgesiyle, ayrı bir pencerede açılır. Chrome'da: <b>⋮ › Yayınla, kaydet ve paylaş › Uygulama olarak yükle</b> (veya Kısayol oluştur).</p>
-    <p class="muted small">İlerleme bu bilgisayarın tarayıcısında saklanır. Mikrofon claude.ai içinde çalışmaz; sesle konuşmak için sayfayı dosya olarak açıp Bilge'yi API anahtarıyla bağlayın.</p>
+    <p class="muted">Adres: <b>inovanistievy-create.github.io/odev-arkadasi</b> — Safari'de açın → <b>Dosya › Dock'a Ekle</b>. Ödev Arkadaşı Dock'ta kendi simgesiyle, ayrı pencerede açılır; güncellemeler kendiliğinden gelir.</p>
+    <p class="muted small"><b>Mikrofon:</b> Dock uygulaması izin isteyip Sistem Ayarları'na yönlendirirse önce adresi normal Safari sekmesinde açıp 🎤'a basarak izin verin, sonra Dock uygulamasını kapatıp yeniden açın. İlerleme ve API anahtarı bu bilgisayarda saklanır.</p>
   </div>`;
   $('#sName').addEventListener('input', e => { S.name = e.target.value.trim(); save(); });
   $('#sGoal').addEventListener('change', e => { S.goal = +e.target.value; save(); updateHeader(); });
