@@ -125,6 +125,22 @@ th{color:var(--muted);font-size:15px}
 .onb{background:#fff;border-radius:28px;padding:26px;margin-bottom:22px;display:flex;gap:18px;align-items:center;flex-wrap:wrap;box-shadow:0 6px 0 rgba(43,42,76,.07)}
 .onb input{font:inherit;font-size:22px;font-weight:800;border:3px solid var(--line);border-radius:16px;padding:12px 16px;min-width:220px}
 #confetti{position:fixed;inset:0;pointer-events:none;z-index:50}
+.ws{margin-top:16px;background:#fff;border:3px solid var(--line);border-radius:22px;padding:18px;text-align:left;font-weight:700}
+.wsh{font-size:19px;margin-bottom:10px}
+.wsbar{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+.wsstat{background:#FFF1C9;border-radius:99px;padding:8px 14px;font-size:17px}
+.wsblocks{display:flex;flex-wrap:wrap;align-items:flex-end;gap:8px;min-height:60px;padding:10px;background:#FFF7EA;border-radius:16px}
+.wsten{width:22px;height:140px;border:0;border-radius:6px;background:var(--blue);background-image:repeating-linear-gradient(0deg,transparent 0 13px,rgba(255,255,255,.6) 13px 14px);cursor:pointer;transition:transform .1s}
+.wsone{width:22px;height:22px;border:0;border-radius:5px;background:var(--orange);cursor:pointer;transition:transform .1s}
+.wsten:hover,.wsone:hover{transform:scale(1.12)}
+.wsmsg{margin-top:12px;font-size:18px;color:var(--purple);font-weight:800;min-height:24px}
+.wsq{font-size:22px;font-weight:900;margin-top:14px;text-align:center}
+.wsopts{margin-top:10px}.wsopts .opt{font-size:22px;padding:12px}
+.wsplates{display:flex;flex-wrap:wrap;gap:12px;min-height:90px;padding:10px;background:#FFF7EA;border-radius:16px}
+.wsplate{background:#fff;border:3px solid #E6D9BF;border-radius:50%;width:96px;height:96px;display:flex;flex-direction:column;align-items:center;justify-content:center;animation:pop .2s}
+.wsdots{display:flex;flex-wrap:wrap;gap:3px;justify-content:center;max-width:70px}
+.wsdots i{width:12px;height:12px;border-radius:50%;background:#B5651D;display:block}
+.wscount{font-size:14px;font-weight:900;color:var(--muted);margin-top:4px}
 .upd{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:#2B2A4C;color:#fff;padding:12px 18px;border-radius:99px;font-weight:900;font-size:17px;display:flex;gap:12px;align-items:center;z-index:60;box-shadow:0 8px 24px rgba(0,0,0,.25);animation:pop .3s}
 .gwrap{position:relative;background:#fff;border-radius:32px;padding:12px;box-shadow:0 6px 0 rgba(43,42,76,.07)}
 .gq{text-align:center;font-size:38px;font-weight:900;min-height:48px;letter-spacing:1px}
@@ -167,7 +183,7 @@ const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { c
 let VIEW = 'home';
 
 /* ---------- kayıt ---------- */
-const APP_VERSION = '20261107.1736';
+const APP_VERSION = '20261107.1739';
 const KEY = 'odev-arkadasi-v1';
 function load() { try { return JSON.parse(localStorage.getItem(KEY)) || null; } catch (e) { return null; } }
 let S = Object.assign({ name: '', stars: 0, goal: 10, day: '', dayStars: 0, stats: {}, mistakes: [], sound: true, rate: 1.15, autoRead: true, voice: '' }, load() || {});
@@ -400,7 +416,7 @@ function home() {
   const nm = $('#nm'); if (nm) { nm.focus(); nm.addEventListener('keydown', e => { if (e.key === 'Enter') A.setname(); }); }
 }
 const MENUS = {
-  math: { t: 'Matematik 🔢', items: [['math:topla','➕','Toplama',"100'e kadar, eldeli",'blue'],['math:cikar','➖','Çıkarma','Onluk bozarak','blue'],['math:carp','✖️','Çarpma','Kere kere, ritmik sayma','purple'],['math:eksik','🔍','Eksik Sayı','▢ yerine ne gelir?','green'],['math:karisik','🎲','Karışık','Hepsinden biraz','orange']] },
+  math: { t: 'Matematik 🔢', items: [['math:topla','➕','Toplama',"100'e kadar, eldeli",'blue'],['math:cikar','➖','Çıkarma','Onluk bozarak','blue'],['math:carp','✖️','Çarpma','Kere kere, ritmik sayma','purple'],['math:eksik','🔍','Eksik Sayı','▢ yerine ne gelir?','green'],['math:karisik','🎲','Karışık','Hepsinden biraz','orange'],['math:atolye-cikar','🧮','Çıkarma Atölyesi','Blokları çıkar, onluğu boz','pink'],['math:atolye-carp','🍪','Çarpma Atölyesi','Tabakları doldur, ritmik say','yellow']] },
   tr: { t: 'Türkçe 🔤', items: [['tr:hece','🧩','Hece Sırala','Heceleri doğru diz, kelimeyi bul','orange'],['tr:yazim','✍️','Doğru Yazım','Hangisi doğru yazılmış?','purple']] },
   bilgi: { t: 'Bil Bakalım 🌍', items: [['bilgi:hayat','🏡','Hayat Bilgisi','Okul, ev, sağlık, güvenlik, ülkemiz','green'],['bilgi:ing','🇬🇧','İngilizce','Renkler, sayılar, hayvanlar','blue'],['bilgi:mix','🎲','Karışık','Hepsinden biraz','orange']] },
 };
@@ -414,6 +430,7 @@ function menu(v) {
 let R = null;
 function play(v) {
   const [m, mode] = v.split(':'); let items, title;
+  if (v.startsWith('math:atolye')) return wsPlay(v);
   if (m === 'math') { const seen = new Set(); items = []; while (items.length < 10) { const it = mathItem(mode); if (!seen.has(it.key)) { seen.add(it.key); items.push(it); } } title = MENUS.math.items.find(x => x[0] === v)[2]; }
   else if (v === 'tr:hece') { items = shuffle(WORDS).slice(0, 8).map(heceItem); title = 'Hece Sırala'; }
   else if (v === 'tr:yazim') { items = shuffle(YAZIM).slice(0, 8).map(yazimItem); title = 'Doğru Yazım'; }
@@ -455,13 +472,21 @@ function blocks(v) {
 }
 function explainBox(it, withNext) {
   return `<div class="explain"><div class="exh">🦉 Bilge diyor ki:</div><div>${md(it.explain)}</div>${it.visual ? blocks(it.visual) : ''}
-  <div class="row">${withNext ? '<button class="btn primary" data-a="next" id="nextb">Anladım, devam ➜</button>' : ''}<button class="btn soft" data-a="ask">🦉 Bilge'ye sor</button><button class="btn soft" data-a="speak" data-t="${esc(strip(it.explain))}">🔊 Dinle</button></div></div>`;
+  <div class="row">${withNext ? '<button class="btn primary" data-a="next" id="nextb">Anladım, devam ➜</button>' : ''}${it.mod === 'math' && it.prompt && WS_OK(it.prompt) ? '<button class="btn green" data-a="ws">🧮 Birlikte çözelim</button>' : ''}<button class="btn soft" data-a="ask">🦉 Bilge'ye sor</button><button class="btn soft" data-a="speak" data-t="${esc(strip(it.explain))}">🔊 Dinle</button></div><div id="wsh"></div></div>`;
 }
 function answerMCQ(el, i) {
   if (R.answered) return; R.answered = true;
   const it = cur(), val = it.options[+i], ok = val === it.answer;
-  document.querySelectorAll('.opt').forEach(b => { const v = it.options[+b.dataset.v]; if (v === it.answer) b.classList.add('ok'); else if (b === el) b.classList.add('no'); b.disabled = true; });
-  if (ok) win(); else { R.lastWrong = { it, val }; R.res[R.i] = 'no'; stat(it.mod, false); addMistake(it); sfx('no'); $('#fb').innerHTML = explainBox(it, true); autoSpeak('Olsun, birlikte bakalım. ' + strip(it.explain)); }
+  const wsMode = !ok && it.mod === 'math' && it.prompt && WS_OK(it.prompt);
+  document.querySelectorAll('.opt').forEach(b => { const v = it.options[+b.dataset.v]; if (v === it.answer && !wsMode) b.classList.add('ok'); else if (b === el) b.classList.add('no'); b.disabled = true; });
+  if (ok) win(); else {
+    R.lastWrong = { it, val }; R.res[R.i] = 'no'; stat(it.mod, false); addMistake(it); sfx('no');
+    if (wsMode) {
+      $('#fb').innerHTML = `<div class="explain"><div class="exh">🦉 Olsun! Doğrusunu birlikte bulalım:</div><div id="wsh"></div><div id="wsafter"></div></div>`;
+      speak('Olsun, doğrusunu birlikte bulalım.');
+      wsFor(it.prompt, $('#wsh'), () => { addStar(); document.querySelectorAll('.opt').forEach(b => { if (it.options[+b.dataset.v] === it.answer) b.classList.add('ok'); }); $('#wsafter').innerHTML = explainBox(it, true).replace('🧮 Birlikte çözelim', '').replace('data-a="ws"', 'hidden'); });
+    } else { $('#fb').innerHTML = explainBox(it, true); autoSpeak('Olsun, birlikte bakalım. ' + strip(it.explain)); }
+  }
 }
 function pickSyl(el) {
   if (R.answered) return;
@@ -493,6 +518,67 @@ function endRound() {
    <p>${k === n ? 'Mükemmel! Hepsini bildin!' : great ? 'Çok iyi gidiyorsun!' : 'Her hata bize yeni bir şey öğretir. Bir daha deneyelim mi?'}</p>
    ${k < n ? `<p class="muted">${R.review ? 'Bilemediklerin defterde kaldı, sonra yine deneriz 📕' : "Yanlışların Hata Defteri'ne eklendi 📕"}</p>` : ''}
    <div class="row center"><button class="btn primary" data-a="replay">Tekrar oyna 🔁</button>${!R.review && S.mistakes.length ? '<button class="btn green" data-a="review">Hatalarımı tekrar et 📕</button>' : ''}<button class="btn soft" data-a="home">Ana sayfa 🏠</button></div></div>`;
+}
+
+/* ---------- Atölyeler: çıkarma blokları, çarpma grupları ---------- */
+function wsOptions(ans, onPick, box) {
+  const opts = makeOpts(ans);
+  box.innerHTML = `<div class="wsq">Cevap kaç? 🤔</div><div class="opts n4 wsopts">${opts.map(o => `<button class="opt" data-ws="${o}">${o}</button>`).join('')}</div>`;
+  box.querySelectorAll('[data-ws]').forEach(b => b.onclick = () => {
+    if (+b.dataset.ws === ans) { b.classList.add('ok'); box.querySelectorAll('[data-ws]').forEach(x => x.disabled = true); sfx('ok'); onPick(); }
+    else { b.classList.add('no'); b.disabled = true; sfx('no'); speak('Bir daha say.'); }
+  });
+}
+/* Çıkarma: a − b — blokları tıklayıp çıkar, gerekirse onluğu boz */
+function buildSubWS(a, b, host, onDone) {
+  const st = { tens: Math.floor(a / 10), ones: a % 10, removed: 0, done: false };
+  const render = () => {
+    const left = b - st.removed, remain = a - st.removed;
+    host.innerHTML = `<div class="ws"><div class="wsh">🧮 <b>${a} − ${b}</b> → ${a} sayısından <b>${b}</b> tane çıkaralım. Bloklara tıkla!</div>
+      <div class="wsbar"><span class="wsstat">Çıkarılan: <b>${st.removed}</b> / ${b}</span><span class="wsstat">Kalan: <b>${remain}</b></span>${st.tens > 0 && left > 0 && left < 10 && st.ones < left ? '<button class="btn primary sm" id="wsbreak">✂️ Onluğu boz</button>' : st.tens > 0 && left > 0 ? '<button class="btn soft sm" id="wsbreak">✂️ Onluğu boz</button>' : ''}</div>
+      <div class="wsblocks">${Array.from({ length: st.tens }, () => '<button class="wsten" title="10 çıkar"></button>').join('')}${Array.from({ length: st.ones }, () => '<button class="wsone" title="1 çıkar"></button>').join('')}</div>
+      <div class="wsmsg" id="wsmsg">${left === 0 ? `Bitti! ${a} − ${b} işleminde kalan blokları say 👇` : st.ones < left && left < 10 && st.tens > 0 ? 'Birlikler yetmiyor! Bir onluğu boz ✂️' : left >= 10 ? 'Bir onluk çubuğa tıkla: 10 tane birden çıkar!' : 'Birlik küplerine tıkla.'}</div><div id="wsans"></div></div>`;
+    host.querySelectorAll('.wsten').forEach(el => el.onclick = () => { if (left < 10) { el.classList.add('shake'); sfx('no'); $('#wsmsg', host).textContent = `Sadece ${left} tane kaldı, 10 çok fazla! Onluğu boz ✂️`; return; } st.tens--; st.removed += 10; sfx('tick'); render(); });
+    host.querySelectorAll('.wsone').forEach(el => el.onclick = () => { if (left <= 0) return; st.ones--; st.removed++; sfx('tick'); render(); });
+    const br = $('#wsbreak', host); if (br) br.onclick = () => { st.tens--; st.ones += 10; sfx('win'); speak('Bir onluk, on birlik oldu.'); render(); };
+    if (left === 0 && !st.done) { st.done = true; speak(`Kalan blokları say.`); wsOptions(a - b, () => { $('#wsmsg', host).textContent = `Evet! ${a} − ${b} = ${a - b} 🎉`; speak(`${a} eksi ${b} eşittir ${a - b}. Harikasın!`); onDone(); }, $('#wsans', host)); }
+  };
+  render();
+}
+/* Çarpma: a × b — a tane grup kur, her grupta b tane */
+function buildMulWS(a, b, host, onDone) {
+  const st = { g: 0, done: false };
+  const render = () => {
+    host.innerHTML = `<div class="ws"><div class="wsh">🍪 <b>${a} × ${b}</b> → "<b>${a} kere ${b}</b>" demek: ${a} tabak, her tabakta ${b} kurabiye. Tabak ekle!</div>
+      <div class="wsbar"><button class="btn primary sm" id="wsadd">+ Tabak ekle (${b} tane)</button><button class="btn soft sm" id="wsrem" ${st.g ? '' : 'disabled'}>− Tabak al</button><span class="wsstat">${st.g} tabak × ${b} = <b>${st.g * b}</b></span></div>
+      <div class="wsplates">${Array.from({ length: st.g }, (_, i) => `<div class="wsplate"><div class="wsdots">${'<i></i>'.repeat(b)}</div><div class="wscount">${(i + 1) * b}</div></div>`).join('')}</div>
+      <div class="wsmsg" id="wsmsg">${st.g < a ? `${a - st.g} tabak daha!` : `${a} tabak tamam! Ritmik say: ${Array.from({ length: a }, (_, i) => (i + 1) * b).join(', ')} 🥁`}</div><div id="wsans"></div></div>`;
+    $('#wsadd', host).onclick = () => { if (st.g >= a) { $('#wsmsg', host).textContent = `${a} tabak yeter! ${a} kere ${b} dedik.`; sfx('no'); return; } st.g++; sfx('tick'); speak(String(st.g * b)); render(); };
+    $('#wsrem', host).onclick = () => { if (st.g > 0) { st.g--; sfx('tick'); render(); } };
+    if (st.g === a && !st.done) { st.done = true; wsOptions(a * b, () => { $('#wsmsg', host).textContent = `Evet! ${a} × ${b} = ${a * b} 🎉`; speak(`${a} çarpı ${b} eşittir ${a * b}. Süpersin!`); onDone(); }, $('#wsans', host)); }
+  };
+  render();
+}
+function wsFor(prompt, host, onDone) {
+  const n = prompt.match(/\d+/g).map(Number);
+  if (/−/.test(prompt)) return buildSubWS(n[0], n[1], host, onDone);
+  if (/×/.test(prompt)) return buildMulWS(n[0], n[1], host, onDone);
+  if (/▢/.test(prompt)) return buildSubWS(n[1], n[0], host, onDone);
+}
+const WS_OK = p => /−|×|▢/.test(p);
+/* Atölye modu: arka arkaya 5 problem */
+let WSR = null;
+function wsPlay(kind) {
+  VIEW = 'ws'; app.classList.remove('wide'); WSR = { kind, i: 0, n: 5 };
+  wsNext();
+}
+function wsNext() {
+  if (WSR.i >= WSR.n) { VIEW = 'end'; confetti(); sfx('win'); app.innerHTML = `<div class="endcard center"><div class="bigemo">🏆</div><h2>${WSR.n} problem çözdün!</h2><p>Her birini kendin buldun. Süper! +${WSR.n} ⭐</p><div class="row center"><button class="btn primary" data-a="play" data-v="${WSR.kind}">Tekrar 🔁</button><button class="btn soft" data-a="home">Ana sayfa 🏠</button></div></div>`; return; }
+  const it = mathItem(WSR.kind === 'math:atolye-cikar' ? 'cikar' : 'carp');
+  app.innerHTML = `<div class="rtop"><button class="btn soft sm" data-a="home">← Çık</button><div class="rtitle">${WSR.kind === 'math:atolye-cikar' ? '🧮 Çıkarma Atölyesi' : '🍪 Çarpma Atölyesi'}</div><div class="dots">${Array.from({ length: WSR.n }, (_, k) => `<i class="${k < WSR.i ? 'ok' : k === WSR.i ? 'now' : ''}"></i>`).join('')}</div></div>
+    <div class="qcard"><div class="qtext big">${esc(it.prompt)}</div><div id="wsh"></div><div id="wsnext"></div></div>`;
+  autoSpeak(it.prompt);
+  wsFor(it.prompt, $('#wsh'), () => { addStar(); stat('math', true); WSR.i++; $('#wsnext').innerHTML = `<div class="row center"><button class="btn primary" id="wsn">Sıradaki ➜</button></div>`; $('#wsn').onclick = wsNext; });
 }
 
 /* ---------- Balon Avı (canvas oyunu) ---------- */
@@ -937,6 +1023,7 @@ const A = {
   },
   stopv: () => stopSpeak(),
   reload: () => location.reload(),
+  ws: () => { const it = cur(); stopSpeak(); const h = $('#wsh'); if (!h || h.children.length) return; wsFor(it.prompt, h, () => { addStar(); }); h.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); },
   balloon: () => balloonStart(), bgo: () => balloonGo(), car: () => carStart(), cgo: () => carGo(),
   cmode: v => { S.carMode = v; save(); carStart(); },
   showkey: (v, el) => { const i = $('#sKey'); i.type = i.type === 'password' ? 'text' : 'password'; el.textContent = i.type === 'password' ? 'Göster' : 'Gizle'; },
