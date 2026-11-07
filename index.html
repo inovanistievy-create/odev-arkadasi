@@ -130,6 +130,7 @@ th{color:var(--muted);font-size:15px}
 .gq{text-align:center;font-size:38px;font-weight:900;min-height:48px;letter-spacing:1px}
 .glvl{text-align:center;color:var(--muted);font-weight:800;margin-bottom:6px}
 #gc{display:block;width:100%;border-radius:22px;cursor:crosshair;touch-action:none}
+.seg{display:flex;background:#F1ECFF;border-radius:99px;padding:4px}.seg button{border:0;background:none;border-radius:99px;padding:8px 16px;font-weight:900;font-size:16px;cursor:pointer}.seg button.on{background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.12)}
 .gover{position:absolute;inset:16px;background:rgba(255,255,255,.94);border-radius:22px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:24px}
 .gover h2{font-size:38px;margin:6px 0;font-weight:900}.gover p{font-size:20px;font-weight:700;max-width:520px}
 @media (max-width:760px){
@@ -166,7 +167,7 @@ const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { c
 let VIEW = 'home';
 
 /* ---------- kayıt ---------- */
-const APP_VERSION = '20261107.1734';
+const APP_VERSION = '20261107.1736';
 const KEY = 'odev-arkadasi-v1';
 function load() { try { return JSON.parse(localStorage.getItem(KEY)) || null; } catch (e) { return null; } }
 let S = Object.assign({ name: '', stars: 0, goal: 10, day: '', dayStars: 0, stats: {}, mistakes: [], sound: true, rate: 1.15, autoRead: true, voice: '' }, load() || {});
@@ -270,6 +271,7 @@ function confetti() {
 /* ---------- içerik: MEB 2. sınıf ---------- */
 const WORDS = ['ki-tap|📕','o-kul|🏫','öğ-ret-men|👩‍🏫','ar-ka-daş|🧑‍🤝‍🧑','bah-çe|🏡','a-ğaç|🌳','ke-le-bek|🦋','çi-çek|🌸','gü-neş|☀️','pen-ce-re|🪟','bi-sik-let|🚲','te-le-viz-yon|📺','ka-rın-ca|🐜','kur-ba-ğa|🐸','zü-ra-fa|🦒','pa-pat-ya|🌼','fut-bol|⚽','çan-ta|🎒','or-man|🌲','de-niz|🌊','yağ-mur|🌧️','mey-ve|🧺','ar-mut|🍐','ki-raz|🍒','kar-puz|🍉','u-çurt-ma|🪁','sa-at|⏰','ka-lem|✏️','ço-cuk|🧒','def-ter|📒','ö-dev|📝','kır-mı-zı|🔴','tu-run-cu|🟠','söz-lük|📖','gök-ku-şa-ğı|🌈','don-dur-ma|🍦','pen-gu-en|🐧','tav-şan|🐰','kap-lum-ba-ğa|🐢','a-yak-ka-bı|👟','şem-si-ye|☂️','el-ma|🍎','ba-lık|🐟','yıl-dız|⭐','sin-cap|🐿️'];
 
+const SENTENCES = ['Ali okula gitti.|🏫','Kedi süt içti.|🐱','Annem pasta yaptı.|🎂','Kuşlar gökyüzünde uçar.|🐦','Ayşe kitap okuyor.|📖','Babam arabayı yıkadı.|🚗','Güneş sabah doğar.|🌅','Çocuklar bahçede oynuyor.|🏡','Kardeşim resim çizdi.|🎨','Öğretmen tahtaya yazdı.|👩‍🏫','Bugün hava çok güzel.|☀️','Tavşan havuç yer.|🐰','Dedem gazete okur.|📰','Balıklar suda yüzer.|🐟','Mete topu attı.|⚽','Kelebek çiçeğe kondu.|🦋','Yağmur yağınca şemsiye açarız.|☂️','Ninem çorba pişirdi.|🍲','Ağaçlar sonbaharda sararır.|🍂','Ben her gün diş fırçalarım.|🪥','Köpek kemiği kemirdi.|🐶','Biz parka gittik.|🌳','Kuzu annesini arıyor.|🐑','Elma ağaçtan düştü.|🍎','Mavi balon uçtu.|🎈','Kar yağınca kardan adam yaparız.|⛄','Zil çalınca sınıfa gireriz.|🔔','Arılar bal yapar.|🐝','Uçak gökyüzünde uçuyor.|✈️','Sabah erken kalktım.|⏰'];
 const YAZIM = [
  ['herkes','herkez','**Her + kes = herkes.** Sonunda "kes" var, "z" yok! Makası düşün: kes kes ✂️'],
  ['yanlış','yalnış','"Yanılmak" kelimesinden gelir: **yan**-lış. Yanılınca yanlış yaparız! 🙃'],
@@ -434,7 +436,7 @@ function renderQ() {
     R.pos = 0; R.miss = false;
     let sh = shuffle(it.parts); let g = 0; while (sh.join() === it.parts.join() && g++ < 10) sh = shuffle(it.parts);
     app.innerHTML = roundTop() + `<div class="qcard"><div class="qemo">${it.emoji}</div>
-      <div class="qtext">Heceleri sırayla seç! <button class="iconbtn sm" data-a="speak" data-t="${esc(it.word)}" title="Sesli oku">🔊</button></div>
+      <div class="qtext">${esc(it.label || 'Heceleri sırayla seç!')} <button class="iconbtn sm" data-a="speak" data-t="${esc(it.word)}" title="Sesli oku">🔊</button></div>
       <div class="slots">${it.parts.map((_, i) => `<span class="slot" id="s${i}"></span>`).join('')}</div>
       <div class="opts sylls">${sh.map(p => `<button class="opt syl" data-a="syl" data-p="${esc(p)}">${esc(p)}</button>`).join('')}</div>
       <div id="fb"></div></div>`;
@@ -592,7 +594,7 @@ function balloonEnd() {
 let C = null;
 function carStart() {
   VIEW = 'car'; stopSpeak(); app.classList.add('wide');
-  app.innerHTML = `<div class="rtop"><button class="btn soft sm" data-a="home">← Çık</button><div class="rtitle">🚗 Hece Yarışı</div><div class="pill" id="cScore">0 kelime</div><div class="pill" id="cLives">❤️❤️❤️</div></div>
+  app.innerHTML = `<div class="rtop"><button class="btn soft sm" data-a="home">← Çık</button><div class="rtitle">🚗 Hece Yarışı</div><div class="seg"><button data-a="cmode" data-v="hece" class="${(S.carMode || 'hece') === 'hece' ? 'on' : ''}">Hece</button><button data-a="cmode" data-v="kelime" class="${S.carMode === 'kelime' ? 'on' : ''}">Kelime ⭐ İleri</button></div><div class="pill" id="cScore">0 kelime</div><div class="pill" id="cLives">❤️❤️❤️</div></div>
   <div class="gwrap"><div class="gq" id="cWord"></div><div class="glvl" id="cHint"></div><canvas id="cc"></canvas>
   <div class="gover" id="cOver" style="display:none"></div></div>`;
   C = { canvas: $('#cc'), ctx: $('#cc').getContext('2d'), running: false, carX: 0, carY: 0, vx: 0, vy: 0, keys: {}, target: null, spd: 50, v: 0, words: 0, lives: 3, tokens: [], road: 0, smoke: [], sparks: [], word: null, pos: 0, miss: false, last: 0, bump: 0, tilt: 0, light: -1, fog: 0 };
@@ -603,30 +605,31 @@ function carResize() { if (!C) return; const w = C.canvas.parentElement.clientWi
 function carRoad() { const W = C.canvas.width, rw = Math.min(W * .84, 1100); return { W, H: C.canvas.height, rw, x0: (W - rw) / 2 }; }
 function carGo() {
   $('#cOver').style.display = 'none';
-  C.running = false; C.spd = 50; C.words = 0; C.lives = 3; C.fog = 0; C.v = 0; C.smoke = []; C.sparks = []; C.tokens = []; C.tilt = 0; C.target = null; C.keys = {};
+  C.mode = S.carMode || 'hece'; C.running = false; C.spd = 50; C.words = 0; C.lives = 3; C.fog = 0; C.v = 0; C.smoke = []; C.sparks = []; C.tokens = []; C.tilt = 0; C.target = null; C.keys = {};
   C.carX = C.canvas.width / 2; C.carY = C.canvas.height - 130;
-  carHud(); $('#cWord').textContent = 'Hazır ol…'; $('#cHint').textContent = 'Ok tuşlarıyla arabayı sür, yoldaki doğru heceyi topla!';
+  carHud(); $('#cWord').textContent = 'Hazır ol…'; $('#cHint').textContent = C.mode === 'kelime' ? 'İleri seviye: cümleyi kurmak için kelimeleri sırayla topla!' : 'Ok tuşlarıyla arabayı sür, yoldaki doğru heceyi topla!';
   const tok = {}; C.tok = tok;
   const step = (n, msg) => { if (C.tok !== tok || VIEW !== 'car') return; C.light = n; carDraw(); if (msg) speak(msg, { rate: 1.3 }); sfx(n === 2 ? 'win' : 'tick'); };
   step(0); setTimeout(() => step(1), 1100); setTimeout(() => step(2, 'Başla!'), 2200);
   setTimeout(() => { if (C.tok !== tok || VIEW !== 'car') return; C.light = -1; C.running = true; carNewWord(); C.last = performance.now(); requestAnimationFrame(carLoop); }, 3000);
 }
-function carHud() { $('#cScore').textContent = C.words + ' kelime'; $('#cLives').textContent = '❤️'.repeat(C.lives) + '🤍'.repeat(3 - C.lives); }
+function carHud() { $('#cScore').textContent = C.words + (C.mode === 'kelime' ? ' cümle' : ' kelime'); $('#cLives').textContent = '❤️'.repeat(C.lives) + '🤍'.repeat(3 - C.lives); }
 function carNewWord() {
-  const [s, emoji] = pick(WORDS).split('|'); C.word = { parts: s.split('-'), emoji, text: s.replace(/-/g, '') }; C.pos = 0; C.miss = false;
-  carShowWord(); speak(C.word.text); carSpawn();
+  if (C.mode === 'kelime') { const [t, emoji] = pick(SENTENCES).split('|'); C.word = { parts: t.split(' '), emoji, text: t, sep: ' ' }; }
+  else { const [s, emoji] = pick(WORDS).split('|'); C.word = { parts: s.split('-'), emoji, text: s.replace(/-/g, ''), sep: ' · ' }; }
+  C.pos = 0; C.miss = false; carShowWord(); speak(C.word.text); carSpawn();
 }
 function carShowWord() {
-  const w = C.word; $('#cWord').innerHTML = `${w.emoji} ` + w.parts.map((p, i) => i < C.pos ? `<span style="color:var(--green)">${esc(p)}</span>` : i === C.pos ? `<span style="color:var(--orange);border-bottom:4px solid var(--orange)">?</span>` : '<span style="color:#CCC">?</span>').join('<span style="color:#CCC"> · </span>');
-  $('#cHint').textContent = C.pos < w.parts.length ? `Kelime: ${w.text} — sıradaki heceyi yoldan topla!` : '';
+  const w = C.word; $('#cWord').style.fontSize = C.mode === 'kelime' ? '30px' : ''; $('#cWord').innerHTML = `${w.emoji} ` + w.parts.map((p, i) => i < C.pos ? `<span style="color:var(--green)">${esc(p)}</span>` : i === C.pos ? `<span style="color:var(--orange);border-bottom:4px solid var(--orange)">?</span>` : '<span style="color:#CCC">?</span>').join(`<span style="color:#CCC">${w.sep}</span>`);
+  $('#cHint').textContent = C.pos < w.parts.length ? (C.mode === 'kelime' ? `Cümle: ${w.text} — sıradaki kelimeyi topla!` : `Kelime: ${w.text} — sıradaki heceyi yoldan topla!`) : '';
 }
 function carSpawn() {
   const need = C.word.parts[C.pos], { rw, x0 } = carRoad();
-  const others = new Set(); const pool = shuffle(WORDS.flatMap(w => w.split('|')[0].split('-')));
+  const others = new Set(); const pool = shuffle(C.mode === 'kelime' ? SENTENCES.flatMap(w => w.split('|')[0].split(' ')) : WORDS.flatMap(w => w.split('|')[0].split('-')));
   C.word.parts.forEach(p => { if (p !== need && others.size < 1) others.add(p); });
-  for (const p of pool) { if (others.size >= 2) break; if (p !== need && !others.has(p)) others.add(p); }
+  for (const p of pool) { if (others.size >= 2) break; if (p !== need && !others.has(p) && !C.word.parts.includes(p)) others.add(p); }
   const texts = shuffle([need, ...others]), slots = shuffle([0, 1, 2]);
-  C.tokens = texts.map((t, i) => ({ t, ok: t === need, x: x0 + rw * (slots[i] + .5) / 3 + rand(-rw * .09, rw * .09), y: -60 - i * rand(40, 140), r: 44 }));
+  C.tokens = texts.map((t, i) => ({ t, ok: t === need, x: x0 + rw * (slots[i] + .5) / 3 + rand(-rw * .06, rw * .06), y: -60 - i * rand(40, 140), r: 44, w: Math.max(88, t.length * 19 + 30) }));
 }
 function carLoop(t) {
   if (!C || !C.running || VIEW !== 'car') return;
@@ -647,7 +650,7 @@ function carLoop(t) {
   C.tokens = C.tokens.filter(k => k.y < H + 60);
   if (okOff || (!C.tokens.length && C.pos < C.word.parts.length && !C.wait)) carSpawn();
   // çarpışma
-  if (!C.wait) for (const k of C.tokens) { if (Math.hypot(k.x - C.carX, k.y - C.carY) < k.r + 22) { carCollect(k); break; } }
+  if (!C.wait) for (const k of C.tokens) { if (Math.abs(k.x - C.carX) < k.w / 2 + 16 && Math.abs(k.y - C.carY) < k.r + 22) { carCollect(k); break; } }
   C.smoke = C.smoke.filter(p => (p.life -= dt) > 0); for (const p of C.smoke) { p.x += p.vx * dt; p.y += p.vy * dt; p.vx *= .97; p.vy -= 30 * dt; p.r += 40 * dt; }
   if (C.fog > 0) C.fog -= dt * .5;
   C.sparks = C.sparks.filter(p => (p.life -= dt) > 0); for (const p of C.sparks) { p.x += p.vx * dt; p.y += p.vy * dt; }
@@ -662,15 +665,15 @@ function carCollect(k) {
     for (let i = 0; i < 18; i++) C.sparks.push({ x: k.x, y: k.y, vx: rand(-160, 160), vy: rand(-220, -40), c: '#20B072', life: .6 });
     carShowWord();
     if (C.pos >= C.word.parts.length) {
-      C.words++; carHud(); stat('turkce', !C.miss); if (!C.miss) addStar(); else addMistake(heceItem(C.word.parts.join('-') + '|' + C.word.emoji));
-      speak(pick(PRAISE)); sfx('win');
-      setTimeout(() => { if (C && C.running) { C.wait = false; carNewWord(); } }, 1300);
+      C.words++; carHud(); stat('turkce', !C.miss); if (!C.miss) { addStar(); if (C.mode === 'kelime') addStar(); } else addMistake(C.mode === 'kelime' ? { kind: 'hece', mod: 'turkce', word: C.word.text, parts: C.word.parts, emoji: C.word.emoji, label: 'Kelimeleri sırayla seç, cümleyi kur!', key: 'c:' + C.word.text, explain: `**${C.word.text}** — Cümle büyük harfle başlar, sonunda nokta olur. Kim? Ne yaptı? diye sorarak sırala 🧩` } : heceItem(C.word.parts.join('-') + '|' + C.word.emoji));
+      speak(C.mode === 'kelime' ? C.word.text + ' ' + pick(PRAISE) : pick(PRAISE)); sfx('win');
+      setTimeout(() => { if (C && C.running) { C.wait = false; carNewWord(); } }, C.mode === 'kelime' ? 2000 : 1300);
     } else setTimeout(() => { if (C && C.running) { C.wait = false; carSpawn(); } }, 400);
   } else {
     C.miss = true; C.spd = Math.max(10, C.spd - 20); C.bump = .5; C.lives--; C.fog = 1; sfxExhaust(); stat('turkce', false); carHud();
     C.tokens = C.tokens.filter(x => x !== k);
     for (let i = 0; i < 60; i++) C.smoke.push({ x: C.carX + rand(-20, 20), y: C.carY + 40, vx: rand(-160, 160), vy: rand(-220, 80), r: rand(14, 30), life: rand(1.2, 2.4) });
-    $('#cHint').textContent = `"${k.t}" değil! ${C.word.text}: ${C.word.parts.join(' · ')}`; speak(C.word.parts.join(', '));
+    $('#cHint').textContent = `"${k.t}" değil! ${C.word.text}`; speak(C.mode === 'kelime' ? C.word.text : C.word.parts.join(', '));
     if (C.lives <= 0) { C.running = false; setTimeout(() => { if (C) carEnd(); }, 900); }
   }
 }
@@ -682,9 +685,9 @@ function carDraw() {
   x.strokeStyle = '#fff'; x.lineWidth = 3; x.setLineDash([26, 30]); x.lineDashOffset = -C.road;
   for (let l = 1; l < 3; l++) { x.beginPath(); x.moveTo(x0 + rw * l / 3, 0); x.lineTo(x0 + rw * l / 3, H); x.stroke(); } x.setLineDash([]);
   for (const k of C.tokens) {
-    x.fillStyle = 'rgba(0,0,0,.2)'; x.beginPath(); x.ellipse(k.x, k.y + 8, k.r, k.r * .9, 0, 0, 7); x.fill();
-    x.fillStyle = '#FFF7EA'; x.strokeStyle = '#E06A1F'; x.lineWidth = 5; x.beginPath(); x.arc(k.x, k.y, k.r, 0, 7); x.fill(); x.stroke();
-    x.fillStyle = '#2B2A4C'; x.font = `900 ${k.t.length > 3 ? 26 : 32}px Nunito, sans-serif`; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText(k.t, k.x, k.y + 2);
+    x.fillStyle = 'rgba(0,0,0,.2)'; x.beginPath(); x.roundRect(k.x - k.w / 2, k.y - k.r + 8, k.w, k.r * 2, k.r); x.fill();
+    x.fillStyle = '#FFF7EA'; x.strokeStyle = '#E06A1F'; x.lineWidth = 5; x.beginPath(); x.roundRect(k.x - k.w / 2, k.y - k.r, k.w, k.r * 2, k.r); x.fill(); x.stroke();
+    x.fillStyle = '#2B2A4C'; x.font = `900 ${k.t.length > 6 ? 24 : k.t.length > 3 ? 28 : 32}px Nunito, sans-serif`; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText(k.t, k.x, k.y + 2);
   }
   for (const p of C.smoke) { x.globalAlpha = Math.min(.75, p.life * .5); x.fillStyle = '#4A4A4A'; x.beginPath(); x.arc(p.x, p.y, p.r, 0, 7); x.fill(); } x.globalAlpha = 1;
   if (C.fog > 0) { x.fillStyle = `rgba(80,80,80,${Math.min(.6, C.fog * .6)})`; x.fillRect(0, 0, W, H); }
@@ -721,7 +724,7 @@ function carDraw() {
 }
 function carEnd() {
   C.running = false; const rec = C.words > (S.bestCar || 0); if (rec) { S.bestCar = C.words; save(); confetti(); }
-  const o = $('#cOver'); o.style.display = ''; o.innerHTML = `<div class="bigemo">${rec ? '🏆' : C.words >= 5 ? '🌟' : '🚗'}</div><h2>Can bitti! ${C.words} kelime</h2><p>${rec ? 'Yeni rekor! 🎉' : `Rekorun: ${S.bestCar || 0} kelime`}</p><div class="row center"><button class="btn primary" data-a="cgo">Tekrar yarış 🔁</button><button class="btn soft" data-a="home">Ana sayfa 🏠</button></div>`;
+  const o = $('#cOver'); o.style.display = ''; o.innerHTML = `<div class="bigemo">${rec ? '🏆' : C.words >= 5 ? '🌟' : '🚗'}</div><h2>Can bitti! ${C.words} ${C.mode === 'kelime' ? 'cümle' : 'kelime'}</h2><p>${rec ? 'Yeni rekor! 🎉' : `Rekorun: ${S.bestCar || 0} kelime`}</p><div class="row center"><button class="btn primary" data-a="cgo">Tekrar yarış 🔁</button><button class="btn soft" data-a="home">Ana sayfa 🏠</button></div>`;
   speak(rec ? 'Yeni rekor! ' + C.words + ' kelime! Süpersin!' : 'Oyun bitti. ' + C.words + ' kelime tamamladın, aferin!');
 }
 
@@ -935,6 +938,7 @@ const A = {
   stopv: () => stopSpeak(),
   reload: () => location.reload(),
   balloon: () => balloonStart(), bgo: () => balloonGo(), car: () => carStart(), cgo: () => carGo(),
+  cmode: v => { S.carMode = v; save(); carStart(); },
   showkey: (v, el) => { const i = $('#sKey'); i.type = i.type === 'password' ? 'text' : 'password'; el.textContent = i.type === 'password' ? 'Göster' : 'Gizle'; },
   testkey: async (v, el) => {
     const r = $('#tkr'); if (!S.apiKey) { r.textContent = 'Önce anahtarı girin.'; return; }
