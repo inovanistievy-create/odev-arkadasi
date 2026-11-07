@@ -1,0 +1,324 @@
+{
+  "kaynak": "tymm.meb.gov.tr öğretim programları (Türkiye Yüzyılı Maarif Modeli), 2. sınıf",
+  "erisim_tarihi": "2026-11-07",
+  "notlar": [
+    "Tüm dört ders için tema/öğrenme alanı sayfaları eksiksiz çekildi; süreler sayfalardaki 'ders saati' değeridir (yüzde/hafta sitede verilmiyor).",
+    "Türkçe programında kazanım kodları beceri bazlıdır (T.D=dinleme/izleme, T.K=konuşma, T.O=okuma, T.Y=yazma) ve her temada tekrar eder; temaya özgü olan anahtar kavramlar ve metinlerdir. Süreç bileşenleri (alt maddeler) 'turkce.beceri_detaylari' altında bir kez verildi.",
+    "İngilizce kazanım kodları ENG.2.<tema>.<beceri><no> biçimindedir (L=dinleme/izleme, P=telaffuz, R=okuma, V=sözcük, G=dil bilgisi, W=yazma, S=konuşma); beceri kazanımları her temada aynı iskelettedir, temaya özgü içerik 'icerik' alanındadır.",
+    "Kaynak URL'leri: matematik /ilkokul-matematik-dersi/unite/{116,125,164,165,166,240}; turkce /ilkokul-turkce-dersi/unite/{353,357,373,374,378,380,382,385}; hayat_bilgisi /hayat-bilgisi-dersi/unite/{238,239,241,245,246,308}; ingilizce /ingilizce-dersi-temel-egitim/unite/{629,634,756,763,766,776}."
+  ],
+  "dersler": {
+    "matematik": {
+      "ad": "Matematik",
+      "toplam_ders_saati": 172,
+      "temalar": [
+        {
+          "no": 1,
+          "ad": "Sayılar ve Nicelikler (1)",
+          "sure": "41 ders saati",
+          "icerik": ["Sayılar", "Sayıları çözümleme", "Sayıları sıralama", "Ritmik sayma", "Sayı ve şekil örüntüleri", "Nesne sayısını tahmin etme"],
+          "kavramlar": ["sayı doğrusu", "basamak değeri", "çözümleme", "onluk", "birlik", "şekil örüntüleri"],
+          "genellemeler": ["Sayılar çoklukları temsil eder.", "Sıra sayıları bir örüntü oluşturur."],
+          "kazanimlar": [
+            {"kod": "MAT.2.1.1", "metin": "100'e kadar niceliklerin büyüklüklerini sayıların sembolik temsilleriyle gösterme; sayıları okuma ve yazma."},
+            {"kod": "MAT.2.1.2", "metin": "İki basamaklı sayıları çözümleme: basamak ve basamak değerini belirleme, aralarındaki ilişkiyi görme."},
+            {"kod": "MAT.2.1.3", "metin": "Sayıların sırasını belirleme (sıralama, karşılaştırma)."},
+            {"kod": "MAT.2.1.4", "metin": "İleri-geri ritmik sayma: 20 içinde ikişer, 30 içinde üçer, 40 içinde dörder, 100 içinde beşer; yüzlük tabloda örüntü bulma ve genelleme."},
+            {"kod": "MAT.2.1.5", "metin": "Sayı ve sayı temsiline dönüşen şekil örüntülerinde kuralı bulma, varsayım kurup sınama, kuralı sözlü ifade etme."},
+            {"kod": "MAT.2.1.6", "metin": "Bir çokluktaki ilişkilerden (parça-bütün, dağılım) yararlanarak 50'ye kadar nesne sayısını tahmin etme ve sayarak tahminini değerlendirme."}
+          ]
+        },
+        {
+          "no": 2,
+          "ad": "Sayılar ve Nicelikler (2)",
+          "sure": "30 ders saati",
+          "icerik": ["Kesirler (bütün, yarım, çeyrek)", "Paralarımız", "Zaman ölçme", "Uzunluk ve kütle ölçme araç ve birimleri", "Uzunluk ve kütle ölçmede tahmin"],
+          "kavramlar": ["bütün", "yarım", "çeyrek", "kuruş", "Türk lirası", "saat", "dakika", "gün", "hafta", "ay", "mevsim", "yıl", "kilogram", "gram", "metre", "santimetre"],
+          "semboller": ["kr.", "kg", "g", "m", "cm", "dk."],
+          "genellemeler": ["Para bir değişim aracıdır.", "Saat zamanı ölçme aracıdır.", "Karşılaştırma ve hesaplamada aynı birimler kullanılır."],
+          "kazanimlar": [
+            {"kod": "MAT.2.1.7", "metin": "Bütün, yarım ve çeyrek arasındaki ilişkiyi çözümleme; bir bütünün yarım ve çeyrek parçalarını belirleme."},
+            {"kod": "MAT.2.1.8", "metin": "Paraları değerlerine göre ilişkilendirme; madenî paraları tanıma, kuruş-lira ilişkisini belirleme."},
+            {"kod": "MAT.2.1.9", "metin": "Zaman ölçü birimlerini (saat, dakika, gün, hafta, ay, mevsim, yıl) okuma ve yazma."},
+            {"kod": "MAT.2.1.10", "metin": "Standart uzunluk ve kütle ölçme araçlarının ve birimlerinin gerekliliğini açıklama (standart olmayan ölçmeden yola çıkarak)."},
+            {"kod": "MAT.2.1.11", "metin": "Uzunlukları (m, cm) ve kütleleri (kg, g) standart birimlerle tahmin etme, ölçerek tahminini değerlendirme."}
+          ]
+        },
+        {
+          "no": 3,
+          "ad": "İşlemlerden Cebirsel Düşünmeye",
+          "sure": "55 ders saati",
+          "icerik": ["Toplama ve çıkarma problemleri", "Toplama ve çıkarmada sonucu tahmin ve zihinden işlem", "Toplama-çıkarma ilişkisi", "Çarpma ve bölme", "Çarpma ve bölmede tahmin ve zihinden işlem", "Dört işlemde eşitlik"],
+          "kavramlar": ["eldeli toplama", "tekrarlı toplama", "çarpma", "çarpan", "çarpım", "ardışık çıkarma", "bölme", "bölünen", "bölen", "bölüm", "kalan", "gruplandırma", "eşit paylaştırma", "deste", "düzine"],
+          "semboller": ["×", "÷"],
+          "genellemeler": ["Toplama, çıkarma, çarpma ve bölme matematiğin temel işlemleridir."],
+          "kazanimlar": [
+            {"kod": "MAT.2.2.1", "metin": "Toplama ve çıkarma gerektiren günlük yaşam problemlerini çözme: verilen/isteneni belirleme, matematiksel temsile dönüştürme, tahmin, strateji seçme-uygulama-kontrol etme, genelleme."},
+            {"kod": "MAT.2.2.2", "metin": "Toplama ve çıkarmanın sonucunu tahmin etme ve zihinden işlem yapma; işlem ögeleri arasındaki ilişkiyi kullanma."},
+            {"kod": "MAT.2.2.3", "metin": "Toplama ile çıkarma arasındaki ilişkiyi yorumlama; işlemleri tersine çevirme."},
+            {"kod": "MAT.2.2.4", "metin": "Çarpmayı tekrarlı toplama, bölmeyi ardışık çıkarma/eşit paylaştırma üzerinden anlamlandırma."},
+            {"kod": "MAT.2.2.5", "metin": "Çarpma ve bölmenin sonucunu tahmin etme ve zihinden işlem yapma."},
+            {"kod": "MAT.2.2.6", "metin": "Dört işlemde eşitliğin farklı anlamlarını yorumlama; aynı sonucu farklı sayılarla ifade etme."}
+          ]
+        },
+        {
+          "no": 4,
+          "ad": "Nesnelerin Geometrisi (1)",
+          "sure": "25 ders saati",
+          "icerik": ["Geometrik cisimler", "Geometrik cisim modelleri", "Geometrik şekil modelleri", "Şekil ve cisimlerin biçimsel özellikleri", "Sıvı miktarını tahmin etme"],
+          "kavramlar": ["daire", "küp", "kare prizma", "dikdörtgen prizma", "üçgen prizma", "küre", "dik dairesel silindir"],
+          "genellemeler": ["Bazı nesneler geometrik cisimlerle ilişkilidir.", "Yapılar geometrik cisimlerden oluşur.", "Şekil ve cisimlerin biçimsel özellikleri yön, konum veya boyut değişince değişmez.", "Sıvının gerçek miktarı kullanılan ölçme aracından bağımsızdır."],
+          "kazanimlar": [
+            {"kod": "MAT.2.3.1", "metin": "Günlük yaşamdaki nesneleri biçimsel özelliklerine göre geometrik cisim olarak sınıflandırma ve adlandırma."},
+            {"kod": "MAT.2.3.2", "metin": "Geometrik cisim modelleriyle özgün yapılar oluşturma."},
+            {"kod": "MAT.2.3.3", "metin": "Geometrik şekillerle özgün modeller oluşturma."},
+            {"kod": "MAT.2.3.4", "metin": "Şekil ve cisimlerin yön, konum veya boyutu değişse de biçimsel özelliklerinin değişmediğini yorumlama."},
+            {"kod": "MAT.2.3.5", "metin": "Standart olmayan araçlarla sıvı miktarını tahmin etme ve ölçerek tahminini değerlendirme."}
+          ]
+        },
+        {
+          "no": 5,
+          "ad": "Nesnelerin Geometrisi (2)",
+          "sure": "11 ders saati",
+          "icerik": ["Yer ve yön bulma", "Simetri"],
+          "kavramlar": ["simetri", "yer", "yön", "konum", "mesafe"],
+          "genellemeler": ["Yer, yön ve konum ilişkilidir.", "Simetrik yapılarda bir uyum vardır."],
+          "kazanimlar": [
+            {"kod": "MAT.2.3.6", "metin": "Mesafe ve yönleri kullanarak hedefe ulaşmak için uygun stratejiye karar verme (ölçüt belirleme, seçenek oluşturma, seçim yapma)."},
+            {"kod": "MAT.2.3.7", "metin": "Verilen şekiller arasından simetrik olanları ayırt etme."}
+          ]
+        },
+        {
+          "no": 6,
+          "ad": "Veriye Dayalı Araştırma",
+          "sure": "10 ders saati",
+          "icerik": ["Veriyle çalışma ve veriye dayalı karar verme", "Çetele tablosu", "Sıklık tablosu", "Şekil grafiği"],
+          "kavramlar": ["şekil grafiği", "çetele", "sıklık tablosu", "kategorik veri"],
+          "genellemeler": ["Grafikler verilerin görsel temsilidir."],
+          "kazanimlar": [
+            {"kod": "MAT.2.4.1", "metin": "Kategorik veriyle (en çok iki veri grubu) araştırma yapma: soru oluşturma, veri toplama, çetele/sıklık tablosu ve şekil grafiğiyle gösterme, yorumlama ve karar verme."}
+          ]
+        }
+      ]
+    },
+    "turkce": {
+      "ad": "Türkçe",
+      "toplam_ders_saati": 304,
+      "kazanim_kodlari": {
+        "T.D.2.1": "Dinleme/izlemeyi yönetebilme",
+        "T.D.2.2": "Dinledikleri/izledikleri ile ilgili anlam oluşturabilme",
+        "T.D.2.3": "Dinlediklerini/izlediklerini çözümleyebilme",
+        "T.D.2.4": "Dinleme/izleme sürecine etki eden durumları gözden geçirebilme",
+        "T.D.2.5": "Dinleme/izleme sürecini değerlendirebilme",
+        "T.K.2.1": "Konuşmalarını yönetebilme",
+        "T.K.2.2": "Konuşmalarında içerik oluşturabilme",
+        "T.K.2.3": "Konuşma kurallarını uygulayabilme",
+        "T.K.2.4": "Konuşma sürecine etki eden durumları gözden geçirebilme",
+        "T.K.2.5": "Konuşma sürecini değerlendirebilme",
+        "T.O.2.1": "Okuma sürecini yönetebilme",
+        "T.O.2.2": "Okudukları ile ilgili anlam oluşturabilme",
+        "T.O.2.3": "Okuduklarını çözümleyebilme",
+        "T.O.2.4": "Okuma sürecine etki eden durumları gözden geçirebilme",
+        "T.O.2.5": "Okuma sürecini değerlendirebilme",
+        "T.Y.2.1": "Yazılı anlatım becerilerini yönetebilme",
+        "T.Y.2.2": "Yazılarında içerik oluşturabilme",
+        "T.Y.2.3": "Yazma kurallarını uygulayabilme",
+        "T.Y.2.4": "Yazma sürecine etki eden durumları gözden geçirebilme",
+        "T.Y.2.5": "Yazma sürecini değerlendirebilme"
+      },
+      "beceri_detaylari": {
+        "dinleme_izleme": ["Amacına uygun dinleme/izleme seçimi, dinleme kurallarına uyma, uygun zamanda söz alma", "Görsellerden metnin konusunu tahmin etme; olayların öncesi/sonrası hakkında tahmin", "Dinlediği metindeki olayları ve konuyu belirleme"],
+        "konusma": ["Göz teması kurma, uygun zamanda söz alma", "Ön bilgileri kullanma; olayları oluş sırasına göre kendi ifadeleriyle anlatma; görsellerle destekleme", "Konuşma hızı, vurgu ve tonlama; sözcükleri yerinde kullanma; anlamlı ve kurallı cümle kurma"],
+        "okuma": ["Başlık ve görselleri inceleme; kuralına uygun sesli/sessiz okuma; noktalama işaretlerine dikkat ederek okuma", "Ön bilgilerle bağlantı kurma; başlık ve görsellerden konu ve olay tahmini", "Metindeki karakter, olay ve bilgileri açıklama; konuyu bulma", "Bilinmeyen sözcüğü bağlamdan tahmin, sözlük/resimli sözlükten kontrol"],
+        "yazma": ["Hazırlık yaparak yazma", "Eksik bırakılan cümleleri/yarım metni tamamlama; sözcük anlamına ilişkin tahmin yazma; olayları sırayla yazma; basit yönergeler yazma", "Yazım alanını kullanma: sayfaya hizalama, paragraf başı, satır sonuna sığmayan sözcükler", "Noktalama işaretleri: nokta, virgül, soru işareti, ünlem, iki nokta, kesme işareti, tırnak işareti, kısa çizgi"]
+      },
+      "temalar": [
+        {"no": 1, "ad": "Değerlerimizle Varız", "sure": "38 ders saati", "kavramlar": ["azim", "çalışkanlık", "nezaket", "öz denetim", "saygı", "sevgi", "sorumluluk alma"], "kazanimlar": ["T.D.2.1", "T.D.2.2", "T.D.2.3", "T.K.2.1", "T.K.2.2", "T.K.2.3", "T.O.2.1", "T.O.2.2", "T.O.2.3", "T.Y.2.1", "T.Y.2.2", "T.Y.2.3"]},
+        {"no": 2, "ad": "Atatürk ve Çocuk", "sure": "38 ders saati", "kavramlar": ["cesaret", "cumhuriyet", "İstiklâl Marşı", "kahramanlık", "Mustafa Kemal Atatürk", "millî egemenlik", "millî irade", "Millî Mücadele", "vatanseverlik"], "kazanimlar": ["T.D.2.1", "T.D.2.2", "T.D.2.3", "T.K.2.1", "T.K.2.2", "T.K.2.3", "T.O.2.1", "T.O.2.2", "T.O.2.3", "T.Y.2.1", "T.Y.2.2", "T.Y.2.3"]},
+        {"no": 3, "ad": "Doğada Neler Oluyor?", "sure": "38 ders saati", "kavramlar": ["doğa", "hayvan sevgisi", "iklim", "orman", "tasarruf"], "kazanimlar": ["T.D.2.1", "T.D.2.2", "T.D.2.3", "T.K.2.1", "T.K.2.2", "T.K.2.3", "T.K.2.5", "T.O.2.1", "T.O.2.2", "T.O.2.3", "T.Y.2.1", "T.Y.2.2", "T.Y.2.3"]},
+        {"no": 4, "ad": "Okuma Serüvenimiz", "sure": "38 ders saati", "kavramlar": ["dil sevgisi", "kitaplar", "okuma alışkanlığı", "okuma sevgisi"], "kazanimlar": ["T.D.2.1", "T.D.2.2", "T.D.2.3", "T.D.2.4", "T.D.2.5", "T.K.2.1", "T.K.2.2", "T.K.2.3", "T.O.2.1", "T.O.2.2", "T.O.2.3", "T.O.2.4", "T.Y.2.1", "T.Y.2.2", "T.Y.2.3", "T.Y.2.5"]},
+        {"no": 5, "ad": "Yeteneklerimizi Tanıyoruz", "sure": "38 ders saati", "kavramlar": ["çocuk kültürü", "dijital oyunlar", "eğlence", "geleneksel sanatlar", "hayal", "yetenek"], "kazanimlar": ["T.D.2.1", "T.D.2.2", "T.D.2.3", "T.K.2.1", "T.K.2.2", "T.K.2.3", "T.O.2.1", "T.O.2.2", "T.O.2.3", "T.Y.2.1", "T.Y.2.2", "T.Y.2.3", "T.Y.2.4"]},
+        {"no": 6, "ad": "Mucit Çocuk", "sure": "38 ders saati", "kavramlar": ["araştırma", "bilim", "kâşif", "keşif", "merak", "sorgulama", "teknoloji", "yapay zekâ"], "kazanimlar": ["T.D.2.1", "T.D.2.2", "T.D.2.3", "T.K.2.1", "T.K.2.2", "T.K.2.3", "T.K.2.4", "T.O.2.1", "T.O.2.2", "T.O.2.3", "T.Y.2.1", "T.Y.2.2", "T.Y.2.3"]},
+        {"no": 7, "ad": "Kültür Hazinemiz", "sure": "38 ders saati", "kavramlar": ["bayrak", "kültürel miras", "millî ve dinî bayramlar", "millî ve manevi değerler", "tarihî mekânlar", "Türkçe", "vatan", "yurdumuz"], "kazanimlar": ["T.D.2.1", "T.D.2.2", "T.D.2.3", "T.K.2.1", "T.K.2.2", "T.K.2.3", "T.O.2.1", "T.O.2.2", "T.O.2.3", "T.O.2.5", "T.Y.2.1", "T.Y.2.2", "T.Y.2.3"]},
+        {"no": 8, "ad": "Haklarımızı Biliyoruz", "sure": "38 ders saati", "kavramlar": ["çocuk hakları", "demokrasi", "eşitlik", "mahremiyet", "sorumluluk", "temel hak ve özgürlükler"], "kazanimlar": ["T.D.2.1", "T.D.2.2", "T.D.2.3", "T.D.2.5", "T.K.2.1", "T.K.2.2", "T.K.2.3", "T.K.2.5", "T.O.2.1", "T.O.2.2", "T.O.2.3", "T.O.2.4", "T.O.2.5", "T.Y.2.1", "T.Y.2.2", "T.Y.2.3"]}
+      ]
+    },
+    "hayat_bilgisi": {
+      "ad": "Hayat Bilgisi",
+      "toplam_ders_saati": 138,
+      "temalar": [
+        {
+          "no": 1, "ad": "Ben ve Okulum", "sure": "24 ders saati",
+          "icerik": ["Zaman yönetimi", "İletişim kuralları", "Arkadaşlık ilişkilerini etkileyen davranışlar", "Sınıf içi karar alma süreçleri"],
+          "kavramlar": ["zaman yönetimi", "planlı olma", "iletişim", "arkadaş", "davranış", "grup çalışması", "iş birliği", "karar alma"],
+          "kazanimlar": [
+            {"kod": "HB.2.1.1", "metin": "Planlı olmanın kişisel yaşamı nasıl etkilediğini fark etme."},
+            {"kod": "HB.2.1.2", "metin": "Öğretmenleri ve arkadaşlarıyla etkili iletişim kurma."},
+            {"kod": "HB.2.1.3", "metin": "Arkadaşlık ilişkilerini düzenleme."},
+            {"kod": "HB.2.1.4", "metin": "Sınıf içi karar alma süreçlerinde grup iletişimini başlatma, katılma, katkı sunma ve değerlendirme."}
+          ]
+        },
+        {
+          "no": 2, "ad": "Sağlığım ve Güvenliğim", "sure": "24 ders saati",
+          "icerik": ["Sağlıklı büyüme ve gelişmeyi etkileyen alışkanlıklar", "Çevrim içi ortamlarda kişisel güvenlik", "Trafik işaret levhaları", "Acil durumlarda iletişim"],
+          "kavramlar": ["alışkanlıklar", "kişisel alan", "güvenlik", "trafik işaret levhaları", "acil durum"],
+          "kazanimlar": [
+            {"kod": "HB.2.2.1", "metin": "Sağlıklı büyüme ve gelişme ile alışkanlıklar (beslenme, uyku, temizlik, hareket) arasındaki ilişkiyi çözümleme."},
+            {"kod": "HB.2.2.2", "metin": "Çevrim içi ortamlarda kişisel güvenliğini sağlama."},
+            {"kod": "HB.2.2.3", "metin": "Temel trafik işaret levhalarını tanıma."},
+            {"kod": "HB.2.2.4", "metin": "Acil bir durumda yetkililerle (112 vb.) etkili iletişim kurma."}
+          ]
+        },
+        {
+          "no": 3, "ad": "Ailem ve Toplum", "sure": "20 ders saati",
+          "icerik": ["Ailenin önemi", "Nezaket ve görgü kuralları", "Görev ve sorumluluklar"],
+          "kavramlar": ["aile", "nezaket ve görgü kuralları", "görev ve sorumluluk"],
+          "kazanimlar": [
+            {"kod": "HB.2.3.1", "metin": "Ailenin önemini örnekler üzerinden yorumlama ve özgün örneklerle kendi cümleleriyle ifade etme."},
+            {"kod": "HB.2.3.2", "metin": "Toplumsal yaşamda nezaket ve görgü kurallarına uygun davranma."},
+            {"kod": "HB.2.3.3", "metin": "Yakın çevresindeki görev ve sorumluluklarını gözden geçirip günlük yaşamına yansıtma."}
+          ]
+        },
+        {
+          "no": 4, "ad": "Yaşadığım Yer ve Ülkem", "sure": "28 ders saati",
+          "icerik": ["Tarihî mekânlar ve doğal güzellikler", "Yaşadığı yerin yönetim birimleri", "Mustafa Kemal Atatürk'ün öğrencilik hayatı", "Millî gün ve bayramların önemi", "Dinî gün ve bayramların önemi"],
+          "kavramlar": ["tarihî mekân", "doğal güzellik", "yönetim birimi", "millî gün ve bayram", "dinî gün ve bayram"],
+          "kazanimlar": [
+            {"kod": "HB.2.4.1", "metin": "Yakın çevredeki tarihî yerleri ve doğal güzellikleri tespit etme."},
+            {"kod": "HB.2.4.2", "metin": "Yaşadığı yerin yönetim birimleri (muhtarlık, belediye vb.) hakkında kaynaklardan bilgi toplama ve kaydetme."},
+            {"kod": "HB.2.4.3", "metin": "Mustafa Kemal Atatürk'ün öğrencilik hayatını anlatma."},
+            {"kod": "HB.2.4.4", "metin": "Millî gün ve bayramların önemini örneklerle yorumlama."},
+            {"kod": "HB.2.4.5", "metin": "Dinî gün ve bayramların önemini örneklerle yorumlama."}
+          ]
+        },
+        {
+          "no": 5, "ad": "Doğa ve Çevre", "sure": "24 ders saati",
+          "icerik": ["Hava olayları ve mevsimler", "Doğadan yararlanarak yön bulma", "Afetlere karşı alınacak önlemler", "Doğal kaynakları tasarruflu kullanma"],
+          "kavramlar": ["hava olayları", "mevsimler", "ana yönler", "doğada yön bulma", "afet", "kaynak", "tasarruf"],
+          "kazanimlar": [
+            {"kod": "HB.2.5.1", "metin": "Hava olayları ile mevsimler arasındaki ilişkiyi çözümleme."},
+            {"kod": "HB.2.5.2", "metin": "Doğadan (güneş, yosun, karınca yuvası vb.) yararlanarak yönünü belirleme."},
+            {"kod": "HB.2.5.3", "metin": "Afetlere karşı alınması gereken önlemler hakkında bilgi toplama, doğrulama ve kaydetme."},
+            {"kod": "HB.2.5.4", "metin": "Doğal kaynakları (su, elektrik vb.) tasarruflu kullanma davranışlarını günlük yaşamına yansıtma."}
+          ]
+        },
+        {
+          "no": 6, "ad": "Bilim, Teknoloji ve Sanat", "sure": "18 ders saati",
+          "icerik": ["Bilim insanlarının bilime katkıları", "Teknolojik ürünlerin zaman içindeki değişimi", "Sanatın günlük yaşamdaki yeri"],
+          "kavramlar": ["bilim", "teknoloji", "değişim", "süreklilik", "sanat"],
+          "kazanimlar": [
+            {"kod": "HB.2.6.1", "metin": "Bilim insanlarının bilime katkıları hakkında kaynaklardan bilgi toplama ve kaydetme."},
+            {"kod": "HB.2.6.2", "metin": "Teknolojik bir ürünün zaman içindeki değişimini kanıtlarla ilişkilendirip geleceğine dair öngörüde bulunma."},
+            {"kod": "HB.2.6.3", "metin": "Sanatın günlük yaşamdaki yerini belirleme."}
+          ]
+        }
+      ]
+    },
+    "ingilizce": {
+      "ad": "İngilizce",
+      "toplam_ders_saati": 66,
+      "kazanim_iskeleti": {
+        "aciklama": "Her temada kodlar ENG.2.<tema>.<beceri> biçimindedir; metinler tüm temalarda aynı iskelettedir.",
+        "L1": "Dinleme/izlemeye hazırlanma: ön bilgileri harekete geçirme, görsel ve bağlamdan basit tahmin.",
+        "L2": "Bütünü dinleyip/izleyip konuyu ve temel ayrıntıları kavrama.",
+        "L3": "Ayrıntılardan anlam çıkarma: tahmini kontrol etme, basit sınıflama/karşılaştırma, kendi yaşamıyla ilişkilendirme.",
+        "L4": "Dinleme/izleme süreciyle ilgili basit duygu ve düşüncelerini paylaşma.",
+        "P1": "Hedef sesleri ve tonlamayı tanıma, tekrar etme ve iletişimde doğal kullanma.",
+        "R1": "Okumaya hazırlanma: ön bilgi ve basit tahmin.",
+        "R2": "Göz gezdirme/tarama ile konuyu ve temel ayrıntıları bulma.",
+        "R3": "Dikkatli okuma: tahmini kontrol, sınıflama, karşılaştırma, basit çıkarım.",
+        "R4": "Okuma süreciyle ilgili basit düşüncelerini paylaşma.",
+        "V1": "Hedef sözcükleri bağlamda tanıma ve iletişimde doğru kullanma.",
+        "G1": "Hedef dil kalıplarını (kural analizi yapmadan) tekrar, hareket ve bağlamla otomatik kullanma.",
+        "W1": "Yazmaya hazırlanma: görevi anlama, ön bilgiyle ilişkilendirme.",
+        "W2": "Model metni kopyalayarak yazma alıştırması.",
+        "W3": "Modele dayalı çok kısa, anlamlı içerik düzenleme.",
+        "W4": "Hedef sözcük ve kalıplarla kısa, anlaşılır mesajlar yazma.",
+        "W5": "Bilgiyi yeni yazılı görevlerde yeniden düzenleyip iletişim kurma.",
+        "W6": "Yazma süreciyle ilgili basit düşüncelerini paylaşma.",
+        "S1": "Konuşmaya hazırlanma: modeli tekrar ve taklitle tanıma.",
+        "S2": "Görsel-işitsel destekle modeli taklit ederek konuşma.",
+        "S3": "Modelleri taklit ederek basit yeni sözlü içerik üretme (kısa diyalog/monolog).",
+        "S4": "Doğru telaffuz, jest ve mimiklerle yeniden yapılandırarak basit konuşma oluşturma.",
+        "S5": "Bilgiyi farklı bağlamlarda sözlü olarak yeniden düzenleyip paylaşma.",
+        "S6": "Konuşma süreciyle ilgili basit düşüncelerini paylaşma."
+      },
+      "ortak_kultur_icerigi": ["29 Ekim Cumhuriyet Bayramı", "23 Nisan Ulusal Egemenlik ve Çocuk Bayramı", "19 Mayıs", "15 Temmuz", "30 Ağustos", "Ramazan Bayramı (Eid al-Fitr)", "Kurban Bayramı (Eid al-Adha)"],
+      "temalar": [
+        {
+          "no": 1, "ad": "School Life", "sure": "11 ders saati",
+          "alt_temalar": ["Okulda selamlaşma ve tanışma", "Okuldaki kişiler ve yerler", "Haftanın günleri", "Millî ve dinî günler"],
+          "kavramlar": ["greetings", "introductions", "people at school", "places at school", "days of the week", "national days", "religious days"],
+          "icerik": {
+            "sozcukler": ["teacher", "pupil", "headmaster/headmistress", "friend", "boy", "girl", "kid", "classroom", "lunch hall", "canteen", "library", "sports hall", "garden", "playground", "teacher's room", "Monday-Sunday"],
+            "kaliplar": ["What's this? It's a/an...", "Who's she? She's...", "Where is she? She is in the garden.", "What's your name? My name is...", "Come here, please.", "What day is it today? It's Monday.", "Good morning! How are you? I'm fine, thanks! And you?"],
+            "sosyal_dil": ["Excuse me", "Sorry", "That's OK", "Goodbye", "See you tomorrow", "Well done", "Thank you", "Can I sit here?", "Nice to meet you"],
+            "sesler": ["a (/æ/, /eɪ/, /ɑː/)", "b /b/"]
+          },
+          "kazanimlar": ["ENG.2.1.L1-L4", "ENG.2.1.P1", "ENG.2.1.R1-R4", "ENG.2.1.V1", "ENG.2.1.G1", "ENG.2.1.W1-W6", "ENG.2.1.S1-S6"],
+          "performans_gorevi": "Okul maketi/çizimi yapıp yerleri ve kişileri etiketleyerek sınıfa sunma (show-and-tell)."
+        },
+        {
+          "no": 2, "ad": "Classroom Life", "sure": "11 ders saati",
+          "alt_temalar": ["Sınıf yönergeleri ve sınıf dili", "Sınıf eşyaları, araçları ve nesneleri", "Renkler"],
+          "kavramlar": ["classroom instructions", "classroom language", "classroom objects", "classroom furniture", "devices", "colours", "numbers 1-20"],
+          "icerik": {
+            "sozcukler": ["desk", "table", "Smart Board", "blackboard/whiteboard", "chair", "bookcase", "clock", "door", "window", "wall", "pencil", "coloured pencil", "rubber", "notebook", "book", "crayon", "pencil case", "sharpener", "chalk", "glue", "scissors", "computer", "tablet", "red", "white", "black", "pink", "blue", "purple", "yellow", "brown", "green", "orange", "1-20"],
+            "kaliplar": ["Come/look/open/close/stand up/sit down/listen/repeat/point/colour/draw/raise your hand (yönergeler)", "What is it? / What colour is it?", "How many...?", "my/his/her/its/our/your/their", "Can I...? (izin isteme)"],
+            "sosyal_dil": ["Good job!", "Well done!", "What's next?", "Good luck!", "Of course!", "You're right!", "It's my/your turn!", "I see!"],
+            "sesler": ["c (/s/, /k/)", "d /d/"]
+          },
+          "kazanimlar": ["ENG.2.2.L1-L4", "ENG.2.2.P1", "ENG.2.2.R1-R4", "ENG.2.2.V1", "ENG.2.2.G1", "ENG.2.2.W1-W6", "ENG.2.2.S1-S6"]
+        },
+        {
+          "no": 3, "ad": "Personal Life", "sure": "11 ders saati",
+          "alt_temalar": ["Vücut bölümleri ve fiziksel özellikler", "Giysiler", "Haftanın günleri, yaş ve doğum günleri", "Hava durumu"],
+          "kavramlar": ["parts of the body", "physical features", "clothes", "days of the week", "ages", "birthdays", "weather conditions"],
+          "icerik": {
+            "sozcukler": ["body", "head", "face", "hair", "eye(s)", "ear(s)", "nose", "mouth", "arm(s)", "hand(s)", "leg(s)", "big", "small", "tall", "short", "long", "blond", "dark", "shirt", "T-shirt", "trousers", "dress", "coat", "shoes", "hat", "scarf", "glasses", "gloves", "umbrella", "birthday", "gift", "cold", "hot", "rainy", "snowy"],
+            "kaliplar": ["How old are you? I'm seven.", "What colour is it?", "Is she tall?", "How's the weather? It's rainy.", "What have you got? / How many ears have you got?", "a/an", "on (yer)"],
+            "sosyal_dil": ["Wow!", "Great!", "That looks great!", "Nice eyes/hair!", "Cheer up, everybody!"]
+          },
+          "kazanimlar": ["ENG.2.3.L1-L4", "ENG.2.3.P1", "ENG.2.3.R1-R4", "ENG.2.3.V1", "ENG.2.3.G1", "ENG.2.3.W1-W6", "ENG.2.3.S1-S6"]
+        },
+        {
+          "no": 4, "ad": "Family Life", "sure": "11 ders saati",
+          "alt_temalar": ["Aile üyeleri ve fiziksel görünüşleri"],
+          "kavramlar": ["family members", "physical appearance", "physical features"],
+          "icerik": {
+            "sozcukler": ["family", "father", "mother", "sister", "brother", "grandfather", "grandmother", "baby", "son", "daughter", "friend", "mum", "dad", "nice", "beautiful", "blond", "tall", "short", "handsome"],
+            "kaliplar": ["Who is he/she? He's my father.", "to be (olumlu/olumsuz/soru)", "have/has got (She has got blue eyes.)"],
+            "sosyal_dil": ["I'm sorry", "That's fine", "You look great", "It's very lovely", "Look!", "Over there!", "It's lunchtime!", "I'm hungry!"],
+            "sesler": ["/əʊ/", "/ɒ/", "k /k/", "l /l/", "m /m/", "n /n/", "p /p/"]
+          },
+          "kazanimlar": ["ENG.2.4.L1-L4", "ENG.2.4.P1", "ENG.2.4.R1-R4", "ENG.2.4.V1", "ENG.2.4.G1", "ENG.2.4.W1-W6", "ENG.2.4.S1-S6"]
+        },
+        {
+          "no": 5, "ad": "Homes & Houses & Neighbourhoods", "sure": "11 ders saati",
+          "alt_temalar": ["Evin bölümleri, odalar ve eşyalar", "Evdeki evcil hayvanlar"],
+          "kavramlar": ["parts of the house", "rooms", "furniture", "pets"],
+          "icerik": {
+            "sozcukler": ["bedroom", "bathroom", "sitting room/living room", "kitchen", "garden", "dining room", "balcony", "doorbell", "dollhouse", "bed", "sofa", "coffee table", "pet", "dog", "cat", "rabbit", "bird", "(gold)fish", "tail", "whiskers", "claw", "paw", "beak", "dance", "in", "on"],
+            "kaliplar": ["We've got a house. (have got)", "The cat is in the kitchen. (to be + yer)", "There is / There are (There are five cats in the sitting room.)"],
+            "sosyal_dil": ["Here's a...!", "Come and see!", "Let's look at...!", "Come on!", "Hold on.", "Really?", "That looks great!", "Look around!"],
+            "sesler": ["q /kjuː/", "r /ɑː/-/r/", "s /s/ /z/", "t /t/", "v /v/", "w"]
+          },
+          "kazanimlar": ["ENG.2.5.L1-L4", "ENG.2.5.P1", "ENG.2.5.R1-R4", "ENG.2.5.V1", "ENG.2.5.G1", "ENG.2.5.W1-W6", "ENG.2.5.S1-S6"]
+        },
+        {
+          "no": 6, "ad": "Life in the City & the World", "sure": "11 ders saati",
+          "alt_temalar": ["Temel yiyecek türleri ve öğünler"],
+          "kavramlar": ["food", "basic food items", "food types", "meals"],
+          "icerik": {
+            "sozcukler": ["water", "milk", "ayran", "tea", "coffee", "tomatoes", "bananas", "apples", "oranges", "pears", "strawberries", "grapes", "cherries", "potatoes", "carrots", "beans", "peppers", "lettuce", "cucumbers", "spinach", "broccoli", "garlic", "cauliflower", "courgette", "chicken", "fish", "bread", "meat", "eggs", "some"],
+            "kaliplar": ["Do you like bread? Yes, I do. / No, I don't. (tercih)", "Is there a banana? / There are some apples. (varlık)", "Can I have bread, please? (kibar istek)", "I've got some beans."],
+            "sosyal_dil": ["I'm hungry!", "I'm thirsty!", "Yummy!", "It's delicious!", "Time for breakfast/lunch/dinner!", "Thanks for lunch!", "Enjoy your meal!"],
+            "sesler": ["u (/juː/, /ʌ/)", "w", "x", "y", "z"]
+          },
+          "kazanimlar": ["ENG.2.6.L1-L4", "ENG.2.6.P1", "ENG.2.6.R1-R4", "ENG.2.6.V1", "ENG.2.6.G1", "ENG.2.6.W1-W6", "ENG.2.6.S1-S6"],
+          "performans_gorevi": "Bir arkadaş/aile üyesiyle yiyecek tercihleri hakkında röportaj kaydetme."
+        }
+      ]
+    }
+  }
+}
