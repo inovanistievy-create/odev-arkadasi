@@ -143,6 +143,19 @@ th{color:var(--muted);font-size:15px}
 .wsdots{display:flex;flex-wrap:wrap;gap:3px;justify-content:center;max-width:70px}
 .wsdots i{width:12px;height:12px;border-radius:50%;background:#B5651D;display:block}
 .wscount{font-size:14px;font-weight:900;color:var(--muted);margin-top:4px}
+.clockwrap{display:flex;justify-content:center;margin:10px 0}
+.clock{user-select:none;-webkit-user-select:none}.clock.drag{cursor:grab;touch-action:none}.clock.drag:active{cursor:grabbing}
+.grafitems{display:flex;flex-wrap:wrap;gap:6px;padding:12px;background:#FFF7EA;border-radius:16px;margin:10px 0}
+.gi{font-size:34px;border:0;background:#fff;border-radius:12px;width:52px;height:52px;cursor:pointer;transition:transform .1s}.gi:hover:not(:disabled){transform:scale(1.15)}.gi.off{opacity:.15}
+.ttab{margin:10px 0;font-size:18px}.ttab th{text-align:left;color:var(--muted);font-size:14px}.ttab td{padding:8px}
+.tally{font-family:monospace;font-size:24px;letter-spacing:2px;color:var(--purple)}.t5{text-decoration:line-through;margin-right:8px}
+.num{display:flex;align-items:center;gap:10px}.num button{width:34px;height:34px;border:0;border-radius:10px;background:#F1ECFF;font-size:20px;font-weight:900;cursor:pointer}.num b{min-width:24px;text-align:center;font-size:20px}
+.graf{display:flex;gap:16px;align-items:flex-end;justify-content:center;padding:16px;background:#FFF7EA;border-radius:16px;min-height:200px;margin:10px 0;border-bottom:4px solid var(--ink)}
+.gcol{display:flex;flex-direction:column;align-items:center;gap:6px}
+.gstack{display:flex;flex-direction:column-reverse;gap:2px;min-height:40px;justify-content:flex-start}.gstack span{font-size:26px;line-height:1}
+.graf.small .gstack span{font-size:20px}
+.gbtns{display:flex;gap:6px}.gbtns button{width:32px;height:32px;border:0;border-radius:10px;background:#F1ECFF;font-weight:900;font-size:18px;cursor:pointer}
+.glbl{font-weight:800;font-size:15px;text-align:center}
 .upd{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:#2B2A4C;color:#fff;padding:12px 18px;border-radius:99px;font-weight:900;font-size:17px;display:flex;gap:12px;align-items:center;z-index:60;box-shadow:0 8px 24px rgba(0,0,0,.25);animation:pop .3s}
 .gwrap{position:relative;background:#fff;border-radius:32px;padding:12px;box-shadow:0 6px 0 rgba(43,42,76,.07)}
 .gq{text-align:center;font-size:38px;font-weight:900;min-height:48px;letter-spacing:1px}
@@ -185,7 +198,7 @@ const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { c
 let VIEW = 'home';
 
 /* ---------- kayıt ---------- */
-const APP_VERSION = '20261107.1835';
+const APP_VERSION = '20261107.1911';
 const KEY = 'odev-arkadasi-v1';
 function load() { try { return JSON.parse(localStorage.getItem(KEY)) || null; } catch (e) { return null; } }
 let S = Object.assign({ name: '', unit: {}, stars: 0, goal: 10, day: '', dayStars: 0, stats: {}, mistakes: [], sound: true, rate: 1.15, autoRead: true, voice: '' }, load() || {});
@@ -498,7 +511,7 @@ function home() {
   const nm = $('#nm'); if (nm) { nm.focus(); nm.addEventListener('keydown', e => { if (e.key === 'Enter') A.setname(); }); }
 }
 const MENUS = {
-  math: { t: 'Matematik 🔢', items: [['math:topla','➕','Toplama',"100'e kadar, eldeli",'blue'],['math:cikar','➖','Çıkarma','Onluk bozarak','blue'],['math:carp','✖️','Çarpma','Kere kere, ritmik sayma','purple'],['math:bol','➗','Bölme','Eşit paylaştırma','pink'],['math:esitlik','⚖️','Eşitlik','İki taraf eşit olsun','yellow'],['math:eksik','🔍','Eksik Sayı','▢ yerine ne gelir?','green'],['math:geo','🧊','Geometri','Cisimler, şekiller, köşe-kenar','purple'],['math:olcme','📏','Ölçme & Kesirler','Yarım-çeyrek, para, saat, uzunluk, kütle','blue'],['math:veri','📊','Veri & Yön','Çetele, sıklık tablosu, grafik, sağ-sol','orange'],['math:sayilar','🧱','Sayılar','Onluk-birlik, çözümleme, deste-düzine, ritmik sayma','green'],['math:karisik','🎲','Karışık','Hepsinden biraz','orange'],['math:atolye-cikar','🧮','Çıkarma Atölyesi','Blokları çıkar, onluğu boz','pink'],['math:atolye-carp','🍪','Çarpma Atölyesi','Tabakları doldur, ritmik say','yellow']] },
+  math: { t: 'Matematik 🔢', items: [['math:topla','➕','Toplama',"100'e kadar, eldeli",'blue'],['math:cikar','➖','Çıkarma','Onluk bozarak','blue'],['math:carp','✖️','Çarpma','Kere kere, ritmik sayma','purple'],['math:bol','➗','Bölme','Eşit paylaştırma','pink'],['math:esitlik','⚖️','Eşitlik','İki taraf eşit olsun','yellow'],['math:eksik','🔍','Eksik Sayı','▢ yerine ne gelir?','green'],['math:geo','🧊','Geometri','Cisimler, şekiller, köşe-kenar','purple'],['math:olcme','📏','Ölçme & Kesirler','Yarım-çeyrek, para, saat, uzunluk, kütle','blue'],['math:saat','⏰','Saat Atölyesi','Akrep-yelkovanı çevir, saati oku','pink'],['math:grafik','📊','Grafik Atölyesi','Çetele → sıklık tablosu → grafik','green'],['math:veri','📊','Veri & Yön','Çetele, sıklık tablosu, grafik, sağ-sol','orange'],['math:sayilar','🧱','Sayılar','Onluk-birlik, çözümleme, deste-düzine, ritmik sayma','green'],['math:karisik','🎲','Karışık','Hepsinden biraz','orange'],['math:atolye-cikar','🧮','Çıkarma Atölyesi','Blokları çıkar, onluğu boz','pink'],['math:atolye-carp','🍪','Çarpma Atölyesi','Tabakları doldur, ritmik say','yellow']] },
   tr: { t: 'Türkçe 🔤', items: [['tr:hece','🧩','Hece Sırala','Heceleri doğru diz, kelimeyi bul','orange'],['tr:yazim','✍️','Doğru Yazım','Hangisi doğru yazılmış?','purple']] },
   bilgi: { t: 'Bil Bakalım 🌍', items: [['bilgi:hayat','🏡','Hayat Bilgisi','Okul, ev, sağlık, güvenlik, ülkemiz','green'],['bilgi:ing','🇬🇧','İngilizce','Renkler, sayılar, hayvanlar','blue'],['bilgi:mix','🎲','Karışık','Hepsinden biraz','orange']] },
 };
@@ -513,6 +526,8 @@ let R = null;
 function play(v) {
   const [m, mode] = v.split(':'); let items, title;
   if (v.startsWith('math:atolye')) return wsPlay(v);
+  if (v === 'math:saat') return clockPlay();
+  if (v === 'math:grafik') return grafPlay();
   if (v === 'math:olcme') return startRound('Ölçme & Kesirler', shuffle(OLCME).slice(0, 10).map(g => Object.assign(bilgiItem(g), { mod: 'math', key: 'o:' + g[0] })), false, v);
   if (v === 'math:veri') return startRound('Veri & Yön', shuffle(VERI).slice(0, 10).map(g => Object.assign(bilgiItem(g), { mod: 'math', key: 'v:' + g[0] })), false, v);
   if (v === 'math:geo') return startRound('Geometri', shuffle(GEO).slice(0, 10).map(g => Object.assign(bilgiItem(g), { mod: 'math', key: 'g:' + g[0] })), false, v);
@@ -664,6 +679,117 @@ function wsNext() {
     <div class="qcard"><div class="qtext big">${esc(it.prompt)}</div><div id="wsh"></div><div id="wsnext"></div></div>`;
   autoSpeak(it.prompt);
   wsFor(it.prompt, $('#wsh'), () => { addStar(); stat('math', true); WSR.i++; $('#wsnext').innerHTML = `<div class="row center"><button class="btn primary" id="wsn">Sıradaki ➜</button></div>`; $('#wsn').onclick = wsNext; });
+}
+
+/* ---------- Saat Atölyesi ---------- */
+const CLOCK_WORDS = m => m === 0 ? '' : m === 30 ? ' buçuk' : m === 15 ? 'ü çeyrek geçiyor' : 'e çeyrek var';
+function timeName(h, m) { if (m === 45) return `${h % 12 + 1 === 13 ? 1 : h % 12 + 1}'e çeyrek var`; if (m === 15) return `${h}'i çeyrek geçiyor`; return `${h}${m === 30 ? ' buçuk' : ''}`; }
+function clockSVG(h, m, id, drag) {
+  const ha = (h % 12) * 30 + m * .5, ma = m * 6;
+  const nums = Array.from({ length: 12 }, (_, i) => { const a = (i + 1) * 30 * Math.PI / 180, r = 78; return `<text x="${100 + Math.sin(a) * r}" y="${100 - Math.cos(a) * r + 7}" text-anchor="middle" font-size="19" font-weight="900" fill="#2B2A4C">${i + 1}</text>`; }).join('');
+  const ticks = Array.from({ length: 60 }, (_, i) => { const a = i * 6 * Math.PI / 180, r1 = i % 5 ? 90 : 86; return `<line x1="${100 + Math.sin(a) * r1}" y1="${100 - Math.cos(a) * r1}" x2="${100 + Math.sin(a) * 94}" y2="${100 - Math.cos(a) * 94}" stroke="#2B2A4C" stroke-width="${i % 5 ? 1 : 3}"/>`; }).join('');
+  return `<svg id="${id}" class="clock ${drag ? 'drag' : ''}" viewBox="0 0 200 200" width="260" height="260"><circle cx="100" cy="100" r="97" fill="#fff" stroke="#8E6CEF" stroke-width="6"/>${ticks}${nums}
+    <line class="hh" x1="100" y1="100" x2="100" y2="50" stroke="#2B2A4C" stroke-width="8" stroke-linecap="round" transform="rotate(${ha} 100 100)"/>
+    <line class="mh" x1="100" y1="100" x2="100" y2="28" stroke="#FF8A3D" stroke-width="5" stroke-linecap="round" transform="rotate(${ma} 100 100)"/>
+    <circle cx="100" cy="100" r="6" fill="#2B2A4C"/></svg>`;
+}
+let CL = null;
+function clockPlay() {
+  VIEW = 'ws'; app.classList.remove('wide'); CL = { i: 0, n: 6, ok: 0 }; clockNext();
+}
+function clockNext() {
+  if (CL.i >= CL.n) { VIEW = 'end'; confetti(); sfx('win'); app.innerHTML = `<div class="endcard center"><div class="bigemo">⏰</div><h2>${CL.n} saatten ${CL.ok} doğru!</h2><p>Akrep saati, yelkovan dakikayı gösterir. Süper!</p><div class="row center"><button class="btn primary" data-a="play" data-v="math:saat">Tekrar 🔁</button><button class="btn soft" data-a="home">Ana sayfa 🏠</button></div></div>`; return; }
+  const level = (S.unit || {}).matematik >= 4 ? [0, 30, 15, 45] : [0, 30];
+  const h = rand(1, 12), m = pick(level), read = CL.i % 2 === 0;
+  const top = `<div class="rtop"><button class="btn soft sm" data-a="home">← Çık</button><div class="rtitle">⏰ Saat Atölyesi</div><div class="dots">${Array.from({ length: CL.n }, (_, k) => `<i class="${k < CL.i ? 'ok' : k === CL.i ? 'now' : ''}"></i>`).join('')}</div></div>`;
+  if (read) {
+    const opts = new Set([timeName(h, m)]); while (opts.size < 4) { const hh = rand(1, 12), mm = pick(level); opts.add(timeName(hh, mm)); }
+    app.innerHTML = top + `<div class="qcard"><div class="qtext">Saat kaç? 🕰️</div><div class="clockwrap">${clockSVG(h, m, 'clk', false)}</div>
+      <div class="opts n4">${shuffle([...opts]).map(o => `<button class="opt" data-ck="${esc(o)}">${esc(o)}</button>`).join('')}</div><div id="fb"></div></div>`;
+    autoSpeak('Saat kaç?');
+    app.querySelectorAll('[data-ck]').forEach(b => b.onclick = () => {
+      app.querySelectorAll('[data-ck]').forEach(x => x.disabled = true);
+      if (b.dataset.ck === timeName(h, m)) { b.classList.add('ok'); CL.ok++; addStar(); stat('math', true); sfx('ok'); $('#fb').innerHTML = `<div class="praise">${pick(PRAISE)}</div>`; speak('Saat ' + timeName(h, m)); setTimeout(() => { CL.i++; clockNext(); }, 1300); }
+      else { b.classList.add('no'); stat('math', false); sfx('no'); app.querySelector(`[data-ck="${CSS.escape(timeName(h, m))}"]`).classList.add('ok'); $('#fb').innerHTML = `<div class="explain"><div class="exh">🦉 Bilge diyor ki:</div>${md(clockExplain(h, m))}<div class="row"><button class="btn primary" id="cn">Anladım, devam ➜</button></div></div>`; speak(strip(clockExplain(h, m))); $('#cn').onclick = () => { CL.i++; clockNext(); }; }
+    });
+  } else {
+    app.innerHTML = top + `<div class="qcard"><div class="qtext">Saati <b>${esc(timeName(h, m))}</b> yap! 🖐️</div><div class="qsub">Turuncu yelkovanı ve siyah akrebi sürükle.</div><div class="clockwrap">${clockSVG(3, 0, 'clk', true)}</div>
+      <div class="row center"><button class="btn primary" id="ccheck">Kontrol et ✔️</button></div><div id="fb"></div></div>`;
+    autoSpeak('Saati ' + timeName(h, m) + ' yap.');
+    const svg = $('#clk'); let cur_ = { h: 3, m: 0 }, dragging = null;
+    const ang = e => { const r = svg.getBoundingClientRect(); const x = (e.clientX - r.left) / r.width * 200 - 100, y = (e.clientY - r.top) / r.height * 200 - 100; return ((Math.atan2(x, -y) * 180 / Math.PI) + 360) % 360; };
+    const draw = () => { svg.querySelector('.hh').setAttribute('transform', `rotate(${(cur_.h % 12) * 30 + cur_.m * .5} 100 100)`); svg.querySelector('.mh').setAttribute('transform', `rotate(${cur_.m * 6} 100 100)`); };
+    svg.addEventListener('pointerdown', e => { const a = ang(e), r = svg.getBoundingClientRect(), d = Math.hypot((e.clientX - r.left) / r.width * 200 - 100, (e.clientY - r.top) / r.height * 200 - 100); dragging = d > 55 ? 'm' : 'h'; svg.setPointerCapture(e.pointerId); sfx('tick'); });
+    svg.addEventListener('pointermove', e => { if (!dragging) return; const a = ang(e); if (dragging === 'm') { cur_.m = Math.round(a / 6 / 15) * 15 % 60; } else { cur_.h = Math.round(a / 30) % 12 || 12; } draw(); });
+    svg.addEventListener('pointerup', () => dragging = null);
+    $('#ccheck').onclick = () => {
+      const good = (cur_.h % 12) === (h % 12) && cur_.m === m;
+      if (good) { CL.ok++; addStar(); stat('math', true); sfx('ok'); $('#fb').innerHTML = `<div class="praise">${pick(PRAISE)}</div>`; speak('Evet, saat ' + timeName(h, m)); $('#ccheck').disabled = true; setTimeout(() => { CL.i++; clockNext(); }, 1300); }
+      else { sfx('no'); stat('math', false); const msg = cur_.m !== m ? `Yelkovan (turuncu, uzun) **${m === 0 ? '12' : m === 30 ? '6' : m === 15 ? '3' : '9'}**'yi göstermeli${m === 30 ? ' (buçuk = yarım tur)' : m === 15 ? ' (çeyrek geçiyor)' : m === 45 ? ' (çeyrek var)' : ' (tam saat)'}.` : `Akrep (siyah, kısa) **${h}**'${m >= 30 ? 'i geçmiş, ' + (h % 12 + 1) + "'e doğru" : 'yi göstermeli'}.`; $('#fb').innerHTML = `<div class="hint">${md(msg)} Tekrar dene! 💪</div>`; speak(strip(msg)); }
+    };
+  }
+}
+function clockExplain(h, m) {
+  return `Kısa siyah kol **akrep** saati gösterir: ${m >= 30 ? `${h} ile ${h % 12 + 1} arasında, ${h}'i geçmiş` : `${h}'${m ? 'i biraz geçmiş' : 'de'}`}. Uzun turuncu kol **yelkovan** dakikayı gösterir: ${m === 0 ? '12\'de → **tam saat**' : m === 30 ? '6\'da → **buçuk** (yarım tur)' : m === 15 ? '3\'te → **çeyrek geçiyor**' : '9\'da → **çeyrek var**'}.\nSaat: **${timeName(h, m)}** ⏰`;
+}
+
+/* ---------- Grafik Atölyesi ---------- */
+const GRAF_SETS = [
+  { ad: 'En Çok Sevilen Meyveler', birim: 'kişi', kat: [['🍎', 'Elma'], ['🍌', 'Muz'], ['🍊', 'Portakal'], ['🍐', 'Armut']] },
+  { ad: 'Bahçedeki Hayvanlar', birim: 'hayvan', kat: [['🐔', 'Tavuk'], ['🐑', 'Koyun'], ['🐄', 'İnek'], ['🐇', 'Tavşan']] },
+  { ad: 'Sınıftaki Oyuncaklar', birim: 'oyuncak', kat: [['🚗', 'Araba'], ['🧸', 'Ayı'], ['⚽', 'Top'], ['🪁', 'Uçurtma']] },
+  { ad: 'Orkestradaki Müzik Aletleri', birim: 'alet', kat: [['🎻', 'Keman'], ['🎹', 'Piyano'], ['🎸', 'Gitar'], ['🥁', 'Davul']] },
+];
+let GR = null;
+function grafPlay() {
+  VIEW = 'ws'; app.classList.remove('wide');
+  const set = pick(GRAF_SETS); const counts = set.kat.map(() => rand(2, 7)); while (new Set(counts).size < 3) counts[rand(0, 3)] = rand(2, 7);
+  const items = shuffle(set.kat.flatMap(([e], i) => Array(counts[i]).fill(i)));
+  GR = { set, counts, items, tally: set.kat.map(() => 0), done: set.kat.map(() => false), step: 1, clicked: items.map(() => false), freq: set.kat.map(() => null) };
+  grafRender();
+}
+function tallyHTML(n) { let s = ''; for (let i = 0; i < Math.floor(n / 5); i++) s += '<span class="t5">||||</span>'; s += '|'.repeat(n % 5); return s || '<span class="muted">–</span>'; }
+function grafRender() {
+  const { set, counts, items, tally, step } = GR;
+  const top = `<div class="rtop"><button class="btn soft sm" data-a="home">← Çık</button><div class="rtitle">📊 Grafik Atölyesi</div><div class="pill">${['', 'Adım 1: Çetele', 'Adım 2: Sıklık tablosu', 'Adım 3: Grafik', 'Adım 4: Yorumla'][step]}</div></div>`;
+  if (step === 1) {
+    app.innerHTML = top + `<div class="ws"><div class="wsh">📝 <b>${esc(set.ad)}</b> — Her nesneye bir kez tıkla; çetele tablosuna çizgi eklensin. Hepsini sayınca devam et!</div>
+      <div class="grafitems">${items.map((k, i) => `<button class="gi ${GR.clicked[i] ? 'off' : ''}" data-gi="${i}" ${GR.clicked[i] ? 'disabled' : ''}>${set.kat[k][0]}</button>`).join('')}</div>
+      <table class="ttab"><tr><th>${esc(set.ad)}</th><th>Çetele</th></tr>${set.kat.map(([e, n], i) => `<tr><td>${e} ${n}</td><td class="tally">${tallyHTML(tally[i])}</td></tr>`).join('')}</table>
+      <div class="row"><button class="btn primary" id="gnext" ${GR.clicked.every(Boolean) ? '' : 'disabled'}>Sıklık tablosuna geç ➜</button><span class="muted">${GR.clicked.filter(Boolean).length} / ${items.length} sayıldı</span></div></div>`;
+    app.querySelectorAll('[data-gi]').forEach(b => b.onclick = () => { const i = +b.dataset.gi; GR.clicked[i] = true; tally[items[i]]++; sfx('tick'); grafRender(); });
+    $('#gnext').onclick = () => { GR.step = 2; speak('Şimdi çizgileri sayıp sayıyla yaz.'); grafRender(); };
+  } else if (step === 2) {
+    app.innerHTML = top + `<div class="ws"><div class="wsh">🔢 Çeteledeki çizgileri say, <b>sıklık tablosuna</b> sayı olarak yaz. (İpucu: <span class="t5">||||</span> = 5)</div>
+      <table class="ttab"><tr><th>${esc(set.ad)}</th><th>Çetele</th><th>Kişi sayısı</th></tr>${set.kat.map(([e, n], i) => `<tr><td>${e} ${n}</td><td class="tally">${tallyHTML(tally[i])}</td><td><div class="num"><button data-gm="${i}" data-d="-1">−</button><b id="gf${i}">${GR.freq[i] ?? 0}</b><button data-gm="${i}" data-d="1">+</button></div></td></tr>`).join('')}</table>
+      <div class="row"><button class="btn primary" id="gcheck">Kontrol et ✔️</button><span id="gmsg" class="muted"></span></div></div>`;
+    app.querySelectorAll('[data-gm]').forEach(b => b.onclick = () => { const i = +b.dataset.gm; GR.freq[i] = Math.max(0, (GR.freq[i] ?? 0) + +b.dataset.d); $('#gf' + i).textContent = GR.freq[i]; sfx('tick'); });
+    $('#gcheck').onclick = () => { const bad = set.kat.findIndex((_, i) => (GR.freq[i] ?? 0) !== tally[i]); if (bad < 0) { sfx('ok'); addStar(); GR.step = 3; speak('Tablo doğru! Şimdi grafiği çizelim.'); grafRender(); } else { sfx('no'); $('#gmsg').textContent = `${set.kat[bad][1]} satırını tekrar say: çizgileri beşerli grupla 👀`; speak(set.kat[bad][1] + ' satırını tekrar say.'); } };
+  } else if (step === 3) {
+    const mx = Math.max(...tally);
+    app.innerHTML = top + `<div class="ws"><div class="wsh">📊 <b>Nesne grafiği</b>: her sütuna tabloda yazdığın kadar nesne koy. (Her nesne 1 ${esc(set.birim)}i gösterir.)</div>
+      <div class="graf">${set.kat.map(([e, n], i) => `<div class="gcol"><div class="gstack" id="gs${i}">${e.repeat(GR.bars ? GR.bars[i] : 0).split('').map(() => `<span>${e}</span>`).join('')}</div><div class="gbtns"><button data-gb="${i}" data-d="-1">−</button><button data-gb="${i}" data-d="1">+</button></div><div class="glbl">${n}</div></div>`).join('')}</div>
+      <div class="row"><button class="btn primary" id="gcheck">Kontrol et ✔️</button><span id="gmsg" class="muted"></span></div></div>`;
+    GR.bars = GR.bars || set.kat.map(() => 0);
+    app.querySelectorAll('[data-gb]').forEach(b => b.onclick = () => { const i = +b.dataset.gb; GR.bars[i] = Math.max(0, Math.min(10, GR.bars[i] + +b.dataset.d)); sfx('tick'); grafRender(); });
+    $('#gcheck').onclick = () => { const bad = GR.bars.findIndex((v, i) => v !== tally[i]); if (bad < 0) { sfx('win'); addStar(); GR.step = 4; grafRender(); } else { sfx('no'); $('#gmsg').textContent = `${set.kat[bad][1]} sütununda ${tally[bad]} ${set.birim} olmalı.`; } };
+  } else {
+    const order = tally.map((v, i) => [v, i]).sort((a, b) => b[0] - a[0]);
+    const qs = shuffle([
+      [`En çok hangisi?`, set.kat[order[0][1]][1], set.kat.map(k => k[1]).filter(n => n !== set.kat[order[0][1]][1])],
+      [`En az hangisi?`, set.kat[order[3][1]][1], set.kat.map(k => k[1]).filter(n => n !== set.kat[order[3][1]][1])],
+      [`${set.kat[order[0][1]][1]} ile ${set.kat[order[3][1]][1]} arasındaki fark kaç?`, String(order[0][0] - order[3][0]), makeOpts(order[0][0] - order[3][0]).filter(o => o !== String(order[0][0] - order[3][0]))],
+      [`Toplam kaç ${set.birim} var?`, String(tally.reduce((a, b) => a + b)), makeOpts(tally.reduce((a, b) => a + b)).filter(o => o !== String(tally.reduce((a, b) => a + b)))],
+    ]);
+    GR.qi = GR.qi || 0; GR.qok = GR.qok || 0;
+    if (GR.qi >= qs.length) { VIEW = 'end'; confetti(); sfx('win'); app.innerHTML = `<div class="endcard center"><div class="bigemo">📊</div><h2>Araştırma tamam!</h2><p>Veri topladın, çetele ve sıklık tablosu yaptın, grafiği çizdin ve yorumladın. Tam bir araştırmacı! 🔬</p><div class="row center"><button class="btn primary" data-a="play" data-v="math:grafik">Yeni araştırma 🔁</button><button class="btn soft" data-a="home">Ana sayfa 🏠</button></div></div>`; return; }
+    const [q, ans, wrong] = qs[GR.qi]; const opts = shuffle([ans, ...wrong.slice(0, 3)]);
+    app.innerHTML = top + `<div class="ws"><div class="wsh">🧐 Grafiğe bakarak cevapla:</div>
+      <div class="graf small">${set.kat.map(([e, n], i) => `<div class="gcol"><div class="gstack">${Array(tally[i]).fill(`<span>${e}</span>`).join('')}</div><div class="glbl">${n}<br><b>${tally[i]}</b></div></div>`).join('')}</div>
+      <div class="wsq">${esc(q)}</div><div class="opts n4 wsopts">${opts.map(o => `<button class="opt" data-gq="${esc(o)}">${esc(o)}</button>`).join('')}</div><div id="gmsg" class="wsmsg"></div></div>`;
+    autoSpeak(q);
+    app.querySelectorAll('[data-gq]').forEach(b => b.onclick = () => { app.querySelectorAll('[data-gq]').forEach(x => x.disabled = true); if (b.dataset.gq === ans) { b.classList.add('ok'); sfx('ok'); addStar(); stat('math', true); } else { b.classList.add('no'); sfx('no'); stat('math', false); app.querySelector(`[data-gq="${CSS.escape(ans)}"]`).classList.add('ok'); $('#gmsg').textContent = 'Grafikte en uzun sütun en çok, en kısa sütun en az demektir 👀'; } setTimeout(() => { GR.qi++; grafRender(); }, 1300); });
+  }
 }
 
 /* ---------- Balon Avı (canvas oyunu) ---------- */
@@ -1121,7 +1247,7 @@ const A = {
   cmode: v => { S.carMode = v; save(); carStart(); },
   unitplay: k => {
     const t = unitOf(k); if (!t) return;
-    if (k === 'matematik') return play(t.no === 1 ? 'math:geo' : t.no === 2 ? 'math:sayilar' : t.no === 4 ? 'math:olcme' : t.no >= 5 ? 'math:veri' : 'math:karisik');
+    if (k === 'matematik') return play(t.no === 1 ? 'math:geo' : t.no === 2 ? 'math:sayilar' : t.no === 4 ? pick(['math:olcme', 'math:saat']) : t.no === 5 ? 'math:veri' : t.no === 6 ? 'math:grafik' : 'math:karisik');
     if (k === 'turkce') return play(t.no % 2 ? 'tr:hece' : 'tr:yazim');
     if (k === 'hayat_bilgisi') return play('bilgi:hayat');
     return play('bilgi:ing');
