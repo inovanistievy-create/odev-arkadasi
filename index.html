@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ödev Arkadaşı</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#FFF7EA;--ink:#2B2A4C;--muted:#6E6C8C;--card:#fff;--orange:#FF8A3D;--blue:#3D9BFF;--green:#20B072;--purple:#8E6CEF;--pink:#FF5C8A;--yellow:#FFC93C;--line:#F0E3CC}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{font-family:Nunito,system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit}
+header{display:flex;align-items:center;gap:16px;padding:12px 28px;background:#fff;border-bottom:3px solid var(--line);position:sticky;top:0;z-index:5}
+.brand{display:flex;align-items:center;gap:10px;font-weight:900;font-size:24px;cursor:pointer;background:none;border:0;padding:0}
+.goal{flex:1;max-width:360px;margin-left:auto}
+.goal small{display:block;font-weight:800;color:var(--muted);margin-bottom:4px;font-size:14px}
+.bar{height:14px;background:#F3EAD8;border-radius:99px;overflow:hidden}
+.bar>i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--yellow),var(--orange));border-radius:99px;transition:width .5s}
+.pill{background:#FFF1C9;border-radius:99px;padding:8px 16px;font-weight:900;font-size:18px;white-space:nowrap}
+.iconbtn{border:0;background:#F1ECFF;border-radius:14px;width:46px;height:46px;font-size:21px;cursor:pointer;display:inline-grid;place-items:center;flex:none}
+.iconbtn:hover{background:#E6DEFF}
+.iconbtn.sm{width:38px;height:38px;font-size:17px;border-radius:12px;vertical-align:middle;margin-left:8px}
+main{max-width:1100px;margin:0 auto;padding:28px}
+h1{font-size:34px;margin:4px 0 6px;font-weight:900}
+.lead{color:var(--muted);font-weight:700;font-size:19px;margin:0 0 24px}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px}
+.grid.three{grid-template-columns:repeat(3,1fr)}
+.card{background:var(--card);border-radius:28px;padding:24px;border:3px solid transparent;box-shadow:0 6px 0 rgba(43,42,76,.07);cursor:pointer;transition:transform .15s,border-color .15s;display:flex;gap:18px;align-items:center;text-align:left;width:100%}
+.card:hover{transform:translateY(-3px);border-color:var(--line)}
+.card:disabled{opacity:.6;cursor:default;transform:none}
+.card .emo{font-size:48px;width:86px;height:86px;border-radius:24px;display:grid;place-items:center;flex:none}
+.card h3{margin:0 0 4px;font-size:25px;font-weight:900}
+.card p{margin:0;color:var(--muted);font-weight:700;font-size:16px}
+.wide{grid-column:1/-1}
+.c-orange .emo{background:#FFE8D8}.c-blue .emo{background:#DDEEFF}.c-green .emo{background:#D8F5E8}.c-purple .emo{background:#ECE5FF}.c-pink .emo{background:#FFE1EA}.c-yellow .emo{background:#FFF1C9}
+.hero{background:linear-gradient(120deg,#8E6CEF,#B08CFF);color:#fff}
+.hero p{color:#F1EBFF}.hero .emo{background:rgba(255,255,255,.2)}
+.hero:hover{border-color:#fff}
+.btn{border:0;border-radius:18px;padding:14px 22px;font-weight:900;font-size:18px;cursor:pointer;transition:transform .1s}
+.btn:active{transform:scale(.97)}
+.btn.primary{background:var(--orange);color:#fff;box-shadow:0 4px 0 #E06A1F}
+.btn.green{background:var(--green);color:#fff;box-shadow:0 4px 0 #148A57}
+.btn.soft{background:#F1ECFF;color:var(--ink)}
+.btn.sm{padding:9px 14px;font-size:16px;border-radius:14px}
+.btn.danger{background:#FFE1EA;color:#B3123F}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-top:16px}
+.center{text-align:center;justify-content:center}
+.muted{color:var(--muted);font-weight:700}
+.small{font-size:14px}
+/* round */
+.rtop{display:flex;align-items:center;gap:14px;margin-bottom:20px}
+.rtitle{font-weight:900;font-size:24px;flex:1}
+.dots{display:flex;gap:6px}
+.dots i{width:16px;height:16px;border-radius:50%;background:#EADFC9;display:block}
+.dots i.now{background:var(--orange);transform:scale(1.2)}
+.dots i.ok{background:var(--green)}.dots i.no{background:var(--pink)}
+.qcard{background:#fff;border-radius:32px;padding:34px;box-shadow:0 6px 0 rgba(43,42,76,.07);text-align:center}
+.qemo{font-size:72px;line-height:1;margin-bottom:10px}
+.qtext{font-size:30px;font-weight:900;margin-bottom:8px}
+.qtext.big{font-size:56px;letter-spacing:1px}
+.qsub{font-size:20px;color:var(--muted);font-weight:700;margin-bottom:10px}
+.opts{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:24px}
+.opts.n2{grid-template-columns:1fr 1fr}
+.opt{background:#FFF7EA;border:3px solid var(--line);border-radius:22px;padding:20px 14px;font-size:26px;font-weight:900;cursor:pointer;transition:transform .1s,background .2s}
+.opt:hover:not(:disabled){background:#FFEFD6;transform:translateY(-2px)}
+.opt:disabled{cursor:default}
+.opt.ok{background:#D8F5E8;border-color:var(--green);color:#0E7A4C}
+.opt.no{background:#FFE1EA;border-color:var(--pink);color:#B3123F}
+.opt .k{display:inline-block;font-size:14px;color:var(--muted);background:#fff;border-radius:8px;padding:1px 7px;margin-right:8px;vertical-align:middle}
+.sylls{display:flex;justify-content:center;flex-wrap:wrap}
+.syl{min-width:120px;font-size:32px}
+.syl.used{opacity:.25}
+.slots{display:flex;gap:10px;justify-content:center;margin:20px 0 4px;flex-wrap:wrap}
+.slot{min-width:110px;height:72px;border:3px dashed #E2D3B6;border-radius:20px;display:grid;place-items:center;font-size:32px;font-weight:900}
+.slot.filled{border-style:solid;border-color:var(--green);background:#EFFAF4}
+.shake{animation:shake .35s}
+@keyframes shake{25%{transform:translateX(-8px)}50%{transform:translateX(8px)}75%{transform:translateX(-4px)}}
+.explain{margin-top:24px;background:#F5F0FF;border-radius:24px;padding:20px 24px;text-align:left;font-size:20px;font-weight:700;line-height:1.5;animation:pop .25s}
+.exh{font-weight:900;color:var(--purple);margin-bottom:6px}
+.praise{margin-top:22px;font-size:30px;font-weight:900;color:var(--green);animation:pop .25s}
+.hint{margin-top:20px;font-size:19px;font-weight:800;color:var(--purple)}
+@keyframes pop{from{transform:scale(.9);opacity:0}to{transform:none;opacity:1}}
+.blocks{display:flex;gap:28px;flex-wrap:wrap;margin-top:12px}
+.bgroup .blbl{font-size:16px;color:var(--muted);margin-bottom:6px}
+.blks{display:flex;align-items:flex-end;gap:4px;flex-wrap:wrap;max-width:360px}
+.ten{width:12px;height:80px;background:var(--blue);border-radius:4px;background-image:repeating-linear-gradient(0deg,transparent 0 7px,rgba(255,255,255,.55) 7px 8px)}
+.one{width:12px;height:12px;background:var(--orange);border-radius:3px}
+.endcard{background:#fff;border-radius:32px;padding:44px;box-shadow:0 6px 0 rgba(43,42,76,.07)}
+.bigemo{font-size:96px}
+.endcard h2{font-size:38px;margin:8px 0;font-weight:900}
+.endcard p{font-size:20px;font-weight:700}
+/* chat */
+.chat{background:#fff;border-radius:32px;padding:22px;box-shadow:0 6px 0 rgba(43,42,76,.07);display:flex;flex-direction:column;height:calc(100vh - 210px);min-height:460px}
+.msgs{flex:1;overflow-y:auto;padding:6px 6px 12px;display:flex;flex-direction:column;gap:14px}
+.msg{max-width:78%;padding:14px 18px;border-radius:22px;font-size:20px;font-weight:700;line-height:1.5;white-space:normal;word-wrap:break-word}
+.msg.bot{background:#F5F0FF;border-bottom-left-radius:6px;align-self:flex-start;display:flex;gap:12px}
+.msg.bot .av{flex:none}
+.msg.me{background:#FFE8D8;border-bottom-right-radius:6px;align-self:flex-end}
+.msg img{display:block;max-width:260px;max-height:220px;border-radius:14px;margin-bottom:8px}
+.msg .sp{border:0;background:none;cursor:pointer;font-size:18px;padding:0 0 0 6px}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.chip{border:2px solid var(--line);background:#FFF7EA;border-radius:99px;padding:8px 14px;font-weight:800;font-size:15px;cursor:pointer}
+.chip:hover{background:#FFEFD6}
+.composer{display:flex;gap:10px;align-items:flex-end;border-top:3px solid #F6EEDD;padding-top:12px}
+.composer textarea{flex:1;border:3px solid var(--line);border-radius:18px;padding:12px 16px;font:inherit;font-size:19px;font-weight:700;resize:none;outline:none;background:#FFFDF8}
+.composer textarea:focus{border-color:var(--purple)}
+.photo{cursor:pointer;width:54px;height:54px;font-size:24px;border:0}
+.mic.on{background:var(--pink);color:#fff;animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(255,92,138,.5)}50%{box-shadow:0 0 0 10px rgba(255,92,138,0)}}
+#imgprev img{height:70px;border-radius:12px;margin:6px 0;border:3px solid var(--line)}
+#imgprev{display:flex;align-items:center;gap:10px}
+.typing{opacity:.7}
+/* settings */
+.panel{background:#fff;border-radius:28px;padding:26px;box-shadow:0 6px 0 rgba(43,42,76,.07);margin-bottom:20px}
+.panel h2{margin:0 0 14px;font-size:24px;font-weight:900}
+.field{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:10px 0;font-weight:800;font-size:18px}
+.field input,.field select{font:inherit;font-size:18px;font-weight:700;border:3px solid var(--line);border-radius:14px;padding:10px 14px;background:#FFFDF8}
+table{width:100%;border-collapse:collapse;font-size:18px;font-weight:700}
+td,th{padding:10px 8px;border-bottom:2px solid #F6EEDD;text-align:left}
+th{color:var(--muted);font-size:15px}
+.mlist{max-height:240px;overflow:auto;font-weight:700;color:var(--muted);padding-left:20px;margin:8px 0}
+.onb{background:#fff;border-radius:28px;padding:26px;margin-bottom:22px;display:flex;gap:18px;align-items:center;flex-wrap:wrap;box-shadow:0 6px 0 rgba(43,42,76,.07)}
+.onb input{font:inherit;font-size:22px;font-weight:800;border:3px solid var(--line);border-radius:16px;padding:12px 16px;min-width:220px}
+#confetti{position:fixed;inset:0;pointer-events:none;z-index:50}
+@media (max-width:760px){
+  header{padding:10px 14px;gap:10px;flex-wrap:wrap}.brand span{display:none}
+  main{padding:16px}.grid,.grid.three{grid-template-columns:1fr}
+  .qcard{padding:22px}.qtext.big{font-size:42px}.opt{font-size:22px}.msg{max-width:92%;font-size:18px}
+  .dots{display:none}
+}
+</style>
+</head>
+<body>
+<header>
+  <button class="brand" data-a="home" aria-label="Ana sayfa">
+    <svg viewBox="0 0 100 100" width="46" height="46" aria-hidden="true"><path d="M20 20 L36 34 L20 42Z M80 20 L64 34 L80 42Z" fill="#6F4FD8"/><ellipse cx="50" cy="58" rx="34" ry="36" fill="#8E6CEF"/><ellipse cx="50" cy="71" rx="20" ry="21" fill="#EDE6FF"/><circle cx="36" cy="46" r="13" fill="#fff"/><circle cx="64" cy="46" r="13" fill="#fff"/><circle cx="38" cy="47" r="6" fill="#2B2A4C"/><circle cx="62" cy="47" r="6" fill="#2B2A4C"/><circle cx="40" cy="45" r="2" fill="#fff"/><circle cx="64" cy="45" r="2" fill="#fff"/><path d="M45 56 L55 56 L50 64Z" fill="#FF8A3D"/></svg>
+    <span>Ödev Arkadaşı</span>
+  </button>
+  <div class="goal"><small id="goalTxt">Bugünkü hedef</small><div class="bar"><i id="goalBar"></i></div></div>
+  <div class="pill" id="starPill">⭐ 0</div>
+  <button class="iconbtn" data-a="settings" title="Veli Köşesi">⚙️</button>
+</header>
+<main id="app"></main>
+<canvas id="confetti"></canvas>
+
+<script>
+/* ---------- yardımcılar ---------- */
+const $ = (s, r = document) => r.querySelector(s);
+const app = $('#app');
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const md = s => esc(s).replace(/\*\*(.+?)\*\*/g, '<b>$1</b>').replace(/\n/g, '<br>');
+const strip = s => String(s).replace(/\*\*/g, '');
+const rand = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
+const pick = a => a[Math.floor(Math.random() * a.length)];
+const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+let VIEW = 'home';
+
+/* ---------- kayıt ---------- */
+const KEY = 'odev-arkadasi-v1';
+function load() { try { return JSON.parse(localStorage.getItem(KEY)) || null; } catch (e) { return null; } }
+let S = Object.assign({ name: '', stars: 0, goal: 10, day: '', dayStars: 0, stats: {}, mistakes: [], sound: true, rate: 1.15, autoRead: true, voice: '' }, load() || {});
+function save() { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {} }
+function today() { const d = new Date(); return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate(); }
+function rollDay() { if (S.day !== today()) { S.day = today(); S.dayStars = 0; save(); } }
+function addStar() { rollDay(); S.stars++; S.dayStars++; save(); updateHeader(); if (S.dayStars === S.goal) setTimeout(() => { confetti(); sfx('win'); }, 300); }
+function stat(mod, ok) { const s = S.stats[mod] || (S.stats[mod] = { c: 0, w: 0 }); ok ? s.c++ : s.w++; save(); }
+function addMistake(it) { if (!S.mistakes.some(m => m.key === it.key)) { S.mistakes.unshift(JSON.parse(JSON.stringify(it))); S.mistakes = S.mistakes.slice(0, 60); save(); } }
+function removeMistake(key) { S.mistakes = S.mistakes.filter(m => m.key !== key); save(); }
+function updateHeader() {
+  rollDay();
+  $('#starPill').textContent = '⭐ ' + S.stars;
+  const done = Math.min(S.dayStars, S.goal);
+  $('#goalTxt').textContent = S.dayStars >= S.goal ? `Bugünkü hedef tamam! 🎉 (${S.dayStars} ⭐)` : `Bugünkü hedef: ${done} / ${S.goal} ⭐`;
+  $('#goalBar').style.width = (done / S.goal * 100) + '%';
+}
+
+/* ---------- ses, konuşma, konfeti ---------- */
+let AC;
+function sfx(t) {
+  if (!S.sound) return;
+  try {
+    AC = AC || new (window.AudioContext || window.webkitAudioContext)();
+    const notes = { ok: [660, 880], win: [523, 659, 784, 1046], no: [240, 190], tick: [520] }[t] || [440];
+    notes.forEach((f, i) => {
+      const o = AC.createOscillator(), g = AC.createGain(), t0 = AC.currentTime + i * .12;
+      o.type = 'triangle'; o.frequency.value = f;
+      g.gain.setValueAtTime(.0001, t0); g.gain.exponentialRampToValueAtTime(.22, t0 + .02); g.gain.exponentialRampToValueAtTime(.0001, t0 + .25);
+      o.connect(g).connect(AC.destination); o.start(t0); o.stop(t0 + .3);
+    });
+  } catch (e) {}
+}
+function trVoices() { try { return speechSynthesis.getVoices().filter(v => /^tr/i.test(v.lang)); } catch (e) { return []; } }
+function bestVoice() {
+  const vs = trVoices(); if (!vs.length) return null;
+  if (S.voice) { const v = vs.find(v => v.name === S.voice); if (v) return v; }
+  const score = v => (/yelda/i.test(v.name) ? 40 : 0) + (/premium|enhanced|geliştirilmiş|premium/i.test(v.name) ? 20 : 0) + (/google/i.test(v.name) ? 10 : 0) + (v.localService ? 5 : 0);
+  return vs.slice().sort((a, b) => score(b) - score(a))[0];
+}
+function forSpeech(t) {
+  return strip(t)
+    .replace(/[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{2B00}-\u{2BFF}\u{FE0F}\u{1F900}-\u{1F9FF}]/gu, '')
+    .replace(/×/g, ' çarpı ').replace(/−/g, ' eksi ').replace(/\+/g, ' artı ').replace(/▢/g, ' boşluk ').replace(/= \?/g, ' kaç eder').replace(/=/g, ' eşittir ')
+    .replace(/\s*·\s*/g, ', ').replace(/\s{2,}/g, ' ').trim();
+}
+function speak(t, opts) {
+  opts = opts || {};
+  try {
+    const s = window.speechSynthesis; if (!s) return; s.cancel();
+    const txt = forSpeech(t); if (!txt) return;
+    const u = new SpeechSynthesisUtterance(txt);
+    u.lang = 'tr-TR'; u.rate = opts.rate || S.rate || 1.15; u.pitch = 1.05;
+    const v = bestVoice(); if (v) u.voice = v;
+    if (opts.onend) u.onend = opts.onend;
+    s.speak(u);
+  } catch (e) {}
+}
+function autoSpeak(t) { if (S.autoRead) speak(t); }
+function stopSpeak() { try { speechSynthesis.cancel(); } catch (e) {} }
+
+/* ---------- sesle konuşma (mikrofon) ---------- */
+const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+let rec = null, listening = false;
+function listen(onText, onState) {
+  if (!SR) { onState('nosupport'); return; }
+  if (listening) { try { rec.stop(); } catch (e) {} return; }
+  stopSpeak();
+  rec = new SR(); rec.lang = 'tr-TR'; rec.interimResults = true; rec.continuous = false; rec.maxAlternatives = 1;
+  let finalT = '';
+  rec.onstart = () => { listening = true; onState('on'); };
+  rec.onresult = e => { let t = ''; for (let i = e.resultIndex; i < e.results.length; i++) { t += e.results[i][0].transcript; if (e.results[i].isFinal) finalT += e.results[i][0].transcript; } onText(finalT || t, false); };
+  rec.onerror = e => { listening = false; onState(e.error === 'not-allowed' || e.error === 'service-not-allowed' ? 'denied' : e.error === 'no-speech' ? 'nospeech' : 'err'); };
+  rec.onend = () => { const was = listening; listening = false; onState('off'); if (was && finalT.trim()) onText(finalT.trim(), true); };
+  try { rec.start(); } catch (e) { listening = false; onState('err'); }
+}
+function confetti() {
+  const c = $('#confetti'), x = c.getContext('2d'); c.width = innerWidth; c.height = innerHeight;
+  const cols = ['#FF8A3D', '#3D9BFF', '#20B072', '#8E6CEF', '#FF5C8A', '#FFC93C'];
+  const P = Array.from({ length: 150 }, () => ({ x: Math.random() * c.width, y: -20 - Math.random() * c.height * .5, vx: (Math.random() - .5) * 4, vy: 2 + Math.random() * 4, r: 5 + Math.random() * 6, c: pick(cols), a: Math.random() * 6 }));
+  let f = 0;
+  (function loop() {
+    x.clearRect(0, 0, c.width, c.height);
+    P.forEach(p => { p.x += p.vx; p.y += p.vy; p.vy += .04; p.a += .1; x.save(); x.translate(p.x, p.y); x.rotate(p.a); x.fillStyle = p.c; x.fillRect(-p.r / 2, -p.r / 2, p.r, p.r * 1.6); x.restore(); });
+    if (++f < 200) requestAnimationFrame(loop); else x.clearRect(0, 0, c.width, c.height);
+  })();
+}
+
+/* ---------- içerik: MEB 2. sınıf ---------- */
+const WORDS = ['ki-tap|📕','o-kul|🏫','öğ-ret-men|👩‍🏫','ar-ka-daş|🧑‍🤝‍🧑','bah-çe|🏡','a-ğaç|🌳','ke-le-bek|🦋','çi-çek|🌸','gü-neş|☀️','pen-ce-re|🪟','bi-sik-let|🚲','te-le-viz-yon|📺','ka-rın-ca|🐜','kur-ba-ğa|🐸','zü-ra-fa|🦒','pa-pat-ya|🌼','fut-bol|⚽','çan-ta|🎒','or-man|🌲','de-niz|🌊','yağ-mur|🌧️','mey-ve|🧺','ar-mut|🍐','ki-raz|🍒','kar-puz|🍉','u-çurt-ma|🪁','sa-at|⏰','ka-lem|✏️','ço-cuk|🧒','def-ter|📒','ö-dev|📝','kır-mı-zı|🔴','tu-run-cu|🟠','söz-lük|📖','gök-ku-şa-ğı|🌈','don-dur-ma|🍦','pen-gu-en|🐧','tav-şan|🐰','kap-lum-ba-ğa|🐢','a-yak-ka-bı|👟','şem-si-ye|☂️','el-ma|🍎','ba-lık|🐟','yıl-dız|⭐','sin-cap|🐿️'];
+
+const YAZIM = [
+ ['herkes','herkez','**Her + kes = herkes.** Sonunda "kes" var, "z" yok! Makası düşün: kes kes ✂️'],
+ ['yanlış','yalnış','"Yanılmak" kelimesinden gelir: **yan**-lış. Yanılınca yanlış yaparız! 🙃'],
+ ['yalnız','yanlız','"Yalın" yani tek başına kelimesinden gelir: **yal**-nız 🧍'],
+ ['şoför','şöför','İlk hecede **o** var: ş**o**-för. "Şoför amca yolda, o harfi solda!" 🚕'],
+ ['tren','tiren','**Tren** tek hecedir, araya "i" girmez. Çuf çuf, tek seferde: tren! 🚂'],
+ ['kibrit','kibirit','**Kib-rit**: iki hece. Araya fazladan "i" koyma 🔥'],
+ ['makine','makina','Doğrusu **makine**: sonu "e" ile biter ⚙️'],
+ ['sürpriz','süpriz','**Sür-priz**: ilk hecede "r" var, unutma! 🎁'],
+ ['eşofman','eşortman','Doğrusu **eşofman**: içinde "t" yok 🏃'],
+ ['kılavuz','klavuz','**Kı-la-vuz**: "k" harfinden sonra "ı" gelir 🧭'],
+ ['antrenman','antreman','**Ant-ren-man**: ortada "ren" hecesi var ⚽'],
+ ['Ben de geliyorum.','Bende geliyorum.','"de" burada **ayrı** yazılır. Sihirli test: "de"yi çıkar → "Ben geliyorum." Cümle bozulmadı mı? O zaman ayır! ✅'],
+ ['Kalem sende mi?','Kalem sen de mi?','Burada "de" bir **ek** (sende = senin yanında). Çıkarınca "Kalem sen mi?" olur, anlam bozulur → bitişik yaz!'],
+ ['Ankara çok güzel bir şehir.','ankara çok güzel bir şehir.','Şehir adları **büyük harfle** başlar: **A**nkara, **İ**zmir 🏙️'],
+ ["Ali'nin topu kırmızı.",'Alinin topu kırmızı.',"Kişi adlarına gelen ekler **kesme işaretiyle** ayrılır: Ali**'**nin, Ayşe**'**ye ✍️"],
+ ['Okula gittim.','okula gittim.','Cümleler **büyük harfle** başlar, sonuna nokta konur 🔠'],
+];
+
+const HAYAT = [
+ ['Yaya ışığı hangi renkte yanınca karşıya geçeriz?','Yeşil',['Kırmızı','Sarı','Mor'],'Yaya ışığı **yeşil** yanınca önce sola, sonra sağa, sonra yine sola bakıp geçeriz. Kırmızı: dur! 🚦','🚦'],
+ ['Ellerimizi en az kaç saniye sabunla yıkamalıyız?','20 saniye',['2 saniye','5 saniye','1 saniye'],'En az **20 saniye**! İpucu: "İyi ki doğdun" şarkısını iki kez söyle, süre tamam olur 🧼','🧼'],
+ ["Türkiye'nin başkenti neresidir?",'Ankara',['İstanbul','İzmir','Bursa'],'Başkentimiz **Ankara**. En kalabalık şehrimiz İstanbul ama başkent Ankara! 🇹🇷','🏛️'],
+ ["Cumhuriyet Bayramı'nı hangi gün kutlarız?",'29 Ekim',['23 Nisan','19 Mayıs','30 Ağustos'],'Cumhuriyet **29 Ekim 1923**\'te ilan edildi. Her yıl 29 Ekim\'de kutlarız 🎉','🇹🇷'],
+ ['23 Nisan hangi bayramdır?','Ulusal Egemenlik ve Çocuk Bayramı',['Cumhuriyet Bayramı','Zafer Bayramı','Gençlik ve Spor Bayramı'],"**23 Nisan**, Atatürk'ün çocuklara armağan ettiği **Ulusal Egemenlik ve Çocuk Bayramı**'dır 🎈",'🎈'],
+ ['Acil bir durumda hangi numarayı ararız?','112',['123','911','100'],'Acil yardım numaramız **112**. Akılda tut: "bir, bir, iki — yardım gelsin hızlı!" 🚑','🚑'],
+ ['Dişlerimizi günde en az kaç kez fırçalamalıyız?','2 kez',['1 kez','Haftada 1','Hiç'],'Sabah kahvaltıdan sonra ve akşam yatmadan önce: günde en az **2 kez** 🪥','🪥'],
+ ['Hangisi bir meyvedir?','Elma',['Havuç','Ispanak','Patates'],'**Elma** ağaçta yetişen bir meyvedir. Havuç, ıspanak ve patates sebzedir 🍎','🧺'],
+ ['Bitkilerin büyümesi için hangisi gereklidir?','Su, hava ve güneş ışığı',['Sadece karanlık','Şeker','Oyuncak'],'Bitkiler de canlıdır: **su, hava ve güneş ışığı** olmadan büyüyemezler 🌱','🪴'],
+ ['Bir yılda kaç mevsim vardır?','4',['2','6','12'],'**4 mevsim** var: ilkbahar, yaz, sonbahar, kış. Parmaklarınla say: 4! 🍂','🍂'],
+ ['Bir haftada kaç gün vardır?','7',['5','10','12'],'Bir haftada **7 gün** var: Pazartesi, Salı, Çarşamba, Perşembe, Cuma, Cumartesi, Pazar 📅','📅'],
+ ['Bir yılda kaç ay vardır?','12',['7','10','4'],'Bir yılda **12 ay** var. Ocak ile başlar, Aralık ile biter 🗓️','🗓️'],
+ ['Deprem anında ne yapmalıyız?','Çök, kapan, tutun',['Merdivene koş','Pencereye yaklaş','Asansöre bin'],'Hatırla: **Çök – Kapan – Tutun!** Sağlam bir eşyanın yanına çök, başını koru, tutun 🛡️','🏠'],
+ ['Boş plastik şişeyi nereye atmalıyız?','Geri dönüşüm kutusuna',['Yere','Denize','Bahçeye'],'Plastik şişe **geri dönüşüm kutusuna** atılır; yeniden kullanılır, doğa korunur ♻️','🧴'],
+ ['Güneş hangi yönden doğar?','Doğu',['Batı','Kuzey','Güney'],'Güneş **doğudan** doğar, batıdan batar. İsmi bile ipucu: **doğ**u → **doğ**ar! 🌅','🌅'],
+ ['Paramızı biriktirmek için ne kullanırız?','Kumbara',['Çöp kutusu','Çanta cebi','Ayakkabı'],'Paramızı **kumbarada** biriktiririz. Damlaya damlaya göl olur! 🐷','💰'],
+ ['Okul servisinden indikten sonra ne yapmalıyız?','Servis gidene kadar kaldırımda bekleriz',['Hemen servisin önünden geçeriz','Yola koşarız','Servisin arkasına saklanırız'],'Sürücü bizi göremeyebilir! **Servis gidene kadar kaldırımda bekle**, sonra güvenle geç 🚌','🚌'],
+ ["İstiklal Marşı'nı kim yazmıştır?",'Mehmet Akif Ersoy',['Yunus Emre','Nasreddin Hoca','Karagöz'],"İstiklal Marşı'nın şairi **Mehmet Akif Ersoy**'dur 🎶",'🎶'],
+ ['Mustafa Kemal Atatürk hangi şehirde doğmuştur?','Selanik',['Ankara','İzmir','Samsun'],"Atatürk **1881'de Selanik**'te doğdu. Annesi Zübeyde Hanım, babası Ali Rıza Efendi'dir ⭐",'⭐'],
+ ['Hangisi sağlıklı bir kahvaltıdır?','Peynir, yumurta, domates',['Cips ve kola','Sadece şeker','Gofret'],'**Peynir, yumurta, domates** bize güç verir. Cips ve kola sağlıklı değildir 🍳','🍽️'],
+];
+
+const ING = [
+ ['"Red" hangi renktir?','Kırmızı',['Mavi','Yeşil','Sarı'],'**Red = kırmızı** 🔴. "Red" deyince kırmızı domatesi düşün 🍅'],
+ ['"Cat" ne demektir?','Kedi',['Köpek','Kuş','Balık'],'**Cat = kedi** 🐱. Kedi "miyav" der, cat "meow" der!'],
+ ['"Five" kaçtır?','5',['4','2','9'],'**Five = 5** ✋. Parmaklarını say: one, two, three, four, **five**!'],
+ ['"Good morning" ne demektir?','Günaydın',['İyi geceler','Hoşça kal','Teşekkürler'],'**Good morning = Günaydın** ☀️. Sabah uyanınca söyleriz.'],
+ ['"Apple" nedir?','Elma',['Armut','Muz','Çilek'],'**Apple = elma** 🍎. A for apple!'],
+ ['"Blue" hangi renktir?','Mavi',['Kırmızı','Pembe','Siyah'],'**Blue = mavi** 💙. Gökyüzü ve deniz blue!'],
+ ['"Dog" ne demektir?','Köpek',['Kedi','At','Tavşan'],'**Dog = köpek** 🐶. Hav hav! Woof woof!'],
+ ['"Thank you" ne demektir?','Teşekkür ederim',['Günaydın','Özür dilerim','Merhaba'],'**Thank you = Teşekkür ederim** 🙏'],
+ ['"Three" kaçtır?','3',['8','6','1'],'**Three = 3**. One, two, **three**! 🥉'],
+ ['"Book" nedir?','Kitap',['Kalem','Silgi','Masa'],'**Book = kitap** 📖'],
+ ['"Yellow" hangi renktir?','Sarı',['Yeşil','Mor','Turuncu'],'**Yellow = sarı** 💛. Güneş ve muz yellow!'],
+ ['"Hello" ne demektir?','Merhaba',['Hoşça kal','Evet','Hayır'],'**Hello = Merhaba** 👋. "Goodbye" ise hoşça kal demek.'],
+ ['"Bird" ne demektir?','Kuş',['Balık','Arı','Kedi'],'**Bird = kuş** 🐦'],
+ ['"Ten" kaçtır?','10',['2','7','100'],'**Ten = 10** 🔟. İki elindeki bütün parmaklar!'],
+];
+
+const PRAISE = ['Harikasın! 🌟', 'Süpersin! 🚀', 'Aferin sana! 👏', 'Tam isabet! 🎯', 'Beynin çok çalışıyor! 🧠', 'Bravo! 🎉'];
+
+/* ---------- soru üreticiler ---------- */
+function makeOpts(ans) {
+  const s = new Set();
+  const sw = +String(ans).split('').reverse().join('');
+  shuffle([ans + 1, ans - 1, ans + 10, ans - 10, ans + 2, ans - 2, sw]).forEach(v => { if (v >= 0 && v !== ans && s.size < 3) s.add(v); });
+  while (s.size < 3) { const v = ans + rand(3, 12); if (v !== ans) s.add(v); }
+  return shuffle([ans, ...s]).map(String);
+}
+function explainAdd(a, b) {
+  const ab = a % 10, bb = b % 10, ao = Math.floor(a / 10), bo = Math.floor(b / 10), s1 = ab + bb, e = s1 >= 10;
+  let t = `Önce **birlikler**: ${ab} + ${bb} = ${s1}.`;
+  if (e) t += ` 10 birlik 1 onluk eder → ${s1 % 10} yaz, **elde 1** ✋.`;
+  t += ` Sonra **onluklar**: ${ao} + ${bo}${e ? ' + 1 (elde)' : ''} = ${ao + bo + (e ? 1 : 0)}.\nSonuç: **${a + b}** 🎉`;
+  return t;
+}
+function explainSub(a, b) {
+  const ab = a % 10, bb = b % 10, ao = Math.floor(a / 10), bo = Math.floor(b / 10);
+  if (ab >= bb) return `Önce **birlikler**: ${ab} − ${bb} = ${ab - bb}. Sonra **onluklar**: ${ao} − ${bo} = ${ao - bo}.\nSonuç: **${a - b}** 🎉`;
+  return `Birlikler yetmiyor: ${ab} içinden ${bb} çıkmaz! 🤔 Komşudan **1 onluk ödünç** al → ${ab + 10} − ${bb} = ${ab + 10 - bb}.\nOnluklar bir azaldı: ${ao - 1} − ${bo} = ${ao - 1 - bo}. Sonuç: **${a - b}** 🎉`;
+}
+function mathItem(mode) {
+  if (mode === 'karisik') mode = pick(['topla', 'cikar', 'carp', 'eksik']);
+  let a, b, ans, prompt, explain, visual = null;
+  if (mode === 'topla') { a = rand(10, 79); b = rand(3, Math.min(39, 99 - a)); ans = a + b; prompt = `${a} + ${b} = ?`; explain = explainAdd(a, b); visual = [a, b]; }
+  else if (mode === 'cikar') { a = rand(21, 99); b = rand(3, a - 5); ans = a - b; prompt = `${a} − ${b} = ?`; explain = explainSub(a, b); visual = [a, b]; }
+  else if (mode === 'carp') {
+    a = rand(2, 5); b = rand(1, 10); ans = a * b; prompt = `${a} × ${b} = ?`;
+    const seq = Array.from({ length: a }, (_, i) => b * (i + 1)).join(', ');
+    explain = `${a} × ${b}, "**${a} kere ${b}**" demektir: ${Array(a).fill(b).join(' + ')} = **${ans}**.\nRitmik say: ${seq} 🥁`;
+  } else {
+    const c = rand(25, 99); a = rand(5, c - 4); b = c - a; ans = b; prompt = `${a} + ▢ = ${c}`;
+    explain = `Eksik sayıyı bulmak için **büyük sayıdan küçüğü çıkar**: ${c} − ${a} = ${b}.\nKontrol et: ${a} + ${b} = ${c} ✔️`;
+  }
+  return { kind: 'mcq', mod: 'math', prompt, options: makeOpts(ans), answer: String(ans), explain, visual, key: 'm:' + prompt };
+}
+function heceItem(w) {
+  const [s, emoji] = w.split('|'); const parts = s.split('-'); const word = parts.join('');
+  return { kind: 'hece', mod: 'turkce', word, parts, emoji, key: 'h:' + word,
+    explain: `**${parts.join(' · ')}** — Kelimeyi söylerken her hecede el çırp: ${parts.map(p => p + ' 👏').join(' ')}\nKural: Her hecede **bir tane sesli harf** (a, e, ı, i, o, ö, u, ü) vardır!` };
+}
+function yazimItem([ok, no, rule]) {
+  return { kind: 'mcq', mod: 'turkce', emoji: '✍️', prompt: ok.length > 12 ? 'Hangi cümle doğru yazılmış?' : 'Hangisi doğru yazılmış?', options: shuffle([ok, no]), answer: ok, explain: rule, key: 'y:' + ok };
+}
+function bilgiItem([q, ok, wrong, ex, emo]) {
+  return { kind: 'mcq', mod: 'bilgi', emoji: emo || '🇬🇧', prompt: q, options: shuffle([ok, ...wrong]), answer: ok, explain: ex, key: 'b:' + q };
+}
+
+/* ---------- ana sayfa ---------- */
+function home() {
+  VIEW = 'home';
+  const n = S.mistakes.length;
+  app.innerHTML = `
+  ${!S.name ? `<div class="onb"><div style="font-size:54px">👋</div><div style="flex:1;min-width:220px"><h2 style="margin:0;font-weight:900">Merhaba! Senin adın ne?</h2><p class="muted" style="margin:4px 0 0">Bilge Baykuş seni adınla çağırsın.</p></div><input id="nm" placeholder="Adını yaz" maxlength="20"><button class="btn primary" data-a="setname">Başlayalım! 🚀</button></div>` : ''}
+  <h1>${S.name ? `Merhaba ${esc(S.name)}! 👋` : 'Hoş geldin! 👋'}</h1>
+  <p class="lead">Bugün ne yapalım? Her doğru cevap bir ⭐ kazandırır.</p>
+  <div class="grid">
+    <button class="card hero wide" data-a="help"><div class="emo">🦉</div><div><h3>Ödevime Yardım Et</h3><p>Bilge Baykuş'a sor ya da ödevinin fotoğrafını gönder. Cevabı söylemez, birlikte buluruz!</p></div></button>
+    <button class="card c-blue" data-a="menu" data-v="math"><div class="emo">🔢</div><div><h3>Matematik</h3><p>Toplama, çıkarma, çarpma, eksik sayı</p></div></button>
+    <button class="card c-orange" data-a="menu" data-v="tr"><div class="emo">🔤</div><div><h3>Türkçe</h3><p>Hece sıralama, doğru yazım</p></div></button>
+    <button class="card c-green" data-a="menu" data-v="bilgi"><div class="emo">🌍</div><div><h3>Bil Bakalım</h3><p>Hayat Bilgisi ve İngilizce</p></div></button>
+    <button class="card c-pink" data-a="review" ${n ? '' : 'disabled'}><div class="emo">📕</div><div><h3>Hata Defterim ${n ? `(${n})` : ''}</h3><p>${n ? 'Yanlış yaptıklarını tekrar et, defterden sil!' : 'Defterin boş. Süpersin! ✨'}</p></div></button>
+  </div>`;
+  const nm = $('#nm'); if (nm) { nm.focus(); nm.addEventListener('keydown', e => { if (e.key === 'Enter') A.setname(); }); }
+}
+const MENUS = {
+  math: { t: 'Matematik 🔢', items: [['math:topla','➕','Toplama',"100'e kadar, eldeli",'blue'],['math:cikar','➖','Çıkarma','Onluk bozarak','blue'],['math:carp','✖️','Çarpma','Kere kere, ritmik sayma','purple'],['math:eksik','🔍','Eksik Sayı','▢ yerine ne gelir?','green'],['math:karisik','🎲','Karışık','Hepsinden biraz','orange']] },
+  tr: { t: 'Türkçe 🔤', items: [['tr:hece','🧩','Hece Sırala','Heceleri doğru diz, kelimeyi bul','orange'],['tr:yazim','✍️','Doğru Yazım','Hangisi doğru yazılmış?','purple']] },
+  bilgi: { t: 'Bil Bakalım 🌍', items: [['bilgi:hayat','🏡','Hayat Bilgisi','Okul, ev, sağlık, güvenlik, ülkemiz','green'],['bilgi:ing','🇬🇧','İngilizce','Renkler, sayılar, hayvanlar','blue'],['bilgi:mix','🎲','Karışık','Hepsinden biraz','orange']] },
+};
+function menu(v) {
+  VIEW = 'menu'; const m = MENUS[v];
+  app.innerHTML = `<div class="rtop"><button class="btn soft sm" data-a="home">← Ana sayfa</button><div class="rtitle">${m.t}</div></div>
+  <div class="grid ${m.items.length > 2 ? 'three' : ''}">${m.items.map(([id, e, t, d, c]) => `<button class="card c-${c}" data-a="play" data-v="${id}"><div class="emo">${e}</div><div><h3>${t}</h3><p>${esc(d)}</p></div></button>`).join('')}</div>`;
+}
+
+/* ---------- oyun turu ---------- */
+let R = null;
+function play(v) {
+  const [m, mode] = v.split(':'); let items, title;
+  if (m === 'math') { const seen = new Set(); items = []; while (items.length < 10) { const it = mathItem(mode); if (!seen.has(it.key)) { seen.add(it.key); items.push(it); } } title = MENUS.math.items.find(x => x[0] === v)[2]; }
+  else if (v === 'tr:hece') { items = shuffle(WORDS).slice(0, 8).map(heceItem); title = 'Hece Sırala'; }
+  else if (v === 'tr:yazim') { items = shuffle(YAZIM).slice(0, 8).map(yazimItem); title = 'Doğru Yazım'; }
+  else { const pool = mode === 'hayat' ? HAYAT : mode === 'ing' ? ING : [...HAYAT, ...ING]; items = shuffle(pool).slice(0, 10).map(bilgiItem); title = MENUS.bilgi.items.find(x => x[0] === v)[2]; }
+  startRound(title, items, false, v);
+}
+function startReview() {
+  if (!S.mistakes.length) return home();
+  const items = shuffle(S.mistakes).slice(0, 10).map(m => { const c = JSON.parse(JSON.stringify(m)); if (c.kind === 'mcq') c.options = shuffle(c.options); return c; });
+  startRound('Hata Defterim 📕', items, true, 'review');
+}
+function startRound(title, items, review, replay) { R = { title, items, review, replay, i: 0, ok: 0, res: [], answered: false }; VIEW = 'round'; renderQ(); }
+const cur = () => R.items[R.i];
+function roundTop() {
+  return `<div class="rtop"><button class="btn soft sm" data-a="home">← Çık</button><div class="rtitle">${esc(R.title)}</div><div class="dots">${R.items.map((_, i) => `<i class="${R.res[i] || (i === R.i ? 'now' : '')}"></i>`).join('')}</div></div>`;
+}
+function renderQ() {
+  const it = cur(); R.answered = false;
+  if (it.kind === 'hece') {
+    R.pos = 0; R.miss = false;
+    let sh = shuffle(it.parts); let g = 0; while (sh.join() === it.parts.join() && g++ < 10) sh = shuffle(it.parts);
+    app.innerHTML = roundTop() + `<div class="qcard"><div class="qemo">${it.emoji}</div>
+      <div class="qtext">Heceleri sırayla seç! <button class="iconbtn sm" data-a="speak" data-t="${esc(it.word)}" title="Sesli oku">🔊</button></div>
+      <div class="slots">${it.parts.map((_, i) => `<span class="slot" id="s${i}"></span>`).join('')}</div>
+      <div class="opts sylls">${sh.map(p => `<button class="opt syl" data-a="syl" data-p="${esc(p)}">${esc(p)}</button>`).join('')}</div>
+      <div id="fb"></div></div>`;
+    autoSpeak('Heceleri sırayla seç. Kelime: ' + it.word);
+  } else {
+    app.innerHTML = roundTop() + `<div class="qcard">
+      ${it.emoji ? `<div class="qemo">${it.emoji}</div>` : ''}
+      <div class="qtext ${it.mod === 'math' ? 'big' : ''}">${esc(it.prompt)}<button class="iconbtn sm" data-a="speak" data-t="${esc(it.prompt)}" title="Sesli oku">🔊</button></div>
+      <div class="opts n${it.options.length}">${it.options.map((o, i) => `<button class="opt" data-a="opt" data-v="${i}"><span class="k">${i + 1}</span>${esc(o)}</button>`).join('')}</div>
+      <div id="fb"></div></div>`;
+    autoSpeak(it.mod === 'math' ? it.prompt : it.prompt + '. ' + it.options.map((o, i) => (i + 1) + ': ' + o).join('. '));
+  }
+}
+function blocks(v) {
+  return `<div class="blocks">${v.map(n => { const t = Math.floor(n / 10), o = n % 10; return `<div class="bgroup"><div class="blbl">${n} = ${t} onluk ${o} birlik</div><div class="blks">${'<span class="ten"></span>'.repeat(t)}${'<span class="one"></span>'.repeat(o)}</div></div>`; }).join('')}</div>`;
+}
+function explainBox(it, withNext) {
+  return `<div class="explain"><div class="exh">🦉 Bilge diyor ki:</div><div>${md(it.explain)}</div>${it.visual ? blocks(it.visual) : ''}
+  <div class="row">${withNext ? '<button class="btn primary" data-a="next" id="nextb">Anladım, devam ➜</button>' : ''}<button class="btn soft" data-a="ask">🦉 Bilge'ye sor</button><button class="btn soft" data-a="speak" data-t="${esc(strip(it.explain))}">🔊 Dinle</button></div></div>`;
+}
+function answerMCQ(el, i) {
+  if (R.answered) return; R.answered = true;
+  const it = cur(), val = it.options[+i], ok = val === it.answer;
+  document.querySelectorAll('.opt').forEach(b => { const v = it.options[+b.dataset.v]; if (v === it.answer) b.classList.add('ok'); else if (b === el) b.classList.add('no'); b.disabled = true; });
+  if (ok) win(); else { R.lastWrong = { it, val }; R.res[R.i] = 'no'; stat(it.mod, false); addMistake(it); sfx('no'); $('#fb').innerHTML = explainBox(it, true); autoSpeak('Olsun, birlikte bakalım. ' + strip(it.explain)); }
+}
+function pickSyl(el) {
+  if (R.answered) return;
+  const it = cur(), p = el.dataset.p;
+  if (p === it.parts[R.pos]) {
+    const s = $('#s' + R.pos); s.textContent = p; s.classList.add('filled'); el.disabled = true; el.classList.add('used'); R.pos++; sfx('tick');
+    if (R.pos === it.parts.length) {
+      R.answered = true; speak(it.word);
+      if (!R.miss) win();
+      else { R.res[R.i] = 'no'; stat(it.mod, false); addMistake(it); $('#fb').innerHTML = `<div class="praise" style="color:var(--purple)">Tamamladın: ${esc(it.word)} 👍</div>` + explainBox(it, true); }
+    }
+  } else {
+    el.classList.remove('shake'); void el.offsetWidth; el.classList.add('shake'); sfx('no');
+    if (!R.miss) { R.miss = true; R.lastWrong = { it, val: p }; speak(it.parts.join(', ')); $('#fb').innerHTML = `<div class="hint">İpucu: Kelimeyi yavaşça söyle, her hecede el çırp 👏 Sonra tekrar dene!</div>`; }
+  }
+}
+function win() {
+  const it = cur(); R.ok++; R.res[R.i] = 'ok'; addStar(); stat(it.mod, true); sfx('ok');
+  if (R.review) removeMistake(it.key);
+  const pr = pick(PRAISE); $('#fb').innerHTML = `<div class="praise">${pr} +1 ⭐</div>`; autoSpeak(pr);
+  const tok = R; setTimeout(() => { if (R === tok && VIEW === 'round' && R.res[R.i] === 'ok') next(); }, 1200);
+}
+function next() { stopSpeak(); R.i++; if (R.i >= R.items.length) endRound(); else renderQ(); }
+function endRound() {
+  VIEW = 'end'; const n = R.items.length, k = R.ok, great = k / n >= .7;
+  if (great) { confetti(); sfx('win'); }
+  app.innerHTML = `<div class="endcard center"><div class="bigemo">${k === n ? '🏆' : great ? '🌟' : '💪'}</div>
+   <h2>${n} sorudan ${k} doğru!</h2>
+   <p>${k === n ? 'Mükemmel! Hepsini bildin!' : great ? 'Çok iyi gidiyorsun!' : 'Her hata bize yeni bir şey öğretir. Bir daha deneyelim mi?'}</p>
+   ${k < n ? `<p class="muted">${R.review ? 'Bilemediklerin defterde kaldı, sonra yine deneriz 📕' : "Yanlışların Hata Defteri'ne eklendi 📕"}</p>` : ''}
+   <div class="row center"><button class="btn primary" data-a="replay">Tekrar oyna 🔁</button>${!R.review && S.mistakes.length ? '<button class="btn green" data-a="review">Hatalarımı tekrar et 📕</button>' : ''}<button class="btn soft" data-a="home">Ana sayfa 🏠</button></div></div>`;
+}
+
+/* ---------- Bilge Baykuş (Claude) ---------- */
+let samplePromise = null, imgOK = false;
+const API_URL = 'https://api.anthropic.com/v1/messages';
+function blobToB64(blob) { return new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(String(r.result).split(',')[1]); r.onerror = rej; r.readAsDataURL(blob); }); }
+/* claude.ai dışında (dosya sürümü): Veli Köşesi'ndeki API anahtarıyla doğrudan Anthropic'e bağlanır */
+function apiSample() {
+  const fn = async (hist, opts) => {
+    opts = opts || {};
+    const msgs = await Promise.all(hist.map(async (m, i) => {
+      if (opts.images && opts.images.length && m.role === 'user' && i === hist.length - 1) {
+        const parts = await Promise.all(opts.images.map(async b => ({ type: 'image', source: { type: 'base64', media_type: b.type || 'image/jpeg', data: await blobToB64(b) } })));
+        return { role: m.role, content: [...parts, { type: 'text', text: m.content }] };
+      }
+      return { role: m.role, content: m.content };
+    }));
+    let res;
+    try {
+      res = await fetch(API_URL, { method: 'POST', signal: opts.signal, headers: { 'content-type': 'application/json', 'x-api-key': S.apiKey, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
+        body: JSON.stringify({ model: S.model || 'claude-sonnet-5-5', max_tokens: 600, stream: true, messages: msgs }) });
+    } catch (e) { throw { code: 'network', message: 'İnternet bağlantısı yok ya da istek engellendi' }; }
+    if (!res.ok) { let d = ''; try { d = (await res.json()).error.message; } catch (e) {} throw { code: res.status === 401 ? 'not_granted' : res.status === 429 ? 'rate_limited' : 'api', message: d || ('HTTP ' + res.status) }; }
+    const rd = res.body.getReader(), dec = new TextDecoder(); let buf = '', text = '';
+    while (true) {
+      const { done, value } = await rd.read(); if (done) break;
+      buf += dec.decode(value, { stream: true }); const lines = buf.split('\n'); buf = lines.pop();
+      for (const ln of lines) {
+        if (!ln.startsWith('data:')) continue;
+        try { const ev = JSON.parse(ln.slice(5)); if (ev.type === 'content_block_delta' && ev.delta && ev.delta.text) { text += ev.delta.text; if (opts.onText) opts.onText({ text, delta: ev.delta.text }); } if (ev.type === 'error') throw { code: 'api', message: ev.error && ev.error.message }; } catch (e) { if (e && e.code) throw e; }
+      }
+    }
+    return { text, truncated: false };
+  };
+  fn.limits = async () => ({ images: true });
+  return fn;
+}
+function getSample() {
+  if (!samplePromise) {
+    if (window.claude && window.claude.use) {
+      samplePromise = window.claude.use('sample').then(async s => { if (s && s.limits) { try { imgOK = !!(await s.limits()).images; } catch (e) {} } return s; }).catch(() => null);
+    } else if (S.apiKey) { imgOK = true; samplePromise = Promise.resolve(apiSample()); }
+    else return Promise.resolve(null);
+  }
+  return samplePromise;
+}
+function resetSample() { samplePromise = null; imgOK = false; }
+let chat = [], chatImg = null, pending = null, busy = false;
+const CHIPS = ['Matematik ödevimi anlamadım 🔢', 'Bu kelimenin anlamı ne? 📖', 'Bana bir soru sor! 🎲', 'Bir tekerleme öğret 🎵'];
+function bilgeRules() {
+  return `Sen "Bilge Baykuş"sun: Türkiye'de ilkokul 2. sınıfa giden ${S.name ? S.name + ' adlı bir çocuğun' : 'bir çocuğun'} sevimli, sabırlı ödev öğretmenisin. MEB Türkiye Yüzyılı Maarif Modeli 2. sınıf ders kitaplarına (Türkçe, Matematik, Hayat Bilgisi, İngilizce) uygun konuş.
+Kurallar:
+- Cevabı hemen söyleme. Önce çocuğu düşündürecek TEK küçük soru sor ya da bir ipucu ver. Çocuk iki kez deneyip hâlâ zorlanıyorsa çözümü adım adım göster.
+- Çok kısa yaz: en fazla 3-4 kısa cümle. 7-8 yaşındaki bir çocuğun anlayacağı basit kelimeler kullan. 1-2 emoji kullanabilirsin.
+- Hata yaparsa asla azarlama; çabasını öv, sonra hatayı akılda kalıcı bir yolla öğret: kısa bir tekerleme ya da kafiyeli kural, parmakla sayma, günlük hayattan örnek (şeker, top, elma), minik bir oyun.
+- Doğru bulunca kutla ve aynı konudan bir mini alıştırma sorusu sor.
+- Fotoğraf gelirse önce ödevde ne istendiğini basitçe anlat, sonra ilk soruyla başla; bütün ödevi tek seferde çözme.
+- Ödev dışı ya da çocuğa uygun olmayan konularda nazikçe ödeve dön.
+- Önemli kelimeleri **kalın** yaz. Başlık, tablo veya uzun liste kullanma.`;
+}
+function help(prefill) {
+  VIEW = 'help';
+  app.innerHTML = `<div class="rtop"><button class="btn soft sm" data-a="home">← Ana sayfa</button><div class="rtitle">🦉 Bilge Baykuş</div><button class="btn soft sm" data-a="newchat">Yeni konu ✨</button></div>
+  <div class="chat"><div id="msgs" class="msgs"></div>
+   <div class="chips" id="chips">${CHIPS.map(c => `<button class="chip" data-a="chip" data-t="${esc(c)}">${esc(c)}</button>`).join('')}</div>
+   <div id="imgprev"></div>
+   <form id="cf" class="composer"><label class="iconbtn photo" id="phl" title="Ödevin fotoğrafını ekle" style="display:none">📷<input type="file" id="ph" accept="image/*" hidden></label><button type="button" class="iconbtn photo mic" id="mic" data-a="mic" title="Konuşarak sor">🎤</button><textarea id="ti" rows="2" placeholder="Ne sormak istersin? Yaz ya da 🎤 ile konuş..."></textarea><button class="btn primary" type="submit">Gönder ➜</button></form>
+   <div id="nos" class="muted small"></div></div>`;
+  renderMsgs();
+  if (!SR) $('#mic').style.display = 'none';
+  $('#cf').addEventListener('submit', e => { e.preventDefault(); const t = $('#ti').value; $('#ti').value = ''; send(t); });
+  $('#ti').addEventListener('keydown', e => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); $('#cf').requestSubmit(); } });
+  $('#ph').addEventListener('change', async e => {
+    const f = e.target.files[0]; e.target.value = ''; if (!f) return;
+    try { pending = await shrink(f); $('#imgprev').innerHTML = `<img src="${pending.url}" alt="Ödev fotoğrafı"><span class="muted">Fotoğraf hazır! Bir şey yazıp gönder 📨</span><button class="btn soft sm" data-a="rmimg">Kaldır</button>`; }
+    catch (err) { $('#nos').textContent = 'Bu fotoğraf açılamadı, başka bir tane dener misin?'; }
+  });
+  getSample().then(s => {
+    if (VIEW !== 'help') return;
+    if (!s) $('#nos').innerHTML = 'Bilge şu an bağlı değil. Bir büyüğün <b>Veli Köşesi ⚙️</b>nden Bilge\'yi açması gerekiyor. Oyunlar yine çalışır 🎮';
+    else if (imgOK) $('#phl').style.display = '';
+  });
+  if (prefill) send(prefill); else $('#ti').focus();
+}
+async function shrink(file) {
+  const url = URL.createObjectURL(file); const img = new Image();
+  await new Promise((r, j) => { img.onload = r; img.onerror = j; img.src = url; });
+  const m = 1400, sc = Math.min(1, m / Math.max(img.width, img.height)), c = document.createElement('canvas');
+  c.width = Math.round(img.width * sc); c.height = Math.round(img.height * sc);
+  c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+  const blob = await new Promise(r => c.toBlob(r, 'image/jpeg', .85));
+  return { blob, url };
+}
+const OWL = '<svg class="av" viewBox="0 0 100 100" width="34" height="34" aria-hidden="true"><path d="M20 20 L36 34 L20 42Z M80 20 L64 34 L80 42Z" fill="#6F4FD8"/><ellipse cx="50" cy="58" rx="34" ry="36" fill="#8E6CEF"/><ellipse cx="50" cy="71" rx="20" ry="21" fill="#EDE6FF"/><circle cx="36" cy="46" r="13" fill="#fff"/><circle cx="64" cy="46" r="13" fill="#fff"/><circle cx="38" cy="47" r="6" fill="#2B2A4C"/><circle cx="62" cy="47" r="6" fill="#2B2A4C"/><path d="M45 56 L55 56 L50 64Z" fill="#FF8A3D"/></svg>';
+function botHTML(t, typing) {
+  const shown = !t || t === 'Thinking...' ? 'Düşünüyorum… 🤔' : t;
+  return `${OWL}<div class="${typing ? 'typing' : ''}">${md(shown)}${!typing && t ? `<button class="sp" data-a="speak" data-t="${esc(strip(t))}" title="Sesli oku">🔊</button>` : ''}</div>`;
+}
+function renderMsgs() {
+  const box = $('#msgs'); if (!box) return;
+  const hi = `Merhaba${S.name ? ' ' + esc(S.name) : ''}! Ben **Bilge** 🦉 Ödevinde neye takıldın? Yazabilirsin${imgOK ? ' ya da ödevinin fotoğrafını 📷 gönderebilirsin' : ''}.`;
+  box.innerHTML = `<div class="msg bot">${botHTML(hi, false)}</div>` + chat.map((m, i) => m.role === 'user'
+    ? `<div class="msg me">${m.img ? `<img src="${m.img}" alt="Ödev fotoğrafı">` : ''}${md(m.text)}</div>`
+    : `<div class="msg bot" ${i === chat.length - 1 ? 'id="last"' : ''}>${botHTML(m.text, busy && i === chat.length - 1)}</div>`).join('');
+  $('#chips').style.display = chat.length ? 'none' : '';
+  box.scrollTop = box.scrollHeight;
+}
+async function send(text) {
+  text = (text || '').trim();
+  if (busy || (!text && !pending)) return;
+  if (!text) text = 'Bu ödevde bana yardım eder misin?';
+  const sample = await getSample();
+  if (!sample) { $('#nos').innerHTML = 'Bilge şu an bağlı değil. Bir büyüğün <b>Veli Köşesi ⚙️</b>nden Bilge\'yi açması gerekiyor 🎮'; return; }
+  const u = { role: 'user', text };
+  if (pending) { chatImg = pending.blob; u.img = pending.url; u.hasImg = true; pending = null; $('#imgprev').innerHTML = ''; }
+  chat.push(u);
+  const bot = { role: 'assistant', text: '' }; chat.push(bot); busy = true; renderMsgs();
+  // geçmişi kur: hatalı cevapları çıkar, aynı rolleri birleştir, kuralları ilk mesaja ekle
+  const hist = [];
+  chat.slice(0, -1).filter(m => !m.err).forEach(m => {
+    const c = m.text + (m.hasImg ? '\n[Ödevimin fotoğrafını ekledim]' : '');
+    const last = hist[hist.length - 1];
+    if (last && last.role === m.role) last.content += '\n' + c; else hist.push({ role: m.role, content: c });
+  });
+  hist[0].content = bilgeRules() + '\n\n---\nÇocuğun mesajı:\n' + hist[0].content;
+  try {
+    const opts = { cache: false, onText: ({ text }) => { bot.text = text; const l = $('#last'); if (l) { l.innerHTML = botHTML(text, true); $('#msgs').scrollTop = 1e9; } } };
+    if (chatImg && imgOK) opts.images = [chatImg];
+    const r = await sample(hist, opts); bot.text = r.text;
+    if (VIEW === 'help') autoSpeak(bot.text);
+  } catch (err) {
+    bot.err = true;
+    bot.text = err && err.code === 'rate_limited' ? 'Biraz dinlenmem lazım 😴 Bir dakika sonra tekrar dener misin?'
+      : err && err.code === 'not_granted' ? (S.apiKey && !(window.claude && window.claude.use) ? 'Anahtarım çalışmadı 🔑 Bir büyüğün Veli Köşesi\'nden kontrol etmesi gerekiyor.' : 'Konuşabilmem için izin gerekiyor. Bir büyüğünden izin vermesini iste 🙏')
+      : err && err.code === 'network' ? 'İnternete bağlanamadım 📡 Bağlantıyı kontrol edip tekrar dener misin?'
+      : 'Hımm, bir sorun oldu. Tekrar dener misin? 🙈' + (err && err.message ? ` (${err.message})` : '');
+  }
+  busy = false; renderMsgs();
+  const ti = $('#ti'); if (ti) ti.focus();
+}
+
+/* ---------- Veli Köşesi ---------- */
+let resetArm = false;
+function settings() {
+  VIEW = 'settings'; resetArm = false;
+  const names = { math: 'Matematik', turkce: 'Türkçe', bilgi: 'Bil Bakalım' };
+  const rows = Object.keys(names).map(k => { const s = S.stats[k] || { c: 0, w: 0 }, t = s.c + s.w; return `<tr><td>${names[k]}</td><td>${s.c}</td><td>${s.w}</td><td>${t ? Math.round(s.c / t * 100) + '%' : '–'}</td></tr>`; }).join('');
+  app.innerHTML = `<div class="rtop"><button class="btn soft sm" data-a="home">← Ana sayfa</button><div class="rtitle">⚙️ Veli Köşesi</div></div>
+  <div class="panel"><h2>Ayarlar</h2>
+    <div class="field">Çocuğun adı: <input id="sName" value="${esc(S.name)}" maxlength="20"></div>
+    <div class="field">Günlük yıldız hedefi: <select id="sGoal">${[5, 10, 15, 20, 30].map(g => `<option ${g === S.goal ? 'selected' : ''}>${g}</option>`).join('')}</select></div>
+    <div class="field"><label><input type="checkbox" id="sSound" ${S.sound ? 'checked' : ''}> Ses efektleri</label></div>
+  </div>
+  <div class="panel"><h2>🦉 Bilge Baykuş bağlantısı</h2>
+    ${window.claude && window.claude.use ? '<p class="muted">Bu sayfa claude.ai üzerinden açık: Bilge, hesabınızla çalışıyor; anahtar gerekmez. ✅</p>' : `
+    <p class="muted">Bu sayfa dosya olarak açıldığı için Bilge'nin konuşabilmesi için bir <b>Anthropic API anahtarı</b> gerekir. Anahtar yalnızca bu bilgisayarın tarayıcısında saklanır.</p>
+    <div class="field">API anahtarı: <input id="sKey" type="password" placeholder="sk-ant-..." value="${esc(S.apiKey || '')}" style="min-width:300px" autocomplete="off"><button class="btn soft sm" data-a="showkey" id="skb">Göster</button></div>
+    <div class="field">Model: <select id="sModel">${[['claude-sonnet-5-5','Sonnet 5.5 — önerilen (fotoğraf ve açıklamada daha iyi)'],['claude-haiku-5-5','Haiku 5.5 — daha hızlı ve ucuz']].map(([v, l]) => `<option value="${v}" ${(S.model || 'claude-sonnet-5-5') === v ? 'selected' : ''}>${l}</option>`).join('')}</select></div>
+    <div class="row"><button class="btn green sm" data-a="testkey" id="tkb">Bağlantıyı dene</button><span id="tkr" class="muted"></span></div>
+    <p class="muted small">Anahtar almak için: <a href="https://console.anthropic.com/" target="_blank" rel="noopener">console.anthropic.com</a> → API Keys → Create Key. Kullanım ücretlidir ama çocuk sohbeti için aylık maliyet genelde birkaç dolar düzeyinde kalır; Console'da harcama limiti koyabilirsiniz. Anahtarı çocuğunuzla paylaşmayın.</p>`}
+  </div>
+  <div class="panel"><h2>🔊 Konuşma sesi</h2>
+    <div class="field"><label><input type="checkbox" id="sAuto" ${S.autoRead ? 'checked' : ''}> Soruları ve Bilge'nin cevaplarını otomatik oku</label></div>
+    <div class="field">Konuşma hızı: <select id="sRate">${[[0.9,'Yavaş'],[1.0,'Normal'],[1.15,'Hızlı'],[1.3,'Daha hızlı'],[1.5,'Çok hızlı']].map(([r, l]) => `<option value="${r}" ${Math.abs(r - S.rate) < .01 ? 'selected' : ''}>${l}</option>`).join('')}</select>
+      <button class="btn soft sm" data-a="testv">Dene 🔊</button></div>
+    <div class="field">Ses: <select id="sVoice"><option value="">Otomatik (en iyi Türkçe ses)</option>${trVoices().map(v => `<option value="${esc(v.name)}" ${v.name === S.voice ? 'selected' : ''}>${esc(v.name)}</option>`).join('')}</select></div>
+    <p class="muted small">${trVoices().length ? `Bu bilgisayarda ${trVoices().length} Türkçe ses var.` : 'Türkçe ses bulunamadı.'} Daha doğal bir ses için iMac'te <b>Sistem Ayarları › Erişilebilirlik › Konuşulan İçerik › Sistem sesi › Yönet</b> bölümünden <b>Yelda (Geliştirilmiş/Premium)</b> sesini indirin; uygulama onu otomatik seçer.</p>
+  </div>
+  <div class="panel"><h2>İlerleme</h2>
+    <p class="muted">Toplam ⭐ ${S.stars} · Bugün ⭐ ${S.dayStars}</p>
+    <table><tr><th>Ders</th><th>Doğru</th><th>Yanlış</th><th>Başarı</th></tr>${rows}</table>
+  </div>
+  <div class="panel"><h2>Hata Defteri (${S.mistakes.length})</h2>
+    ${S.mistakes.length ? `<ol class="mlist">${S.mistakes.slice(0, 30).map(m => `<li>${esc(m.kind === 'hece' ? 'Hece: ' + m.word : m.prompt + ' → ' + m.answer)}</li>`).join('')}</ol>` : '<p class="muted">Defter boş.</p>'}
+    <div class="row"><button class="btn danger sm" data-a="clrm" ${S.mistakes.length ? '' : 'disabled'}>Defteri temizle</button><button class="btn danger sm" data-a="reset" id="rb">Tüm ilerlemeyi sıfırla</button></div>
+  </div>
+  <div class="panel"><h2>🖥️ iMac'te uygulama gibi kullanmak</h2>
+    <p class="muted">Bu sayfayı Safari'de açın → menüden <b>Dosya › Dock'a Ekle</b>. Ödev Arkadaşı Dock'ta kendi simgesiyle, ayrı bir pencerede açılır. Chrome'da: <b>⋮ › Yayınla, kaydet ve paylaş › Uygulama olarak yükle</b> (veya Kısayol oluştur).</p>
+    <p class="muted small">İlerleme bu bilgisayarın tarayıcısında saklanır. Mikrofon claude.ai içinde çalışmaz; sesle konuşmak için sayfayı dosya olarak açıp Bilge'yi API anahtarıyla bağlayın.</p>
+  </div>`;
+  $('#sName').addEventListener('input', e => { S.name = e.target.value.trim(); save(); });
+  $('#sGoal').addEventListener('change', e => { S.goal = +e.target.value; save(); updateHeader(); });
+  $('#sSound').addEventListener('change', e => { S.sound = e.target.checked; save(); });
+  const sk = $('#sKey'); if (sk) { sk.addEventListener('input', e => { S.apiKey = e.target.value.trim(); save(); resetSample(); }); $('#sModel').addEventListener('change', e => { S.model = e.target.value; save(); }); }
+  $('#sAuto').addEventListener('change', e => { S.autoRead = e.target.checked; save(); });
+  $('#sRate').addEventListener('change', e => { S.rate = +e.target.value; save(); speak('Merhaba! Ben Bilge Baykuş. Bu hızda konuşuyorum.'); });
+  $('#sVoice').addEventListener('change', e => { S.voice = e.target.value; save(); speak('Merhaba! Bu sesi beğendin mi?'); });
+}
+
+/* ---------- olaylar ---------- */
+const A = {
+  home: () => { stopSpeak(); home(); }, help: () => { stopSpeak(); help(); }, menu: v => { stopSpeak(); menu(v); }, play: v => play(v),
+  opt: (v, el) => answerMCQ(el, v), syl: (v, el) => pickSyl(el), next: () => next(),
+  replay: () => R.replay === 'review' ? startReview() : play(R.replay), review: () => startReview(),
+  speak: (v, el) => speak(el.dataset.t || ''), settings: () => { stopSpeak(); settings(); },
+  testv: () => speak('Merhaba! Ben Bilge Baykuş. Üç artı beş kaç eder? Sekiz! Harikasın!'),
+  chip: (v, el) => send(el.dataset.t), newchat: () => { chat = []; chatImg = null; pending = null; help(); },
+  rmimg: () => { pending = null; $('#imgprev').innerHTML = ''; },
+  mic: () => {
+    const b = $('#mic'), ti = $('#ti'), nos = $('#nos');
+    listen((text, done) => { ti.value = text; if (done) { ti.value = ''; send(text); } },
+      st => {
+        b.classList.toggle('on', st === 'on');
+        nos.textContent = st === 'on' ? '🎤 Dinliyorum… konuş, bitince kendiliğinden gönderirim.' : st === 'denied' ? 'Mikrofon izni verilmemiş. Tarayıcı ayarlarından mikrofona izin ver, ya da yazarak sor ✍️'
+          : st === 'nospeech' ? 'Ses duyamadım, bir daha dener misin? 🎤' : st === 'nosupport' ? 'Bu tarayıcıda sesle konuşma yok; yazarak sorabilirsin ✍️' : st === 'err' ? 'Mikrofon şu an çalışmadı, yazarak sorabilirsin ✍️' : '';
+      });
+  },
+  stopv: () => stopSpeak(),
+  showkey: (v, el) => { const i = $('#sKey'); i.type = i.type === 'password' ? 'text' : 'password'; el.textContent = i.type === 'password' ? 'Göster' : 'Gizle'; },
+  testkey: async (v, el) => {
+    const r = $('#tkr'); if (!S.apiKey) { r.textContent = 'Önce anahtarı girin.'; return; }
+    el.disabled = true; r.textContent = 'Deneniyor…'; resetSample();
+    try { const s = await getSample(); const out = await s([{ role: 'user', content: 'Sadece "Merhaba, ben Bilge Baykuş!" yaz.' }], {}); r.textContent = '✅ Bağlandı: ' + out.text.slice(0, 60); }
+    catch (e) { r.textContent = '❌ ' + (e.code === 'not_granted' ? 'Anahtar geçersiz.' : e.message || 'Bağlanamadı.'); }
+    el.disabled = false;
+  },
+  ask: () => {
+    const { it, val } = R.lastWrong || { it: cur() };
+    const t = it.kind === 'hece' ? `"${it.word}" kelimesinin hecelerini sıralarken karıştırdım. Bana heceleri nasıl bulacağımı öğretir misin?`
+      : `Bu soruda yanıldım: "${it.prompt}". Ben "${val}" dedim ama doğrusu "${it.answer}". Neden böyle olduğunu bana anlatır mısın?`;
+    chat = []; chatImg = null; pending = null; help(t);
+  },
+  setname: () => { const v = ($('#nm') || {}).value; if (v && v.trim()) { S.name = v.trim(); save(); home(); } },
+  clrm: () => { S.mistakes = []; save(); settings(); },
+  reset: (v, el) => {
+    if (!resetArm) { resetArm = true; el.textContent = 'Emin misiniz? Tekrar tıklayın'; return; }
+    const keep = { name: S.name, goal: S.goal, sound: S.sound };
+    S = Object.assign({ stars: 0, day: '', dayStars: 0, stats: {}, mistakes: [] }, keep); save(); updateHeader(); settings();
+  },
+};
+document.addEventListener('click', e => { const el = e.target.closest('[data-a]'); if (!el || el.disabled) return; const f = A[el.dataset.a]; if (f) f(el.dataset.v, el, e); });
+document.addEventListener('keydown', e => {
+  if (VIEW !== 'round' || /INPUT|TEXTAREA/.test(document.activeElement.tagName)) return;
+  if (e.key === 'Enter' && $('#nextb')) { e.preventDefault(); next(); return; }
+  const n = +e.key; if (n >= 1 && n <= 4 && cur().kind === 'mcq' && !R.answered) { const b = document.querySelector(`.opt[data-v="${n - 1}"]`); if (b) answerMCQ(b, n - 1); }
+});
+try { speechSynthesis.getVoices(); speechSynthesis.onvoiceschanged = () => { if (VIEW === 'settings') settings(); }; } catch (e) {}
+updateHeader(); home();
+</script>
+</body>
+</html>
