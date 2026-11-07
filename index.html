@@ -632,7 +632,8 @@ Kurallar:
 }
 function help(prefill) {
   VIEW = 'help';
-  app.innerHTML = `<div class="rtop"><button class="btn soft sm" data-a="home">← Ana sayfa</button><div class="rtitle">🦉 Bilge Baykuş</div><button class="btn soft sm" data-a="newchat">Yeni konu ✨</button></div>
+  const back = R && R.savedHTML;
+  app.innerHTML = `<div class="rtop">${back ? '<button class="btn primary sm" data-a="backq">← Soruya dön</button>' : ''}<button class="btn soft sm" data-a="home">${back ? 'Ana sayfa 🏠' : '← Ana sayfa'}</button><div class="rtitle">🦉 Bilge Baykuş</div><button class="btn soft sm" data-a="newchat">Yeni konu ✨</button></div>
   <div class="chat"><div id="msgs" class="msgs"></div>
    <div class="chips" id="chips">${CHIPS.map(c => `<button class="chip" data-a="chip" data-t="${esc(c)}">${esc(c)}</button>`).join('')}</div>
    <div id="imgprev"></div>
@@ -761,7 +762,7 @@ function settings() {
 
 /* ---------- olaylar ---------- */
 const A = {
-  home: () => { stopSpeak(); home(); }, help: () => { stopSpeak(); help(); }, menu: v => { stopSpeak(); menu(v); }, play: v => play(v),
+  home: () => { stopSpeak(); if (R) R.savedHTML = null; home(); }, help: () => { stopSpeak(); help(); }, menu: v => { stopSpeak(); menu(v); }, play: v => play(v),
   opt: (v, el) => answerMCQ(el, v), syl: (v, el) => pickSyl(el), next: () => next(),
   replay: () => R.replay === 'review' ? startReview() : play(R.replay), review: () => startReview(),
   speak: (v, el) => speak(el.dataset.t || ''), settings: () => { stopSpeak(); settings(); },
@@ -791,8 +792,10 @@ const A = {
     const { it, val } = R.lastWrong || { it: cur() };
     const t = it.kind === 'hece' ? `"${it.word}" kelimesinin hecelerini sıralarken karıştırdım. Bana heceleri nasıl bulacağımı öğretir misin?`
       : `Bu soruda yanıldım: "${it.prompt}". Ben "${val}" dedim ama doğrusu "${it.answer}". Neden böyle olduğunu bana anlatır mısın?`;
+    R.savedHTML = app.innerHTML; stopSpeak();
     chat = []; chatImg = null; pending = null; help(t);
   },
+  backq: () => { if (!R || !R.savedHTML) return home(); stopSpeak(); VIEW = 'round'; app.innerHTML = R.savedHTML; R.savedHTML = null; },
   setname: () => { const v = ($('#nm') || {}).value; if (v && v.trim()) { S.name = v.trim(); save(); home(); } },
   clrm: () => { S.mistakes = []; save(); settings(); },
   reset: (v, el) => {
