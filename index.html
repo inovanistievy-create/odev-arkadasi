@@ -124,6 +124,7 @@ th{color:var(--muted);font-size:15px}
 .onb{background:#fff;border-radius:28px;padding:26px;margin-bottom:22px;display:flex;gap:18px;align-items:center;flex-wrap:wrap;box-shadow:0 6px 0 rgba(43,42,76,.07)}
 .onb input{font:inherit;font-size:22px;font-weight:800;border:3px solid var(--line);border-radius:16px;padding:12px 16px;min-width:220px}
 #confetti{position:fixed;inset:0;pointer-events:none;z-index:50}
+.upd{position:fixed;left:50%;bottom:20px;transform:translateX(-50%);background:#2B2A4C;color:#fff;padding:12px 18px;border-radius:99px;font-weight:900;font-size:17px;display:flex;gap:12px;align-items:center;z-index:60;box-shadow:0 8px 24px rgba(0,0,0,.25);animation:pop .3s}
 .gwrap{position:relative;background:#fff;border-radius:32px;padding:16px;box-shadow:0 6px 0 rgba(43,42,76,.07)}
 .gq{text-align:center;font-size:40px;font-weight:900;min-height:52px;letter-spacing:1px}
 .glvl{text-align:center;color:var(--muted);font-weight:800;margin-bottom:8px}
@@ -164,6 +165,7 @@ const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { c
 let VIEW = 'home';
 
 /* ---------- kayıt ---------- */
+const APP_VERSION = '20261107.1710';
 const KEY = 'odev-arkadasi-v1';
 function load() { try { return JSON.parse(localStorage.getItem(KEY)) || null; } catch (e) { return null; } }
 let S = Object.assign({ name: '', stars: 0, goal: 10, day: '', dayStars: 0, stats: {}, mistakes: [], sound: true, rate: 1.15, autoRead: true, voice: '' }, load() || {});
@@ -855,6 +857,7 @@ function settings() {
   </div>
   <div class="panel"><h2>🖥️ iMac'te uygulama gibi kullanmak</h2>
     <p class="muted">Adres: <b>inovanistievy-create.github.io/odev-arkadasi</b> — Safari'de açın → <b>Dosya › Dock'a Ekle</b>. Ödev Arkadaşı Dock'ta kendi simgesiyle, ayrı pencerede açılır; güncellemeler kendiliğinden gelir.</p>
+    <p class="muted small">Sürüm: <b>${APP_VERSION}</b> · <button class="btn soft sm" data-a="reload">Güncellemeleri kontrol et</button></p>
     <p class="muted small"><b>Mikrofon:</b> Dock uygulaması izin isteyip Sistem Ayarları'na yönlendirirse önce adresi normal Safari sekmesinde açıp 🎤'a basarak izin verin, sonra Dock uygulamasını kapatıp yeniden açın. İlerleme ve API anahtarı bu bilgisayarda saklanır.</p>
   </div>`;
   $('#sName').addEventListener('input', e => { S.name = e.target.value.trim(); save(); });
@@ -885,6 +888,7 @@ const A = {
       });
   },
   stopv: () => stopSpeak(),
+  reload: () => location.reload(),
   balloon: () => balloonStart(), bgo: () => balloonGo(), car: () => carStart(), cgo: () => carGo(),
   showkey: (v, el) => { const i = $('#sKey'); i.type = i.type === 'password' ? 'text' : 'password'; el.textContent = i.type === 'password' ? 'Göster' : 'Gizle'; },
   testkey: async (v, el) => {
@@ -921,6 +925,17 @@ document.addEventListener('keydown', e => {
 });
 try { speechSynthesis.getVoices(); speechSynthesis.onvoiceschanged = () => { if (VIEW === 'settings') settings(); }; } catch (e) {}
 updateHeader(); home();
+/* sürüm kontrolü: sunucuda yeni sürüm varsa şerit göster */
+(async function checkUpdate() {
+  if (!/^https?:/.test(location.protocol)) return;
+  try {
+    const r = await fetch(location.pathname + '?v=' + Date.now(), { cache: 'no-store' }); const t = await r.text();
+    const m = t.match(/APP_VERSION = '([^']+)'/); if (m && m[1] !== APP_VERSION) {
+      const d = document.createElement('div'); d.className = 'upd'; d.innerHTML = '✨ Yeni sürüm hazır! <button class="btn primary sm" id="updb">Yenile</button>'; document.body.appendChild(d);
+      $('#updb').onclick = () => location.reload();
+    }
+  } catch (e) {}
+})();
 </script>
 </body>
 </html>
