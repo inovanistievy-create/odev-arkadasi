@@ -166,7 +166,7 @@ const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { c
 let VIEW = 'home';
 
 /* ---------- kayıt ---------- */
-const APP_VERSION = '20261107.1731';
+const APP_VERSION = '20261107.1734';
 const KEY = 'odev-arkadasi-v1';
 function load() { try { return JSON.parse(localStorage.getItem(KEY)) || null; } catch (e) { return null; } }
 let S = Object.assign({ name: '', stars: 0, goal: 10, day: '', dayStars: 0, stats: {}, mistakes: [], sound: true, rate: 1.15, autoRead: true, voice: '' }, load() || {});
@@ -593,18 +593,19 @@ let C = null;
 function carStart() {
   VIEW = 'car'; stopSpeak(); app.classList.add('wide');
   app.innerHTML = `<div class="rtop"><button class="btn soft sm" data-a="home">← Çık</button><div class="rtitle">🚗 Hece Yarışı</div><div class="pill" id="cScore">0 kelime</div><div class="pill" id="cLives">❤️❤️❤️</div></div>
-  <div class="gwrap"><div class="gq" id="cWord"></div><div class="glvl" id="cHint">Sıradaki heceyi bul, arabayı o şeride sür!</div><canvas id="cc"></canvas>
+  <div class="gwrap"><div class="gq" id="cWord"></div><div class="glvl" id="cHint"></div><canvas id="cc"></canvas>
   <div class="gover" id="cOver" style="display:none"></div></div>`;
-  C = { canvas: $('#cc'), ctx: $('#cc').getContext('2d'), running: false, lane: 1, carX: 0, spd: 50, words: 0, gate: null, road: 0, smoke: [], sparks: [], word: null, pos: 0, miss: false, last: 0, bump: 0, tilt: 0, light: -1 };
-  C.canvas.addEventListener('pointerdown', e => { if (!C.running) return; const r = C.canvas.getBoundingClientRect(); carSteer((e.clientX - r.left) / r.width < .5 ? -1 : 1); });
-  carResize(); carGo();
+  C = { canvas: $('#cc'), ctx: $('#cc').getContext('2d'), running: false, carX: 0, carY: 0, vx: 0, vy: 0, keys: {}, target: null, spd: 50, v: 0, words: 0, lives: 3, tokens: [], road: 0, smoke: [], sparks: [], word: null, pos: 0, miss: false, last: 0, bump: 0, tilt: 0, light: -1, fog: 0 };
+  C.canvas.addEventListener('pointerdown', e => { if (!C.running) return; const r = C.canvas.getBoundingClientRect(), sc = C.canvas.width / r.width; C.target = { x: (e.clientX - r.left) * sc, y: (e.clientY - r.top) * sc }; });
+  carResize(); C.carX = C.canvas.width / 2; C.carY = C.canvas.height - 130; carGo();
 }
-function carResize() { if (!C) return; const w = C.canvas.parentElement.clientWidth - 4; C.canvas.width = w; C.canvas.height = Math.max(400, innerHeight - 300); C.carX = carLaneX(C.lane); }
-function carLaneX(l) { const W = C.canvas.width, rw = Math.min(W * .8, 960), x0 = (W - rw) / 2; return x0 + rw / 6 + l * (rw / 3); }
+function carResize() { if (!C) return; const w = C.canvas.parentElement.clientWidth - 4; C.canvas.width = w; C.canvas.height = Math.max(400, innerHeight - 300); }
+function carRoad() { const W = C.canvas.width, rw = Math.min(W * .84, 1100); return { W, H: C.canvas.height, rw, x0: (W - rw) / 2 }; }
 function carGo() {
   $('#cOver').style.display = 'none';
-  C.running = false; C.spd = 50; C.words = 0; C.lives = 3; C.fog = 0; C.v = 0; C.lane = 1; C.carX = carLaneX(1); C.smoke = []; C.sparks = []; C.gate = null; C.tilt = 0;
-  carHud(); $('#cWord').textContent = 'Hazır ol…'; $('#cHint').textContent = 'Işık yeşile dönünce yarış başlar! ← → şerit, ↑ gaz, ↓ fren.';
+  C.running = false; C.spd = 50; C.words = 0; C.lives = 3; C.fog = 0; C.v = 0; C.smoke = []; C.sparks = []; C.tokens = []; C.tilt = 0; C.target = null; C.keys = {};
+  C.carX = C.canvas.width / 2; C.carY = C.canvas.height - 130;
+  carHud(); $('#cWord').textContent = 'Hazır ol…'; $('#cHint').textContent = 'Ok tuşlarıyla arabayı sür, yoldaki doğru heceyi topla!';
   const tok = {}; C.tok = tok;
   const step = (n, msg) => { if (C.tok !== tok || VIEW !== 'car') return; C.light = n; carDraw(); if (msg) speak(msg, { rate: 1.3 }); sfx(n === 2 ? 'win' : 'tick'); };
   step(0); setTimeout(() => step(1), 1100); setTimeout(() => step(2, 'Başla!'), 2200);
@@ -613,81 +614,83 @@ function carGo() {
 function carHud() { $('#cScore').textContent = C.words + ' kelime'; $('#cLives').textContent = '❤️'.repeat(C.lives) + '🤍'.repeat(3 - C.lives); }
 function carNewWord() {
   const [s, emoji] = pick(WORDS).split('|'); C.word = { parts: s.split('-'), emoji, text: s.replace(/-/g, '') }; C.pos = 0; C.miss = false;
-  carShowWord(); speak(C.word.text); carNewGate();
+  carShowWord(); speak(C.word.text); carSpawn();
 }
 function carShowWord() {
   const w = C.word; $('#cWord').innerHTML = `${w.emoji} ` + w.parts.map((p, i) => i < C.pos ? `<span style="color:var(--green)">${esc(p)}</span>` : i === C.pos ? `<span style="color:var(--orange);border-bottom:4px solid var(--orange)">?</span>` : '<span style="color:#CCC">?</span>').join('<span style="color:#CCC"> · </span>');
-  $('#cHint').textContent = C.pos < w.parts.length ? `Kelime: ${w.text} — sıradaki hece hangisi?` : '';
+  $('#cHint').textContent = C.pos < w.parts.length ? `Kelime: ${w.text} — sıradaki heceyi yoldan topla!` : '';
 }
-function carNewGate() {
-  const need = C.word.parts[C.pos];
+function carSpawn() {
+  const need = C.word.parts[C.pos], { rw, x0 } = carRoad();
   const others = new Set(); const pool = shuffle(WORDS.flatMap(w => w.split('|')[0].split('-')));
-  // yanıltıcı heceler: kelimenin diğer heceleri + benzer heceler
   C.word.parts.forEach(p => { if (p !== need && others.size < 1) others.add(p); });
   for (const p of pool) { if (others.size >= 2) break; if (p !== need && !others.has(p)) others.add(p); }
-  const opts = shuffle([need, ...others]);
-  C.gate = { y: -60, opts, done: false };
+  const texts = shuffle([need, ...others]), slots = shuffle([0, 1, 2]);
+  C.tokens = texts.map((t, i) => ({ t, ok: t === need, x: x0 + rw * (slots[i] + .5) / 3 + rand(-rw * .09, rw * .09), y: -60 - i * rand(40, 140), r: 44 }));
 }
-function carSteer(d) { if (!C.running) return; C.lane = Math.max(0, Math.min(2, C.lane + d)); sfx('tick'); }
 function carLoop(t) {
   if (!C || !C.running || VIEW !== 'car') return;
   const dt = Math.min(.05, (t - C.last) / 1000); C.last = t;
-  const H = C.canvas.height, v = (55 + C.spd * .9) * (C.gas ? 1.8 : C.brake ? .5 : 1); C.v += (v - C.v) * Math.min(1, dt * 4);
+  const { W, H, rw, x0 } = carRoad();
+  // araba hareketi
+  let ax = (C.keys.right ? 1 : 0) - (C.keys.left ? 1 : 0), ay = (C.keys.down ? 1 : 0) - (C.keys.up ? 1 : 0);
+  if (C.target) { const dx = C.target.x - C.carX, dy = C.target.y - C.carY; if (Math.hypot(dx, dy) < 8) C.target = null; else { ax = Math.max(-1, Math.min(1, dx / 40)); ay = Math.max(-1, Math.min(1, dy / 40)); } }
+  const cs = 380; C.vx += (ax * cs - C.vx) * Math.min(1, dt * 9); C.vy += (ay * cs - C.vy) * Math.min(1, dt * 9);
+  C.carX = Math.max(x0 + 40, Math.min(x0 + rw - 40, C.carX + C.vx * dt)); C.carY = Math.max(90, Math.min(H - 70, C.carY + C.vy * dt));
+  C.tilt += ((C.vx / cs) * .4 - C.tilt) * Math.min(1, dt * 10);
+  // yol hızı: yukarıda sürmek = gaz
+  const v = (55 + C.spd * .9) * (1 + (1 - C.carY / H) * .9); C.v += (v - C.v) * Math.min(1, dt * 4);
   C.road = (C.road + v * dt) % 56;
-  const dx = carLaneX(C.lane) - C.carX; C.carX += dx * Math.min(1, dt * 8); C.tilt += ((Math.max(-1, Math.min(1, dx / 70)) * .45) - C.tilt) * Math.min(1, dt * 12);
-  if (C.gate) {
-    C.gate.y += v * dt;
-    if (!C.gate.done && C.gate.y >= H - 175) { C.gate.done = true; carResolve(C.gate.opts[C.lane]); }
-  }
+  // heceler akıyor
+  let okOff = false;
+  for (const k of C.tokens) { k.y += v * dt; if (k.ok && k.y > H + 50) okOff = true; }
+  C.tokens = C.tokens.filter(k => k.y < H + 60);
+  if (okOff || (!C.tokens.length && C.pos < C.word.parts.length && !C.wait)) carSpawn();
+  // çarpışma
+  if (!C.wait) for (const k of C.tokens) { if (Math.hypot(k.x - C.carX, k.y - C.carY) < k.r + 22) { carCollect(k); break; } }
   C.smoke = C.smoke.filter(p => (p.life -= dt) > 0); for (const p of C.smoke) { p.x += p.vx * dt; p.y += p.vy * dt; p.vx *= .97; p.vy -= 30 * dt; p.r += 40 * dt; }
   if (C.fog > 0) C.fog -= dt * .5;
   C.sparks = C.sparks.filter(p => (p.life -= dt) > 0); for (const p of C.sparks) { p.x += p.vx * dt; p.y += p.vy * dt; }
   if (C.bump > 0) C.bump -= dt;
-  if (C.gas && C.running) for (let i = 0; i < 2; i++) C.sparks.push({ x: C.carX + rand(-14, 14), y: C.canvas.height - 50, vx: rand(-20, 20), vy: rand(120, 260), c: pick(['#FF8A3D', '#FFC93C']), life: .35 });
+  if (C.carY < H * .45) for (let i = 0; i < 2; i++) C.sparks.push({ x: C.carX + rand(-14, 14), y: C.carY + 55, vx: rand(-20, 20), vy: rand(120, 260), c: pick(['#FF8A3D', '#FFC93C']), life: .3 });
   carDraw();
   if (C.running) requestAnimationFrame(carLoop);
 }
-function carResolve(got) {
-  const need = C.word.parts[C.pos];
-  if (got === need) {
-    C.pos++; C.spd = Math.min(100, C.spd + 12); sfx('ok');
-    for (let i = 0; i < 14; i++) C.sparks.push({ x: C.carX, y: C.canvas.height - 110, vx: rand(-120, 120), vy: rand(-200, -40), c: '#20B072', life: .6 });
+function carCollect(k) {
+  if (k.ok) {
+    C.pos++; C.spd = Math.min(100, C.spd + 12); sfx('ok'); C.tokens = []; C.wait = true;
+    for (let i = 0; i < 18; i++) C.sparks.push({ x: k.x, y: k.y, vx: rand(-160, 160), vy: rand(-220, -40), c: '#20B072', life: .6 });
     carShowWord();
     if (C.pos >= C.word.parts.length) {
       C.words++; carHud(); stat('turkce', !C.miss); if (!C.miss) addStar(); else addMistake(heceItem(C.word.parts.join('-') + '|' + C.word.emoji));
       speak(pick(PRAISE)); sfx('win');
-      setTimeout(() => { if (C && C.running) carNewWord(); }, 1300);
-    } else { setTimeout(() => { if (C && C.running) carNewGate(); }, 500); }
+      setTimeout(() => { if (C && C.running) { C.wait = false; carNewWord(); } }, 1300);
+    } else setTimeout(() => { if (C && C.running) { C.wait = false; carSpawn(); } }, 400);
   } else {
     C.miss = true; C.spd = Math.max(10, C.spd - 20); C.bump = .5; C.lives--; C.fog = 1; sfxExhaust(); stat('turkce', false); carHud();
-    for (let i = 0; i < 60; i++) C.smoke.push({ x: C.carX + rand(-20, 20), y: C.canvas.height - 70, vx: rand(-160, 160), vy: rand(-220, 80), r: rand(14, 30), life: rand(1.2, 2.4) });
-    $('#cHint').textContent = `"${got}" değil! ${C.word.text} kelimesini yavaşça söyle: ${C.word.parts.join(' · ')}`; speak(C.word.parts.join(', '));
-    if (C.lives <= 0) { setTimeout(() => { if (C) carEnd(); }, 900); return; }
-    setTimeout(() => { if (C && C.running) carNewGate(); }, 1800);
+    C.tokens = C.tokens.filter(x => x !== k);
+    for (let i = 0; i < 60; i++) C.smoke.push({ x: C.carX + rand(-20, 20), y: C.carY + 40, vx: rand(-160, 160), vy: rand(-220, 80), r: rand(14, 30), life: rand(1.2, 2.4) });
+    $('#cHint').textContent = `"${k.t}" değil! ${C.word.text}: ${C.word.parts.join(' · ')}`; speak(C.word.parts.join(', '));
+    if (C.lives <= 0) { C.running = false; setTimeout(() => { if (C) carEnd(); }, 900); }
   }
 }
 function carDraw() {
-  const x = C.ctx, W = C.canvas.width, H = C.canvas.height, rw = Math.min(W * .8, 960), x0 = (W - rw) / 2;
+  const x = C.ctx, { W, H, rw, x0 } = carRoad();
   x.fillStyle = '#BFE6A8'; x.fillRect(0, 0, W, H);
-  // tek yol yukarıda üçe ayrılıyor: her hece kendi yolunda
-  const lw = rw / 3 - 44, fy = 150, mid = W / 2;
-  for (let l = 0; l < 3; l++) {
-    const lx = carLaneX(l);
-    const strip = (pad, col) => { x.fillStyle = col; x.beginPath(); x.moveTo(mid - lw / 2 - pad, -10); x.lineTo(mid + lw / 2 + pad, -10); x.bezierCurveTo(mid + lw / 2 + pad, fy * .6, lx + lw / 2 + pad, fy * .4, lx + lw / 2 + pad, fy); x.lineTo(lx + lw / 2 + pad, H); x.lineTo(lx - lw / 2 - pad, H); x.lineTo(lx - lw / 2 - pad, fy); x.bezierCurveTo(lx - lw / 2 - pad, fy * .4, mid - lw / 2 - pad, fy * .6, mid - lw / 2 - pad, -10); x.closePath(); x.fill(); };
-    strip(5, '#F6D56A'); strip(0, '#5B5F6B');
-  }
+  x.fillStyle = '#F6D56A'; x.fillRect(x0 - 7, 0, rw + 14, H);
+  x.fillStyle = '#5B5F6B'; x.fillRect(x0, 0, rw, H);
   x.strokeStyle = '#fff'; x.lineWidth = 3; x.setLineDash([26, 30]); x.lineDashOffset = -C.road;
-  for (let l = 0; l < 3; l++) { const lx = carLaneX(l); x.beginPath(); x.moveTo(lx, fy + 10); x.lineTo(lx, H); x.stroke(); } x.setLineDash([]);
-  if (C.gate) C.gate.opts.forEach((o, i) => {
-    const cx = carLaneX(i), cy = C.gate.y, w = rw / 3 - 44, h = 64;
-    x.fillStyle = '#FFF7EA'; x.strokeStyle = '#E06A1F'; x.lineWidth = 4; x.beginPath(); x.roundRect(cx - w / 2, cy - h / 2, w, h, 14); x.fill(); x.stroke();
-    x.fillStyle = '#2B2A4C'; x.font = `900 ${Math.min(40, w * .3)}px Nunito, sans-serif`; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText(o, cx, cy + 2);
-  });
+  for (let l = 1; l < 3; l++) { x.beginPath(); x.moveTo(x0 + rw * l / 3, 0); x.lineTo(x0 + rw * l / 3, H); x.stroke(); } x.setLineDash([]);
+  for (const k of C.tokens) {
+    x.fillStyle = 'rgba(0,0,0,.2)'; x.beginPath(); x.ellipse(k.x, k.y + 8, k.r, k.r * .9, 0, 0, 7); x.fill();
+    x.fillStyle = '#FFF7EA'; x.strokeStyle = '#E06A1F'; x.lineWidth = 5; x.beginPath(); x.arc(k.x, k.y, k.r, 0, 7); x.fill(); x.stroke();
+    x.fillStyle = '#2B2A4C'; x.font = `900 ${k.t.length > 3 ? 26 : 32}px Nunito, sans-serif`; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText(k.t, k.x, k.y + 2);
+  }
   for (const p of C.smoke) { x.globalAlpha = Math.min(.75, p.life * .5); x.fillStyle = '#4A4A4A'; x.beginPath(); x.arc(p.x, p.y, p.r, 0, 7); x.fill(); } x.globalAlpha = 1;
   if (C.fog > 0) { x.fillStyle = `rgba(80,80,80,${Math.min(.6, C.fog * .6)})`; x.fillRect(0, 0, W, H); }
-  const cx0 = C.carX + (C.bump > 0 ? Math.sin(C.bump * 60) * 6 : 0), cy0 = H - 130;
+  const cx0 = C.carX + (C.bump > 0 ? Math.sin(C.bump * 60) * 6 : 0), cy0 = C.carY;
   x.fillStyle = 'rgba(0,0,0,.25)'; x.beginPath(); x.ellipse(cx0, cy0 + 50, 34, 10, 0, 0, 7); x.fill();
-  const csc = Math.max(1, Math.min(1.5, (rw / 3) / 150)); x.save(); x.translate(cx0, cy0); x.rotate(C.tilt || 0); x.scale(csc, csc);
+  const csc = 1.15; x.save(); x.translate(cx0, cy0); x.rotate(C.tilt || 0); x.scale(csc, csc);
   x.fillStyle = '#2B2A4C'; [[-30, -26], [18, -26], [-30, 20], [18, 20]].forEach(([dx, dy]) => { x.save(); if (dy < 0) { x.translate(dx + 6, dy + 11); x.rotate(C.tilt * .8); x.translate(-dx - 6, -dy - 11); } x.beginPath(); x.roundRect(dx, dy, 12, 22, 4); x.fill(); x.restore(); });
   x.fillStyle = '#20B072'; x.beginPath(); x.roundRect(-26, -44, 52, 96, 16); x.fill();
   x.fillStyle = '#148A57'; x.beginPath(); x.roundRect(-22, -8, 44, 26, 6); x.fill();
@@ -697,18 +700,16 @@ function carDraw() {
   for (const p of C.sparks) { x.globalAlpha = Math.max(0, p.life); x.fillStyle = p.c; x.beginPath(); x.arc(p.x, p.y, 4, 0, 7); x.fill(); } x.globalAlpha = 1;
   // hız göstergesi
   const gr = Math.max(44, Math.min(80, (W - rw) / 2 - 20)), gx = W - gr - 14, gy = gr + 20;
-  {
-    x.fillStyle = '#fff'; x.beginPath(); x.arc(gx, gy, gr, 0, 7); x.fill();
-    const a0 = Math.PI * .75, a1 = Math.PI * 2.25;
-    x.lineWidth = 10; x.lineCap = 'round';
-    [[0, .4, '#FF5C8A'], [.4, .7, '#FFC93C'], [.7, 1, '#20B072']].forEach(([f0, f1, c]) => { x.strokeStyle = c; x.beginPath(); x.arc(gx, gy, gr - 12, a0 + (a1 - a0) * f0, a0 + (a1 - a0) * f1); x.stroke(); });
-    x.lineCap = 'butt';
-    const kmh = Math.round((C.v || 0) * .85), shown = Math.min(100, kmh / 2.4); const na = a0 + (a1 - a0) * shown / 100;
-    x.strokeStyle = '#2B2A4C'; x.lineWidth = 4; x.beginPath(); x.moveTo(gx, gy); x.lineTo(gx + Math.cos(na) * (gr - 18), gy + Math.sin(na) * (gr - 18)); x.stroke();
-    x.fillStyle = '#2B2A4C'; x.beginPath(); x.arc(gx, gy, 6, 0, 7); x.fill();
-    x.font = `900 ${Math.round(gr * .3)}px Nunito, sans-serif`; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText(kmh, gx, gy + gr * .45);
-    x.font = `800 ${Math.round(gr * .17)}px Nunito, sans-serif`; x.fillStyle = '#6E6C8C'; x.fillText('km/s', gx, gy + gr * .72);
-  }
+  x.fillStyle = '#fff'; x.beginPath(); x.arc(gx, gy, gr, 0, 7); x.fill();
+  const a0 = Math.PI * .75, a1 = Math.PI * 2.25;
+  x.lineWidth = 10; x.lineCap = 'round';
+  [[0, .4, '#FF5C8A'], [.4, .7, '#FFC93C'], [.7, 1, '#20B072']].forEach(([f0, f1, c]) => { x.strokeStyle = c; x.beginPath(); x.arc(gx, gy, gr - 12, a0 + (a1 - a0) * f0, a0 + (a1 - a0) * f1); x.stroke(); });
+  x.lineCap = 'butt';
+  const kmh = Math.round((C.v || 0) * .85), shown = Math.min(100, kmh / 2.4); const na = a0 + (a1 - a0) * shown / 100;
+  x.strokeStyle = '#2B2A4C'; x.lineWidth = 4; x.beginPath(); x.moveTo(gx, gy); x.lineTo(gx + Math.cos(na) * (gr - 18), gy + Math.sin(na) * (gr - 18)); x.stroke();
+  x.fillStyle = '#2B2A4C'; x.beginPath(); x.arc(gx, gy, 6, 0, 7); x.fill();
+  x.font = `900 ${Math.round(gr * .3)}px Nunito, sans-serif`; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText(kmh, gx, gy + gr * .45);
+  x.font = `800 ${Math.round(gr * .17)}px Nunito, sans-serif`; x.fillStyle = '#6E6C8C'; x.fillText('km/s', gx, gy + gr * .72);
   // trafik ışığı
   if (C.light >= 0) {
     const lx = W / 2, ly = H / 2 - 95;
@@ -959,10 +960,10 @@ const A = {
   },
 };
 document.addEventListener('click', e => { const el = e.target.closest('[data-a]'); if (!el || el.disabled) return; const f = A[el.dataset.a]; if (f) f(el.dataset.v, el, e); });
-document.addEventListener('keyup', e => { if (!C) return; if (e.key === 'ArrowUp' || e.key === 'w' || e.key === 'W') C.gas = false; if (e.key === 'ArrowDown' || e.key === 's' || e.key === 'S') C.brake = false; });
+document.addEventListener('keyup', e => { if (!C) return; const k = { ArrowLeft: 'left', ArrowRight: 'right', ArrowUp: 'up', ArrowDown: 'down', a: 'left', d: 'right', w: 'up', s: 'down', A: 'left', D: 'right', W: 'up', S: 'down' }[e.key]; if (k) C.keys[k] = false; });
 window.addEventListener('resize', () => { if (VIEW === 'balloon') { balloonResize(); balloonDraw(); } if (VIEW === 'car') { carResize(); carDraw(); } });
 document.addEventListener('keydown', e => {
-  if (VIEW === 'car' && C) { if (e.key === 'ArrowUp' || e.key === 'w' || e.key === 'W') { e.preventDefault(); if (!C.gas) { C.gas = true; sfx('tick'); } return; } if (e.key === 'ArrowDown' || e.key === 's' || e.key === 'S') { e.preventDefault(); C.brake = true; return; } if (e.key === 'ArrowLeft' || e.key === 'a' || e.key === 'A') { e.preventDefault(); carSteer(-1); } else if (e.key === 'ArrowRight' || e.key === 'd' || e.key === 'D') { e.preventDefault(); carSteer(1); } else if (e.key === 'Enter' && !C.running && C.light < 0) carGo(); return; }
+  if (VIEW === 'car' && C) { const k = { ArrowLeft: 'left', ArrowRight: 'right', ArrowUp: 'up', ArrowDown: 'down', a: 'left', d: 'right', w: 'up', s: 'down', A: 'left', D: 'right', W: 'up', S: 'down' }[e.key]; if (k) { e.preventDefault(); C.keys[k] = true; C.target = null; } else if (e.key === 'Enter' && !C.running && C.light < 0) carGo(); return; }
   if (VIEW === 'balloon' && G) { const n = +e.key; if (G.running && n >= 1 && n <= 5) { const b = G.balloons.find(b => b.key === n); if (b) balloonHit(b); } else if (e.key === 'Enter' && !G.running) balloonGo(); return; }
   if (VIEW !== 'round' || /INPUT|TEXTAREA/.test(document.activeElement.tagName)) return;
   if (e.key === 'Enter' && $('#nextb')) { e.preventDefault(); next(); return; }
