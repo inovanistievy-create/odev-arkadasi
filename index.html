@@ -204,7 +204,7 @@ const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { c
 let VIEW = 'home';
 
 /* ---------- kayıt ---------- */
-const APP_VERSION = '20261107.1948';
+const APP_VERSION = '20261107.2001';
 const KEY = 'odev-arkadasi-v1';
 function load() { try { return JSON.parse(localStorage.getItem(KEY)) || null; } catch (e) { return null; } }
 let S = Object.assign({ name: '', unit: {}, stars: 0, goal: 10, day: '', dayStars: 0, stats: {}, mistakes: [], sound: true, rate: 1.15, autoRead: true, voice: '' }, load() || {});
@@ -593,10 +593,10 @@ function home() {
   const nm = $('#nm'); if (nm) { nm.focus(); nm.addEventListener('keydown', e => { if (e.key === 'Enter') A.setname(); }); }
 }
 const MENUS = {
-  math: { t: 'Matematik 🔢', items: [['math:topla','➕','Toplama',"100'e kadar, eldeli",'blue'],['math:cikar','➖','Çıkarma','Onluk bozarak','blue'],['math:carp','✖️','Çarpma','Kere kere, ritmik sayma','purple'],['math:bol','➗','Bölme','Eşit paylaştırma','pink'],['math:esitlik','⚖️','Eşitlik','İki taraf eşit olsun','yellow'],['math:eksik','🔍','Eksik Sayı','▢ yerine ne gelir?','green'],['math:geo','🧊','Geometri','Cisimler, şekiller, köşe-kenar','purple'],['math:olcme','📏','Ölçme & Kesirler','Yarım-çeyrek, para, saat, uzunluk, kütle','blue'],['math:saat','⏰','Saat Atölyesi','Akrep-yelkovanı çevir, saati oku','pink'],['math:grafik','📊','Grafik Atölyesi','Çetele → sıklık tablosu → grafik','green'],['math:veri','📊','Veri & Yön','Çetele, sıklık tablosu, grafik, sağ-sol','orange'],['math:sayilar','🧱','Sayılar','Onluk-birlik, çözümleme, deste-düzine, ritmik sayma','green'],['math:karisik','🎲','Karışık','Hepsinden biraz','orange'],['math:atolye-cikar','🧮','Çıkarma Atölyesi','Blokları çıkar, onluğu boz','pink'],['math:atolye-carp','🍪','Çarpma Atölyesi','Tabakları doldur, ritmik say','yellow']] },
+  math: { t: 'Matematik 🔢', items: [['bank:matematik:0','📖','Kitap Soruları','Kitaptaki alıştırma biçimleriyle, seviyen arttıkça zorlaşır','blue'],['math:topla','➕','Toplama',"100'e kadar, eldeli",'blue'],['math:cikar','➖','Çıkarma','Onluk bozarak','blue'],['math:carp','✖️','Çarpma','Kere kere, ritmik sayma','purple'],['math:bol','➗','Bölme','Eşit paylaştırma','pink'],['math:esitlik','⚖️','Eşitlik','İki taraf eşit olsun','yellow'],['math:eksik','🔍','Eksik Sayı','▢ yerine ne gelir?','green'],['math:geo','🧊','Geometri','Cisimler, şekiller, köşe-kenar','purple'],['math:olcme','📏','Ölçme & Kesirler','Yarım-çeyrek, para, saat, uzunluk, kütle','blue'],['math:saat','⏰','Saat Atölyesi','Akrep-yelkovanı çevir, saati oku','pink'],['math:grafik','📊','Grafik Atölyesi','Çetele → sıklık tablosu → grafik','green'],['math:veri','📊','Veri & Yön','Çetele, sıklık tablosu, grafik, sağ-sol','orange'],['math:sayilar','🧱','Sayılar','Onluk-birlik, çözümleme, deste-düzine, ritmik sayma','green'],['math:karisik','🎲','Karışık','Hepsinden biraz','orange'],['math:atolye-cikar','🧮','Çıkarma Atölyesi','Blokları çıkar, onluğu boz','pink'],['math:atolye-carp','🍪','Çarpma Atölyesi','Tabakları doldur, ritmik say','yellow']] },
   tr: { t: 'Türkçe 🔤', items: [['tr:hece','🧩','Hece Sırala','Heceleri doğru diz, kelimeyi bul','orange'],['tr:yazim','✍️','Doğru Yazım','Hangisi doğru yazılmış?','purple']] },
-  ing: { t: 'İngilizce 🇬🇧', items: [['ing:0','🎲','Hepsi','Bütün temalardan karışık','blue'],['ing:1','🏫','School Life','okul, günler, selamlaşma','green'],['ing:2','🖍️','Classroom Life','sınıf eşyaları, renkler, komutlar','orange'],['ing:3','🧥','Personal Life','vücut, giysiler, hava','purple'],['ing:4','👨‍👩‍👧','Family Life','aile üyeleri','pink'],['ing:5','🏠','Homes & Houses','odalar, eşyalar, evcil hayvanlar','yellow'],['ing:6','🍎','Life in the City','yiyecekler, meyve-sebze','green']] },
-  bilgi: { t: 'Hayat Bilgisi 🏡', items: [['bilgi:hayat','🏡','Hepsi','Okul, ev, sağlık, güvenlik, ülkemiz','green'],['bilgi:hb4','🗺️','Yaşadığım Yer ve Ülkem','Yönetim birimleri, bayramlar, Atatürk (2. Kitap)','orange'],['bilgi:hb5','🌦️','Doğa ve Çevre','Mevsimler, yön bulma, afet, tasarruf (2. Kitap)','blue'],['bilgi:hb6','🔬','Bilim, Teknoloji ve Sanat','Bilim insanları, eski-yeni (2. Kitap)','purple'],['ing:0','🇬🇧','İngilizce Kelime Avı','Kitaptaki tüm temalar — dinle, oku, söyle','blue'],['bilgi:mix','🎲','Karışık','Hayat Bilgisi + eski İngilizce seti','orange']] },
+  ing: { t: 'İngilizce 🇬🇧', items: [['bank:ingilizce:0','📖','Kitap Soruları','Ders + çalışma kitabı etkinlikleri, seviyeli','blue'],['ing:0','🎲','Hepsi','Bütün temalardan karışık','blue'],['ing:1','🏫','School Life','okul, günler, selamlaşma','green'],['ing:2','🖍️','Classroom Life','sınıf eşyaları, renkler, komutlar','orange'],['ing:3','🧥','Personal Life','vücut, giysiler, hava','purple'],['ing:4','👨‍👩‍👧','Family Life','aile üyeleri','pink'],['ing:5','🏠','Homes & Houses','odalar, eşyalar, evcil hayvanlar','yellow'],['ing:6','🍎','Life in the City','yiyecekler, meyve-sebze','green']] },
+  bilgi: { t: 'Hayat Bilgisi 🏡', items: [['bank:hayat_bilgisi:0','📖','Kitap Soruları','Kitaptaki etkinlik biçimleriyle, seviyeli','blue'],['bilgi:hayat','🏡','Hepsi','Okul, ev, sağlık, güvenlik, ülkemiz','green'],['bilgi:hb4','🗺️','Yaşadığım Yer ve Ülkem','Yönetim birimleri, bayramlar, Atatürk (2. Kitap)','orange'],['bilgi:hb5','🌦️','Doğa ve Çevre','Mevsimler, yön bulma, afet, tasarruf (2. Kitap)','blue'],['bilgi:hb6','🔬','Bilim, Teknoloji ve Sanat','Bilim insanları, eski-yeni (2. Kitap)','purple'],['ing:0','🇬🇧','İngilizce Kelime Avı','Kitaptaki tüm temalar — dinle, oku, söyle','blue'],['bilgi:mix','🎲','Karışık','Hayat Bilgisi + eski İngilizce seti','orange']] },
 };
 function menu(v) {
   VIEW = 'menu'; app.classList.remove('wide'); const m = MENUS[v];
@@ -608,6 +608,7 @@ function menu(v) {
 let R = null;
 function play(v) {
   const [m, mode] = v.split(':'); let items, title;
+  if (v.startsWith('bank:')) { const [, ders, tema] = v.split(':'); return bankPlay(ders, +tema || 0, ders === 'matematik' ? 'math' : 'bilgi', '📖 ' + { matematik: 'Matematik', hayat_bilgisi: 'Hayat Bilgisi', ingilizce: 'İngilizce' }[ders] + ' Kitap Soruları'); }
   if (v.startsWith('math:atolye')) return wsPlay(v);
   if (v === 'math:saat') return clockPlay();
   if (v === 'math:grafik') return grafPlay();
@@ -665,7 +666,7 @@ function answerMCQ(el, i) {
   const wsMode = !ok && it.mod === 'math' && it.prompt && WS_OK(it.prompt);
   document.querySelectorAll('.opt').forEach(b => { const v = it.options[+b.dataset.v]; if (v === it.answer && !wsMode) b.classList.add('ok'); else if (b === el) b.classList.add('no'); b.disabled = true; });
   if (ok) win(); else {
-    R.lastWrong = { it, val }; R.res[R.i] = 'no'; stat(it.mod, false); addMistake(it); sfx('no');
+    R.lastWrong = { it, val }; R.res[R.i] = 'no'; stat(it.mod, false); addMistake(it); sfx('no'); if (R.bankMod) lvlBump(R.bankMod, false);
     if (wsMode) {
       $('#fb').innerHTML = `<div class="explain"><div class="exh">🦉 Olsun! Doğrusunu birlikte bulalım:</div><div id="wsh"></div><div id="wsafter"></div></div>`;
       speak('Olsun, doğrusunu birlikte bulalım.');
@@ -681,7 +682,7 @@ function pickSyl(el) {
     if (R.pos === it.parts.length) {
       R.answered = true; if (it.en) speakEN(it.en); else speak(it.word);
       if (!R.miss) win();
-      else { R.res[R.i] = 'no'; stat(it.mod, false); addMistake(it); $('#fb').innerHTML = `<div class="praise" style="color:var(--purple)">Tamamladın: ${esc(it.word)} 👍</div>` + explainBox(it, true); }
+      else { R.res[R.i] = 'no'; stat(it.mod, false); addMistake(it); if (R.bankMod) lvlBump(R.bankMod, false); $('#fb').innerHTML = `<div class="praise" style="color:var(--purple)">Tamamladın: ${esc(it.word)} 👍</div>` + explainBox(it, true); }
     }
   } else {
     el.classList.remove('shake'); void el.offsetWidth; el.classList.add('shake'); sfx('no');
@@ -689,7 +690,7 @@ function pickSyl(el) {
   }
 }
 function win() {
-  const it = cur(); R.ok++; R.res[R.i] = 'ok'; addStar(); stat(it.mod, true); sfx('ok');
+  const it = cur(); R.ok++; R.res[R.i] = 'ok'; addStar(); stat(it.mod, true); sfx('ok'); if (R.bankMod) lvlBump(R.bankMod, true);
   if (R.review) removeMistake(it.key);
   const pr = pick(PRAISE); $('#fb').innerHTML = `<div class="praise">${pr} +1 ⭐</div>`; if (it.en) { speakEN(it.en); } else autoSpeak(pr);
   const tok = R; setTimeout(() => { if (R === tok && VIEW === 'round' && R.res[R.i] === 'ok') next(); }, 1200);
@@ -703,6 +704,68 @@ function endRound() {
    <p>${k === n ? 'Mükemmel! Hepsini bildin!' : great ? 'Çok iyi gidiyorsun!' : 'Her hata bize yeni bir şey öğretir. Bir daha deneyelim mi?'}</p>
    ${k < n ? `<p class="muted">${R.review ? 'Bilemediklerin defterde kaldı, sonra yine deneriz 📕' : "Yanlışların Hata Defteri'ne eklendi 📕"}</p>` : ''}
    <div class="row center"><button class="btn primary" data-a="replay">Tekrar oyna 🔁</button>${!R.review && S.mistakes.length ? '<button class="btn green" data-a="review">Hatalarımı tekrar et 📕</button>' : ''}<button class="btn soft" data-a="home">Ana sayfa 🏠</button></div></div>`;
+}
+
+/* ---------- Kitap soru bankası (bank.json) + zorluk motoru ---------- */
+let BANK = null, bankP = null;
+function loadBank() {
+  if (bankP) return bankP;
+  bankP = (async () => { try { const r = await fetch('bank.json?v=' + APP_VERSION, { cache: 'no-store' }); BANK = await r.json(); } catch (e) { BANK = window.BANK_INLINE || null; } return BANK; })();
+  return bankP;
+}
+function lvlOf(mod) { return ((S.lvl || {})[mod]) || 1; }
+function lvlBump(mod, ok) {
+  S.lvl = S.lvl || {}; S.streak = S.streak || {}; const st = S.streak[mod] || { ok: 0, no: 0 };
+  if (ok) { st.ok++; st.no = 0; if (st.ok >= 3 && lvlOf(mod) < 3) { S.lvl[mod] = lvlOf(mod) + 1; st.ok = 0; speak('Seviye atladın! Sorular biraz zorlaşıyor.'); sfx('win'); } }
+  else { st.no++; st.ok = 0; if (st.no >= 2 && lvlOf(mod) > 1) { S.lvl[mod] = lvlOf(mod) - 1; st.no = 0; } }
+  S.streak[mod] = st; save();
+}
+function evalExpr(expr, v) {
+  const e = String(expr).replace(/[a-z]+/g, m => (m in v ? v[m] : 'NaN'));
+  if (!/^[\d+\-*() .]+$/.test(e)) return NaN;
+  try { return Function('return (' + e + ')')(); } catch (x) { return NaN; }
+}
+function instSablon(q) {
+  for (let t = 0; t < 60; t++) {
+    const v = {}; for (const [k, r] of Object.entries(q.degiskenler || {})) v[k] = rand(+r[0], +r[1]);
+    for (const [k, ex] of Object.entries(q.hesapla || {})) v[k] = evalExpr(ex, v);
+    if (q.kisit) { const ok = q.kisit.split(/\s*(?:,|&&|;)\s*/).every(c => { const m = c.match(/^(.+?)(<=|>=|<|>|==|!=)(.+)$/); if (!m) return true; const a = evalExpr(m[1], v), b = evalExpr(m[3], v); return { '<': a < b, '>': a > b, '<=': a <= b, '>=': a >= b, '==': a == b, '!=': a != b }[m[2]]; }); if (!ok) continue; }
+    const ans = evalExpr(q.cevap, v); if (!Number.isInteger(ans) || ans < 0 || ans > 999) continue;
+    v.cevap = ans; const fill = s => String(s).replace(/\{([a-z]+)\}/g, (m, k) => (k in v ? v[k] : m));
+    return { prompt: fill(q.soru), answer: String(ans), explain: fill(q.aciklama || ''), options: makeOpts(ans) };
+  }
+  return null;
+}
+function bankToItem(q, mod, konu) {
+  const base = { mod, zorluk: q.zorluk || 1, emoji: q.emoji, konu, key: 'b:' + (q.soru || '').slice(0, 60) };
+  if (q.tip === 'sablon') { const i = instSablon(q); if (!i) return null; return Object.assign(base, { kind: 'mcq' }, i, { key: 'b:' + i.prompt }); }
+  if (q.tip === 'dy') return Object.assign(base, { kind: 'mcq', prompt: 'Doğru mu, yanlış mı? "' + q.soru + '"', options: ['Doğru ✅', 'Yanlış ❌'], answer: q.cevap === 'D' ? 'Doğru ✅' : 'Yanlış ❌', explain: q.aciklama || '' });
+  if (q.tip === 'siralama') return Object.assign(base, { kind: 'hece', word: (q.parcalar || []).join(' '), parts: q.parcalar || [], label: q.soru, explain: q.aciklama || '', en: mod === 'bilgi' && /^[A-Za-z?'., !]+$/.test((q.parcalar || []).join(' ')) ? (q.parcalar || []).join(' ') : undefined, tr: q.soru });
+  if (q.tip === 'mcq' || q.tip === 'bosluk') { const opts = (q.secenekler || []).slice(); if (!opts.includes(q.cevap)) opts.push(q.cevap); return Object.assign(base, { kind: 'mcq', prompt: q.soru, options: shuffle(opts).slice(0, 4).includes(q.cevap) ? shuffle(opts).slice(0, 4) : shuffle([q.cevap, ...opts.filter(o => o !== q.cevap).slice(0, 3)]), answer: q.cevap, explain: q.aciklama || '' }); }
+  return null;
+}
+function bankItems(ders, tema, n, mod) {
+  if (!BANK || !BANK[ders]) return [];
+  const lvl = lvlOf(mod + ':' + ders);
+  const konular = BANK[ders].konular.filter(k => !tema || k.tema === tema);
+  let pool = konular.flatMap(k => k.sorular.map(q => ({ q, konu: k.konu })));
+  if (!pool.length) return [];
+  const w = q => (q.zorluk || 1) === lvl ? 6 : (q.zorluk || 1) < lvl ? 2.5 : 1.2;
+  const items = [], used = new Set();
+  for (let t = 0; t < n * 20 && items.length < n; t++) {
+    const tot = pool.reduce((a, x) => a + w(x.q), 0); let r = Math.random() * tot, pick_ = pool[0];
+    for (const x of pool) { r -= w(x.q); if (r <= 0) { pick_ = x; break; } }
+    const it = bankToItem(pick_.q, mod, pick_.konu); if (!it || used.has(it.key)) continue; used.add(it.key); items.push(it);
+    if (pick_.q.tip !== 'sablon') pool = pool.filter(x => x !== pick_); else { pick_.n = (pick_.n || 0) + 1; if (pick_.n >= 2) pool = pool.filter(x => x !== pick_); }
+  }
+  return items;
+}
+async function bankPlay(ders, tema, mod, title) {
+  await loadBank();
+  const items = bankItems(ders, tema, 10, mod);
+  if (!items.length) { app.innerHTML = `<div class="rtop"><button class="btn soft sm" data-a="home">← Ana sayfa</button></div><div class="qcard"><div class="qemo">📖</div><div class="qtext">Bu konu için kitap soruları henüz yüklenmedi.</div><p class="muted">Birkaç dakika sonra tekrar dene.</p></div>`; return; }
+  startRound(title + ' · Seviye ' + lvlOf(mod + ':' + ders), items, false, 'bank:' + ders + ':' + (tema || 0));
+  R.bankMod = mod + ':' + ders;
 }
 
 /* ---------- Atölyeler: çıkarma blokları, çarpma grupları ---------- */
@@ -775,8 +838,16 @@ const BOOKS = [
   { id: 'tr1', ad: 'Türkçe 1. Kitap', emo: '🔤', temalar: [] },
   { id: 'tr2', ad: 'Türkçe 2. Kitap', emo: '🔤', temalar: [] },
   { id: 'hb1', ad: 'Hayat Bilgisi 1. Kitap', emo: '🏡', temalar: [] },
+  { id: 'ek1', ad: 'Ek kitap 1 (ör. Üçgen Matematik)', emo: '📙', temalar: [], ek: true },
+  { id: 'ek2', ad: 'Ek kitap 2', emo: '📙', temalar: [], ek: true },
+  { id: 'ek3', ad: 'Ek kitap 3', emo: '📙', temalar: [], ek: true },
+  { id: 'muzik', ad: 'Müzik Ders Kitabı', emo: '🎵', temalar: [] },
+  { id: 'x1', ad: 'Diğer kitap 1 (ödev/yardımcı)', emo: '📙', temalar: [] },
+  { id: 'x2', ad: 'Diğer kitap 2', emo: '📙', temalar: [] },
+  { id: 'x3', ad: 'Diğer kitap 3', emo: '📙', temalar: [] },
   { id: 'hb2', ad: 'Hayat Bilgisi 2. Kitap', emo: '🏡', temalar: [['4. Öğrenme Alanı: Yaşadığım Yer ve Ülkem', 10], ['Belirli Gün ve Haftalar', 12], ['Tarihin ve Doğanın İzinde', 14], ['Yönetim Birimlerini Tanıyorum', 20], ['Mustafa Kemal Atatürk Nasıl Bir Öğrenciydi?', 26], ['Bayramlarımızla Gururluyuz', 32], ['Bayram Gelince', 38], ['Tekrar Zamanı (4. alan)', 44], ['5. Öğrenme Alanı: Doğa ve Çevre', 48], ['Hava Olayları ve Mevsimler', 52], ['Doğadan Yararlanarak Yön Bulma', 60], ['Afetlere Karşı Alınacak Önlemler', 68], ['Tasarruf Bizim İşimiz', 76], ['Tekrar Zamanı (5. alan)', 84], ['6. Öğrenme Alanı: Bilim, Teknoloji ve Sanat', 88], ['Bilim İnsanları İyi ki Var', 92], ['Eskisi, Yenisi', 100], ['Hayat Sanatla Güzel', 106], ['Tekrar Zamanı (6. alan)', 114], ['Sözlük', 125]] },
 ];
+function bookName(b) { return (S.bookNames || {})[b.id] || b.ad; }
 function bookDB() { return new Promise((res, rej) => { const q = indexedDB.open('odev-kitap', 1); q.onupgradeneeded = () => q.result.createObjectStore('pdf'); q.onsuccess = () => res(q.result); q.onerror = () => rej(q.error); }); }
 async function bookPut(id, buf) { const db = await bookDB(); return new Promise((res, rej) => { const t = db.transaction('pdf', 'readwrite'); t.objectStore('pdf').put(buf, id); t.oncomplete = res; t.onerror = () => rej(t.error); }); }
 async function bookGet(id) { const db = await bookDB(); return new Promise((res, rej) => { const r = db.transaction('pdf').objectStore('pdf').get(id); r.onsuccess = () => res(r.result || null); r.onerror = () => rej(r.error); }); }
@@ -793,12 +864,12 @@ async function booksHome() {
   VIEW = 'books'; app.classList.remove('wide'); stopSpeak();
   const have = await bookList();
   app.innerHTML = `<div class="rtop"><button class="btn soft sm" data-a="home">← Ana sayfa</button><div class="rtitle">📘 Kitaplarım</div></div>
-  <div class="grid three">${BOOKS.map(b => `<button class="card ${have.includes(b.id) ? 'c-blue' : ''}" data-a="openbook" data-v="${b.id}" ${have.includes(b.id) ? '' : 'disabled'}><div class="emo">${b.emo}</div><div><h3>${esc(b.ad)}</h3><p>${have.includes(b.id) ? 'Açmak için tıkla' : 'Veli Köşesi\'nden yükleyin'}</p></div></button>`).join('')}</div>
+  <div class="grid three">${BOOKS.map(b => `<button class="card ${have.includes(b.id) ? 'c-blue' : ''}" data-a="openbook" data-v="${b.id}" ${have.includes(b.id) ? '' : 'disabled'}><div class="emo">${b.emo}</div><div><h3>${esc(bookName(b))}</h3><p>${have.includes(b.id) ? 'Açmak için tıkla' : 'Veli Köşesi\'nden yükleyin'}</p></div></button>`).filter((_, i) => have.includes(BOOKS[i].id) || !BOOKS[i].ek).join('')}</div>
   ${have.length ? '' : '<p class="muted" style="margin-top:16px">Henüz kitap yok. ⚙️ Veli Köşesi › Kitaplar bölümünden PDF\'leri yükleyin; kitaplar yalnızca bu bilgisayarda saklanır.</p>'}`;
 }
 async function openBook(id, page) {
   const meta = BOOKS.find(b => b.id === id); VIEW = 'book'; app.classList.add('wide'); stopSpeak();
-  app.innerHTML = `<div class="rtop"><button class="btn soft sm" data-a="books">← Kitaplar</button><div class="rtitle">${meta.emo} ${esc(meta.ad)}</div><span class="muted" id="bkstat">Yükleniyor…</span></div>
+  app.innerHTML = `<div class="rtop"><button class="btn soft sm" data-a="books">← Kitaplar</button><div class="rtitle">${meta.emo} ${esc(bookName(meta))}</div><span class="muted" id="bkstat">Yükleniyor…</span></div>
    <div class="bookwrap"><div class="booknav"><select id="bkjump"><option value="">Konuya git…</option>${meta.temalar.map(([n, p]) => `<option value="${p}">${esc(n)} (s.${p})</option>`).join('')}</select>
      <div class="bkpg"><button class="btn soft sm" id="bkprev">◀</button><input id="bkno" type="number" min="1" value="1"> / <span id="bktot">?</span><button class="btn soft sm" id="bknext">▶</button></div>
      <button class="btn green sm" id="bkask">🦉 Bu sayfayı Bilge'ye sor</button><button class="btn soft sm" id="bkzoom">🔍</button></div>
@@ -813,7 +884,7 @@ async function openBook(id, page) {
     $('#bkprev').onclick = () => go(BK.page - 1); $('#bknext').onclick = () => go(BK.page + 1);
     $('#bkno').onchange = e => go(+e.target.value); $('#bkjump').onchange = e => { if (e.target.value) go(+e.target.value + 1); e.target.value = ''; };
     $('#bkzoom').onclick = () => { BK.zoom = BK.zoom >= 1.6 ? 1 : BK.zoom + .3; bookRender(); };
-    $('#bkask').onclick = async () => { const c = $('#bkc'); const blob = await new Promise(r => c.toBlob(r, 'image/jpeg', .85)); pending = { blob, url: URL.createObjectURL(blob) }; chat = []; chatImg = null; R = null; help(`${meta.ad} ${BK.page}. sayfadaki etkinlikte bana yardım eder misin?`); };
+    $('#bkask').onclick = async () => { const c = $('#bkc'); const blob = await new Promise(r => c.toBlob(r, 'image/jpeg', .85)); pending = { blob, url: URL.createObjectURL(blob) }; chat = []; chatImg = null; R = null; help(`${bookName(meta)} ${BK.page}. sayfadaki etkinlikte bana yardım eder misin?`); };
     document.onkeydown = null; bookRender();
   } catch (e) { $('#bkstat').textContent = 'Açılamadı: ' + (e.message || e); }
 }
@@ -1358,6 +1429,7 @@ function settings() {
     <p class="muted small">${trVoices().length ? `Bu bilgisayarda ${trVoices().length} Türkçe ses var.` : 'Türkçe ses bulunamadı.'} Daha doğal bir ses için iMac'te <b>Sistem Ayarları › Erişilebilirlik › Konuşulan İçerik › Sistem sesi › Yönet</b> bölümünden <b>Yelda (Geliştirilmiş/Premium)</b> sesini indirin; uygulama onu otomatik seçer.</p>
   </div>
   <div class="panel"><h2>İlerleme</h2>
+    <p class="muted small">Kitap soruları seviyesi: ${['matematik','hayat_bilgisi','ingilizce'].map(d => DERS_AD[d] + ' ' + lvlOf((d === 'matematik' ? 'math' : 'bilgi') + ':' + d) + '/3').join(' · ')} <button class="btn soft sm" data-a="lvlreset">Seviyeleri sıfırla</button></p>
     <p class="muted">Toplam ⭐ ${S.stars} · Bugün ⭐ ${S.dayStars}</p>
     <table><tr><th>Ders</th><th>Doğru</th><th>Yanlış</th><th>Başarı</th></tr>${rows}</table>
   </div>
@@ -1376,8 +1448,9 @@ function settings() {
   document.querySelectorAll('[data-unit]').forEach(sel => sel.addEventListener('change', e => { S.unit = S.unit || {}; S.unit[e.target.dataset.unit] = +e.target.value; save(); showUnitInfo(); }));
   const showUnitInfo = () => { $('#unitinfo').innerHTML = Object.keys(MEB2).map(k => { const t = unitOf(k); return t ? `<p><b>${DERS_AD[k]} ${t.no}. tema — ${esc(t.ad)}</b> (${esc(t.sure)}${t.kitap ? ', ' + esc(t.kitap) + (t.sayfa ? ' s.' + t.sayfa : '') : ''})<br>${t.konular ? 'Konular: ' + t.konular.map(esc).join(' · ') + '<br>' : ''}Kavramlar: ${esc(t.kavramlar.join(', '))}${t.kazanimlar ? '<br>Kazanımlar: ' + t.kazanimlar.slice(0, 4).map(esc).join(' · ') + (t.kazanimlar.length > 4 ? ' …' : '') : ''}</p>` : ''; }).join(''); };
   showUnitInfo();
-  const renderBooks = async () => { const have = await bookList(); const el = $('#booklist'); if (!el) return; el.innerHTML = BOOKS.map(b => `<div class="field">${b.emo} <b>${esc(b.ad)}</b>: ${have.includes(b.id) ? `<span style="color:var(--green)">✅ yüklü</span> <button class="btn danger sm" data-bdel="${b.id}">Kaldır</button>` : `<label class="btn soft sm" style="cursor:pointer">PDF seç<input type="file" accept="application/pdf" data-bup="${b.id}" hidden></label>`}</div>`).join('');
+  const renderBooks = async () => { const have = await bookList(); const el = $('#booklist'); if (!el) return; el.innerHTML = BOOKS.map(b => `<div class="field">${b.emo} ${b.ek ? `<input data-bname="${b.id}" value="${esc(bookName(b))}" style="max-width:260px" placeholder="Kitap adı">` : `<b>${esc(b.ad)}</b>`}: ${have.includes(b.id) ? `<span style="color:var(--green)">✅ yüklü</span> <button class="btn danger sm" data-bdel="${b.id}">Kaldır</button>` : `<label class="btn soft sm" style="cursor:pointer">PDF seç<input type="file" accept="application/pdf" data-bup="${b.id}" hidden></label>`}</div>`).join('');
     el.querySelectorAll('[data-bup]').forEach(inp => inp.addEventListener('change', async e => { const f = e.target.files[0]; if (!f) return; e.target.parentElement.textContent = 'Yükleniyor…'; try { await bookPut(inp.dataset.bup, await f.arrayBuffer()); } catch (err) { alert('Kaydedilemedi: ' + err.message); } renderBooks(); }));
+    el.querySelectorAll('[data-bname]').forEach(i => i.addEventListener('input', e => { S.bookNames = S.bookNames || {}; S.bookNames[i.dataset.bname] = e.target.value.trim() || BOOKS.find(b => b.id === i.dataset.bname).ad; save(); }));
     el.querySelectorAll('[data-bdel]').forEach(b => b.onclick = async () => { await bookDel(b.dataset.bdel); renderBooks(); }); };
   renderBooks();
   const sk = $('#sKey'); if (sk) { sk.addEventListener('input', e => { S.apiKey = e.target.value.trim(); save(); resetSample(); }); $('#sModel').addEventListener('change', e => { S.model = e.target.value; save(); }); }
@@ -1410,8 +1483,10 @@ const A = {
   books: () => booksHome(), openbook: v => openBook(v),
   balloon: () => balloonStart(), bgo: () => balloonGo(), car: () => carStart(), cgo: () => carGo(),
   cmode: v => { S.carMode = v; save(); carStart(); },
-  unitplay: k => {
+  unitplay: async k => {
     const t = unitOf(k); if (!t) return;
+    await loadBank(); const dersKey = { matematik: 'matematik', hayat_bilgisi: 'hayat_bilgisi', ingilizce: 'ingilizce' }[k];
+    if (dersKey && BANK && BANK[dersKey] && BANK[dersKey].konular.some(x => x.tema === t.no)) return play('bank:' + dersKey + ':' + t.no);
     if (k === 'matematik') return play(t.no === 1 ? 'math:geo' : t.no === 2 ? 'math:sayilar' : t.no === 4 ? pick(['math:olcme', 'math:saat']) : t.no === 5 ? 'math:veri' : t.no === 6 ? 'math:grafik' : 'math:karisik');
     if (k === 'turkce') return play(t.no % 2 ? 'tr:hece' : 'tr:yazim');
     if (k === 'hayat_bilgisi') return play('bilgi:hayat');
@@ -1435,6 +1510,7 @@ const A = {
   backq: () => { if (!R || !R.savedHTML) return home(); stopSpeak(); VIEW = 'round'; app.innerHTML = R.savedHTML; R.savedHTML = null; },
   setname: () => { const v = ($('#nm') || {}).value; if (v && v.trim()) { S.name = v.trim(); save(); home(); } },
   clrm: () => { S.mistakes = []; save(); settings(); },
+  lvlreset: () => { S.lvl = {}; S.streak = {}; save(); settings(); },
   reset: (v, el) => {
     if (!resetArm) { resetArm = true; el.textContent = 'Emin misiniz? Tekrar tıklayın'; return; }
     const keep = { name: S.name, goal: S.goal, sound: S.sound };
@@ -1453,7 +1529,7 @@ document.addEventListener('keydown', e => {
   const n = +e.key; if (n >= 1 && n <= 4 && cur().kind === 'mcq' && !R.answered) { const b = document.querySelector(`.opt[data-v="${n - 1}"]`); if (b) answerMCQ(b, n - 1); }
 });
 try { speechSynthesis.getVoices(); speechSynthesis.onvoiceschanged = () => { if (VIEW === 'settings') settings(); }; } catch (e) {}
-updateHeader(); home();
+updateHeader(); home(); loadBank();
 /* sürüm kontrolü: sunucuda yeni sürüm varsa şerit göster */
 (async function checkUpdate() {
   if (!/^https?:/.test(location.protocol)) return;
