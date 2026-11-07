@@ -165,7 +165,7 @@ const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { c
 let VIEW = 'home';
 
 /* ---------- kayıt ---------- */
-const APP_VERSION = '20261107.1724';
+const APP_VERSION = '20261107.1727';
 const KEY = 'odev-arkadasi-v1';
 function load() { try { return JSON.parse(localStorage.getItem(KEY)) || null; } catch (e) { return null; } }
 let S = Object.assign({ name: '', stars: 0, goal: 10, day: '', dayStars: 0, stats: {}, mistakes: [], sound: true, rate: 1.15, autoRead: true, voice: '' }, load() || {});
@@ -211,6 +211,18 @@ function forSpeech(t) {
     .replace(/[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{2B00}-\u{2BFF}\u{FE0F}\u{1F900}-\u{1F9FF}]/gu, '')
     .replace(/×/g, ' çarpı ').replace(/−/g, ' eksi ').replace(/\+/g, ' artı ').replace(/▢/g, ' boşluk ').replace(/= \?/g, ' kaç eder').replace(/=/g, ' eşittir ')
     .replace(/\s*·\s*/g, ', ').replace(/\s{2,}/g, ' ').trim();
+}
+function sfxExhaust() {
+  if (!S.sound) return;
+  try {
+    AC = AC || new (window.AudioContext || window.webkitAudioContext)();
+    const len = AC.sampleRate * .12, buf = AC.createBuffer(1, len, AC.sampleRate), d = buf.getChannelData(0);
+    for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / len);
+    for (let k = 0; k < 5; k++) {
+      const src = AC.createBufferSource(); src.buffer = buf; const f = AC.createBiquadFilter(); f.type = 'lowpass'; f.frequency.value = 500 - k * 50;
+      const g = AC.createGain(); g.gain.value = .5; src.connect(f).connect(g).connect(AC.destination); src.start(AC.currentTime + k * .14);
+    }
+  } catch (e) {}
 }
 function speak(t, opts) {
   opts = opts || {};
@@ -377,7 +389,7 @@ function home() {
     <button class="card hero wide" data-a="help"><div class="emo">🦉</div><div><h3>Ödevime Yardım Et</h3><p>Bilge Baykuş'a sor ya da ödevinin fotoğrafını gönder. Cevabı söylemez, birlikte buluruz!</p></div></button>
     <button class="card c-yellow" data-a="balloon"><div class="emo">🎈</div><div><h3>Balon Avı</h3><p>Doğru balonu patlat, seviye atla, rekor kır! ${S.best ? `Rekor: ${S.best}` : ''}</p></div></button>
     <button class="card c-blue" data-a="menu" data-v="math"><div class="emo">🔢</div><div><h3>Matematik</h3><p>Toplama, çıkarma, çarpma, eksik sayı</p></div></button>
-    <button class="card c-pink" data-a="car"><div class="emo">🚗</div><div><h3>Hece Yarışı</h3><p>Arabayı doğru heceye sür, hızlan! ${S.bestCar ? `Rekor: ${S.bestCar} kelime` : ''}</p></div></button>
+    <button class="card c-pink" data-a="car"><div class="emo">🚗</div><div><h3>Hece Yarışı</h3><p>Arabayı doğru heceye sür; 3 can, yanlışta duman! ${S.bestCar ? `Rekor: ${S.bestCar} kelime` : ''}</p></div></button>
     <button class="card c-orange" data-a="menu" data-v="tr"><div class="emo">🔤</div><div><h3>Türkçe</h3><p>Hece sıralama, doğru yazım</p></div></button>
     <button class="card c-green" data-a="menu" data-v="bilgi"><div class="emo">🌍</div><div><h3>Bil Bakalım</h3><p>Hayat Bilgisi ve İngilizce</p></div></button>
     <button class="card c-pink" data-a="review" ${n ? '' : 'disabled'}><div class="emo">📕</div><div><h3>Hata Defterim ${n ? `(${n})` : ''}</h3><p>${n ? 'Yanlış yaptıklarını tekrar et, defterden sil!' : 'Defterin boş. Süpersin! ✨'}</p></div></button>
@@ -579,7 +591,7 @@ function balloonEnd() {
 let C = null;
 function carStart() {
   VIEW = 'car'; stopSpeak();
-  app.innerHTML = `<div class="rtop"><button class="btn soft sm" data-a="home">← Çık</button><div class="rtitle">🚗 Hece Yarışı</div><div class="pill" id="cScore">0 kelime</div></div>
+  app.innerHTML = `<div class="rtop"><button class="btn soft sm" data-a="home">← Çık</button><div class="rtitle">🚗 Hece Yarışı</div><div class="pill" id="cScore">0 kelime</div><div class="pill" id="cLives">❤️❤️❤️</div></div>
   <div class="gwrap"><div class="gq" id="cWord"></div><div class="glvl" id="cHint">Sıradaki heceyi bul, arabayı o şeride sür!</div><canvas id="cc"></canvas>
   <div class="gover" id="cOver" style="display:none"></div></div>`;
   C = { canvas: $('#cc'), ctx: $('#cc').getContext('2d'), running: false, lane: 1, carX: 0, spd: 50, words: 0, gate: null, road: 0, smoke: [], sparks: [], word: null, pos: 0, miss: false, last: 0, bump: 0, tilt: 0, light: -1 };
@@ -590,14 +602,14 @@ function carResize() { if (!C) return; const w = Math.min(1000, C.canvas.parentE
 function carLaneX(l) { const W = C.canvas.width, rw = Math.min(W * .7, 620), x0 = (W - rw) / 2; return x0 + rw / 6 + l * (rw / 3); }
 function carGo() {
   $('#cOver').style.display = 'none';
-  C.running = false; C.spd = 50; C.words = 0; C.lane = 1; C.carX = carLaneX(1); C.smoke = []; C.sparks = []; C.gate = null; C.tilt = 0;
+  C.running = false; C.spd = 50; C.words = 0; C.lives = 3; C.fog = 0; C.v = 0; C.lane = 1; C.carX = carLaneX(1); C.smoke = []; C.sparks = []; C.gate = null; C.tilt = 0;
   carHud(); $('#cWord').textContent = 'Hazır ol…'; $('#cHint').textContent = 'Işık yeşile dönünce yarış başlar! ← → şerit, ↑ gaz, ↓ fren.';
   const tok = {}; C.tok = tok;
   const step = (n, msg) => { if (C.tok !== tok || VIEW !== 'car') return; C.light = n; carDraw(); if (msg) speak(msg, { rate: 1.3 }); sfx(n === 2 ? 'win' : 'tick'); };
   step(0); setTimeout(() => step(1), 1100); setTimeout(() => step(2, 'Başla!'), 2200);
   setTimeout(() => { if (C.tok !== tok || VIEW !== 'car') return; C.light = -1; C.running = true; carNewWord(); C.last = performance.now(); requestAnimationFrame(carLoop); }, 3000);
 }
-function carHud() { $('#cScore').textContent = C.words + ' kelime'; }
+function carHud() { $('#cScore').textContent = C.words + ' kelime'; $('#cLives').textContent = '❤️'.repeat(C.lives) + '🤍'.repeat(3 - C.lives); }
 function carNewWord() {
   const [s, emoji] = pick(WORDS).split('|'); C.word = { parts: s.split('-'), emoji, text: s.replace(/-/g, '') }; C.pos = 0; C.miss = false;
   carShowWord(); speak(C.word.text); carNewGate();
@@ -619,14 +631,15 @@ function carSteer(d) { if (!C.running) return; C.lane = Math.max(0, Math.min(2, 
 function carLoop(t) {
   if (!C || !C.running || VIEW !== 'car') return;
   const dt = Math.min(.05, (t - C.last) / 1000); C.last = t;
-  const H = C.canvas.height, v = (55 + C.spd * .9) * (C.gas ? 1.8 : C.brake ? .5 : 1);
+  const H = C.canvas.height, v = (55 + C.spd * .9) * (C.gas ? 1.8 : C.brake ? .5 : 1); C.v += (v - C.v) * Math.min(1, dt * 4);
   C.road = (C.road + v * dt) % 80;
   const dx = carLaneX(C.lane) - C.carX; C.carX += dx * Math.min(1, dt * 8); C.tilt += ((Math.max(-1, Math.min(1, dx / 70)) * .45) - C.tilt) * Math.min(1, dt * 12);
   if (C.gate) {
     C.gate.y += v * dt;
     if (!C.gate.done && C.gate.y >= H - 150) { C.gate.done = true; carResolve(C.gate.opts[C.lane]); }
   }
-  C.smoke = C.smoke.filter(p => (p.life -= dt) > 0); for (const p of C.smoke) { p.x += p.vx * dt; p.y += p.vy * dt; p.r += 25 * dt; }
+  C.smoke = C.smoke.filter(p => (p.life -= dt) > 0); for (const p of C.smoke) { p.x += p.vx * dt; p.y += p.vy * dt; p.vx *= .97; p.vy -= 30 * dt; p.r += 40 * dt; }
+  if (C.fog > 0) C.fog -= dt * .5;
   C.sparks = C.sparks.filter(p => (p.life -= dt) > 0); for (const p of C.sparks) { p.x += p.vx * dt; p.y += p.vy * dt; }
   if (C.bump > 0) C.bump -= dt;
   if (C.gas && C.running) for (let i = 0; i < 2; i++) C.sparks.push({ x: C.carX + rand(-14, 14), y: C.canvas.height - 50, vx: rand(-20, 20), vy: rand(120, 260), c: pick(['#FF8A3D', '#FFC93C']), life: .35 });
@@ -645,11 +658,11 @@ function carResolve(got) {
       setTimeout(() => { if (C && C.running) carNewWord(); }, 1300);
     } else { setTimeout(() => { if (C && C.running) carNewGate(); }, 500); }
   } else {
-    C.miss = true; C.spd -= 20; C.bump = .4; sfx('no'); stat('turkce', false);
-    for (let i = 0; i < 16; i++) C.smoke.push({ x: C.carX + rand(-10, 10), y: C.canvas.height - 70, vx: rand(-30, 30), vy: rand(40, 120), r: rand(8, 14), life: rand(.8, 1.4) });
+    C.miss = true; C.spd = Math.max(10, C.spd - 20); C.bump = .5; C.lives--; C.fog = 1; sfxExhaust(); stat('turkce', false); carHud();
+    for (let i = 0; i < 60; i++) C.smoke.push({ x: C.carX + rand(-20, 20), y: C.canvas.height - 70, vx: rand(-160, 160), vy: rand(-220, 80), r: rand(14, 30), life: rand(1.2, 2.4) });
     $('#cHint').textContent = `"${got}" değil! ${C.word.text} kelimesini yavaşça söyle: ${C.word.parts.join(' · ')}`; speak(C.word.parts.join(', '));
-    if (C.spd <= 0) { C.spd = 0; carEnd(); return; }
-    setTimeout(() => { if (C && C.running) carNewGate(); }, 1500);
+    if (C.lives <= 0) { setTimeout(() => { if (C) carEnd(); }, 900); return; }
+    setTimeout(() => { if (C && C.running) carNewGate(); }, 1800);
   }
 }
 function carDraw() {
@@ -664,13 +677,14 @@ function carDraw() {
     x.fillStyle = '#FFF7EA'; x.strokeStyle = '#E06A1F'; x.lineWidth = 4; x.beginPath(); x.roundRect(cx - w / 2, cy - h / 2, w, h, 14); x.fill(); x.stroke();
     x.fillStyle = '#2B2A4C'; x.font = `900 ${Math.min(34, w * .28)}px Nunito, sans-serif`; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText(o, cx, cy + 2);
   });
-  for (const p of C.smoke) { x.globalAlpha = Math.min(.7, p.life * .6); x.fillStyle = '#555'; x.beginPath(); x.arc(p.x, p.y, p.r, 0, 7); x.fill(); } x.globalAlpha = 1;
+  for (const p of C.smoke) { x.globalAlpha = Math.min(.75, p.life * .5); x.fillStyle = '#4A4A4A'; x.beginPath(); x.arc(p.x, p.y, p.r, 0, 7); x.fill(); } x.globalAlpha = 1;
+  if (C.fog > 0) { x.fillStyle = `rgba(80,80,80,${Math.min(.6, C.fog * .6)})`; x.fillRect(0, 0, W, H); }
   const cx0 = C.carX + (C.bump > 0 ? Math.sin(C.bump * 60) * 6 : 0), cy0 = H - 110;
   x.fillStyle = 'rgba(0,0,0,.25)'; x.beginPath(); x.ellipse(cx0, cy0 + 50, 34, 10, 0, 0, 7); x.fill();
   x.save(); x.translate(cx0, cy0); x.rotate(C.tilt || 0);
   x.fillStyle = '#2B2A4C'; [[-30, -26], [18, -26], [-30, 20], [18, 20]].forEach(([dx, dy]) => { x.save(); if (dy < 0) { x.translate(dx + 6, dy + 11); x.rotate(C.tilt * .8); x.translate(-dx - 6, -dy - 11); } x.beginPath(); x.roundRect(dx, dy, 12, 22, 4); x.fill(); x.restore(); });
-  x.fillStyle = '#FF5C8A'; x.beginPath(); x.roundRect(-26, -44, 52, 96, 16); x.fill();
-  x.fillStyle = '#B3123F'; x.beginPath(); x.roundRect(-22, -8, 44, 26, 6); x.fill();
+  x.fillStyle = '#20B072'; x.beginPath(); x.roundRect(-26, -44, 52, 96, 16); x.fill();
+  x.fillStyle = '#148A57'; x.beginPath(); x.roundRect(-22, -8, 44, 26, 6); x.fill();
   x.fillStyle = '#CDEBFF'; x.beginPath(); x.roundRect(-20, -36, 40, 22, 6); x.fill(); x.beginPath(); x.roundRect(-20, 22, 40, 18, 6); x.fill();
   x.fillStyle = '#FFC93C'; x.beginPath(); x.arc(-16, -44, 5, 0, 7); x.arc(16, -44, 5, 0, 7); x.fill();
   x.restore();
@@ -683,10 +697,10 @@ function carDraw() {
     x.lineWidth = 10; x.lineCap = 'round';
     [[0, .4, '#FF5C8A'], [.4, .7, '#FFC93C'], [.7, 1, '#20B072']].forEach(([f0, f1, c]) => { x.strokeStyle = c; x.beginPath(); x.arc(gx, gy, gr - 12, a0 + (a1 - a0) * f0, a0 + (a1 - a0) * f1); x.stroke(); });
     x.lineCap = 'butt';
-    const shown = Math.min(100, C.spd * (C.gas ? 1.6 : C.brake ? .6 : 1)); const na = a0 + (a1 - a0) * shown / 100;
+    const kmh = Math.round((C.v || 0) * .85), shown = Math.min(100, kmh / 2.4); const na = a0 + (a1 - a0) * shown / 100;
     x.strokeStyle = '#2B2A4C'; x.lineWidth = 4; x.beginPath(); x.moveTo(gx, gy); x.lineTo(gx + Math.cos(na) * (gr - 18), gy + Math.sin(na) * (gr - 18)); x.stroke();
     x.fillStyle = '#2B2A4C'; x.beginPath(); x.arc(gx, gy, 6, 0, 7); x.fill();
-    x.font = `900 ${Math.round(gr * .3)}px Nunito, sans-serif`; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText(Math.round(shown * 1.8), gx, gy + gr * .45);
+    x.font = `900 ${Math.round(gr * .3)}px Nunito, sans-serif`; x.textAlign = 'center'; x.textBaseline = 'middle'; x.fillText(kmh, gx, gy + gr * .45);
     x.font = `800 ${Math.round(gr * .17)}px Nunito, sans-serif`; x.fillStyle = '#6E6C8C'; x.fillText('km/s', gx, gy + gr * .72);
   }
   // trafik ışığı
@@ -700,8 +714,8 @@ function carDraw() {
 }
 function carEnd() {
   C.running = false; const rec = C.words > (S.bestCar || 0); if (rec) { S.bestCar = C.words; save(); confetti(); }
-  const o = $('#cOver'); o.style.display = ''; o.innerHTML = `<div class="bigemo">${rec ? '🏆' : C.words >= 5 ? '🌟' : '🚗'}</div><h2>Araba durdu! ${C.words} kelime</h2><p>${rec ? 'Yeni rekor! 🎉' : `Rekorun: ${S.bestCar || 0} kelime`}</p><div class="row center"><button class="btn primary" data-a="cgo">Tekrar yarış 🔁</button><button class="btn soft" data-a="home">Ana sayfa 🏠</button></div>`;
-  speak(rec ? 'Yeni rekor! ' + C.words + ' kelime! Süpersin!' : 'Araba durdu. ' + C.words + ' kelime tamamladın, aferin!');
+  const o = $('#cOver'); o.style.display = ''; o.innerHTML = `<div class="bigemo">${rec ? '🏆' : C.words >= 5 ? '🌟' : '🚗'}</div><h2>Can bitti! ${C.words} kelime</h2><p>${rec ? 'Yeni rekor! 🎉' : `Rekorun: ${S.bestCar || 0} kelime`}</p><div class="row center"><button class="btn primary" data-a="cgo">Tekrar yarış 🔁</button><button class="btn soft" data-a="home">Ana sayfa 🏠</button></div>`;
+  speak(rec ? 'Yeni rekor! ' + C.words + ' kelime! Süpersin!' : 'Oyun bitti. ' + C.words + ' kelime tamamladın, aferin!');
 }
 
 /* ---------- Bilge Baykuş (Claude) ---------- */
