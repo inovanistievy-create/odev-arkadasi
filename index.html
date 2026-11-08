@@ -123,6 +123,7 @@ td,th{padding:10px 8px;border-bottom:2px solid #F6EEDD;text-align:left}
 th{color:var(--muted);font-size:15px}
 .mlist{max-height:240px;overflow:auto;font-weight:700;color:var(--muted);padding-left:20px;margin:8px 0}
 .unitbar{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 18px}
+.kfield{display:grid;grid-template-columns:130px 1fr 2fr;gap:8px;align-items:center;margin:8px 0}.kfield select{max-width:100%}.kmatch{grid-column:2/4;font-size:13px;color:#2E7D32}@media(max-width:700px){.kfield{grid-template-columns:1fr}.kmatch{grid-column:1}}
 .unitchip{border:2px solid var(--line);background:#fff;border-radius:99px;padding:8px 14px;font-weight:700;font-size:15px;cursor:pointer}.unitchip:hover{background:#FFF1C9}
 .onb{background:#fff;border-radius:28px;padding:26px;margin-bottom:22px;display:flex;gap:18px;align-items:center;flex-wrap:wrap;box-shadow:0 6px 0 rgba(43,42,76,.07)}
 .onb input{font:inherit;font-size:22px;font-weight:800;border:3px solid var(--line);border-radius:16px;padding:12px 16px;min-width:220px}
@@ -283,7 +284,7 @@ const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { c
 let VIEW = 'home';
 
 /* ---------- kayıt ---------- */
-const APP_VERSION = '20261107.2151';
+const APP_VERSION = '20261108.0715';
 const BASEKEY = 'odev-arkadasi-v1', PKEY = 'odev-arkadasi-profiles', SHKEY = 'odev-arkadasi-shared';
 const SHARED = ['apiKey', 'model', 'voice', 'rate', 'sound', 'autoRead', 'links', 'bookNames', 'unitAutoDone'];
 function lsGet(k) { try { return JSON.parse(localStorage.getItem(k)); } catch (e) { return null; } }
@@ -436,8 +437,37 @@ function fasikulNow(k) { const w = schoolWeek(); return (FASIKUL[k] || []).find(
 const DERS_AD = { matematik: 'Matematik', turkce: 'Türkçe', hayat_bilgisi: 'Hayat Bilgisi', ingilizce: 'İngilizce' };
 const DERS_EMO = { matematik: '🔢', turkce: '🔤', hayat_bilgisi: '🏡', ingilizce: '🇬🇧' };
 function unitOf(k) { const n = (S.unit || {})[k]; return n ? MEB2[k].temalar.find(t => t.no === n) : null; }
+const DERS_BOOKS = { matematik: ['mat1', 'mat2', 'fas:matematik'], turkce: ['tr1', 'tr2'], hayat_bilgisi: ['hb1', 'hb2', 'fas:hayat_bilgisi'], ingilizce: ['ing', 'ingck'] };
+function bookLabel(bid) { if (bid.startsWith('fas:')) return 'Üçgen fasikülleri'; const b = (typeof BOOKS !== 'undefined' ? BOOKS : []).find(x => x.id === bid); return b ? b.ad : bid; }
+function bookKonular(bid, ders) {
+  if (bid.startsWith('fas:')) return (FASIKUL[ders] || []).flatMap(f => f.konular.map(k => ({ ad: k, tema: f.tema, grup: `${f.no}. fasikül: ${f.ad}`, fas: f.no })));
+  const b = BOOKS.find(x => x.id === bid); if (!b) return [];
+  if (!b.temalar.length) return MEB2[ders].temalar.map(t => ({ ad: t.ad, tema: t.no, grup: t.no + '. tema (MEB programı)', page: null }));
+  const groups = []; let g = null;
+  b.temalar.forEach(([ad, page]) => {
+    if (/Sözlük|Glossary/i.test(ad)) return;
+    const m = ad.match(/^(\d)\.\s*(?:Tema|Öğrenme Alanı)|^Theme (\d)/i);
+    if (m) { g = { tema: +(m[1] || m[2]), grup: ad.replace(/\s*\(devam\)/, ''), head: [ad, page], items: [] }; groups.push(g); const dv = ad.match(/devam\)?:\s*(.+)$/); if (dv) g.items.push({ ad: dv[1], page }); return; }
+    if (g) g.items.push({ ad: ad.replace(/\s*\((dinleme|izleme)\)\s*$/, ''), page });
+  });
+  return groups.flatMap(gr => (gr.items.length ? gr.items : [{ ad: gr.head[0].replace(/^Theme \d:\s*/, ''), page: gr.head[1] }]).map(it => ({ ad: it.ad, page: it.page, tema: gr.tema, grup: gr.grup })));
+}
+function konuOf(k) { return (S.konu || {})[k] || null; }
+function konuMatches(ders) {
+  const kc = konuOf(ders); if (!kc || !BANK || !BANK[ders]) return [];
+  const nz = t => String(t).toLocaleLowerCase('tr').replace(/[^a-zçğıöşü ]/g, ' ').split(/\s+/).filter(w => w.length > 2 && !/^(ve|ile|için|tema|konu)$/.test(w));
+  const a = nz(kc.ad); if (!a.length) return [];
+  return BANK[ders].konular.filter(k => { if (k.tema !== kc.tema) return false; const b = nz(k.konu); const common = a.filter(w => b.some(x => x.slice(0, 5) === w.slice(0, 5))).length; return common >= Math.max(1, Math.ceil(Math.min(a.length, b.length) / 2)); });
+}
+function konuActivity(ders, ad) {
+  const t = String(ad).toLocaleLowerCase('tr');
+  if (ders === 'matematik') { if (/çarpma/.test(t)) return 'math:atolye-carp'; if (/bölme/.test(t)) return 'math:bol'; if (/zaman|saat/.test(t)) return 'math:saat'; if (/veri|grafik|çetele/.test(t)) return 'math:grafik'; if (/yön|simetri/.test(t)) return 'math:veri'; if (/kesir|para|uzunluk|kütle|ölç/.test(t)) return 'math:olcme'; if (/cisim|şekil|geometri|sıvı/.test(t)) return 'math:geo'; if (/eşitlik/.test(t)) return 'math:esitlik'; if (/tahmin/.test(t)) return 'fas:tahmin'; if (/problem/.test(t)) return 'fas:problem'; if (/çıkarma/.test(t)) return 'math:atolye-cikar'; if (/toplama|eldeli/.test(t)) return 'fas:alt'; return 'math:sayilar'; }
+  if (ders === 'turkce') return /okuma|metin|anlama/.test(t) ? 'oku:home' : 'tr:hece';
+  if (ders === 'ingilizce') return 'ing:' + (konuOf(ders) || {}).tema;
+  return 'bilgi:hayat';
+}
 function unitSummary() {
-  return Object.keys(MEB2).map(k => { const t = unitOf(k); return t ? `${DERS_AD[k]} ${t.no}. tema "${t.ad}": kavramlar: ${t.kavramlar.join(', ')}${t.kazanimlar ? '; kazanımlar: ' + t.kazanimlar.slice(0, 6).join(' | ') : ''}${t.icerik ? '; içerik: ' + (Array.isArray(t.icerik) ? t.icerik.join(', ') : t.icerik) : ''}${t.terimler ? '; KİTAPTAKİ TERİMLER (bunları kullan): ' + t.terimler.join(' | ') : ''}${t.yontemler ? '; kitaptaki yöntemler: ' + t.yontemler.join(' | ') : ''}${t.konular ? '; kitap konuları: ' + t.konular.join(', ') : ''}${t.kelimeler ? '; kitaptaki kelimeler: ' + t.kelimeler.join(', ') : ''}${(FASIKUL[k] || []).filter(f => f.tema === t.no).map(f => `; öğretmenin ödev verdiği Üçgen ${f.no}. fasikül "${f.ad}" (${f.haftalar[0]}-${f.haftalar[1]}. haftalar) konuları: ${f.konular.join(', ')}`).join('')}` : ''; }).filter(Boolean).join('\n');
+  return Object.keys(MEB2).map(k => { const t = unitOf(k), kc = konuOf(k); return t ? `${kc ? `ŞU AN OKULDA İŞLENEN KONU: ${DERS_AD[k]} — ${bookLabel(kc.book)} "${kc.ad}"${kc.page ? ' (s.' + kc.page + ')' : ''}. ` : ''}${DERS_AD[k]} ${t.no}. tema "${t.ad}": kavramlar: ${t.kavramlar.join(', ')}${t.kazanimlar ? '; kazanımlar: ' + t.kazanimlar.slice(0, 6).join(' | ') : ''}${t.icerik ? '; içerik: ' + (Array.isArray(t.icerik) ? t.icerik.join(', ') : t.icerik) : ''}${t.terimler ? '; KİTAPTAKİ TERİMLER (bunları kullan): ' + t.terimler.join(' | ') : ''}${t.yontemler ? '; kitaptaki yöntemler: ' + t.yontemler.join(' | ') : ''}${t.konular ? '; kitap konuları: ' + t.konular.join(', ') : ''}${t.kelimeler ? '; kitaptaki kelimeler: ' + t.kelimeler.join(', ') : ''}${(FASIKUL[k] || []).filter(f => f.tema === t.no).map(f => `; öğretmenin ödev verdiği Üçgen ${f.no}. fasikül "${f.ad}" (${f.haftalar[0]}-${f.haftalar[1]}. haftalar) konuları: ${f.konular.join(', ')}`).join('')}` : ''; }).filter(Boolean).join('\n');
 }
 
 const WORDS = ['ki-tap|📕','o-kul|🏫','öğ-ret-men|👩‍🏫','ar-ka-daş|🧑‍🤝‍🧑','bah-çe|🏡','a-ğaç|🌳','ke-le-bek|🦋','çi-çek|🌸','gü-neş|☀️','pen-ce-re|🪟','bi-sik-let|🚲','te-le-viz-yon|📺','ka-rın-ca|🐜','kur-ba-ğa|🐸','zü-ra-fa|🦒','pa-pat-ya|🌼','fut-bol|⚽','çan-ta|🎒','or-man|🌲','de-niz|🌊','yağ-mur|🌧️','mey-ve|🧺','ar-mut|🍐','ki-raz|🍒','kar-puz|🍉','u-çurt-ma|🪁','sa-at|⏰','ka-lem|✏️','ço-cuk|🧒','def-ter|📒','ö-dev|📝','kır-mı-zı|🔴','tu-run-cu|🟠','söz-lük|📖','gök-ku-şa-ğı|🌈','don-dur-ma|🍦','pen-gu-en|🐧','tav-şan|🐰','kap-lum-ba-ğa|🐢','a-yak-ka-bı|👟','şem-si-ye|☂️','el-ma|🍎','ba-lık|🐟','yıl-dız|⭐','sin-cap|🐿️'];
@@ -704,7 +734,7 @@ function home() {
   ${!S.name ? `<div class="onb"><div style="font-size:54px">👋</div><div style="flex:1;min-width:220px"><h2 style="margin:0;font-weight:900">Merhaba! Senin adın ne?</h2><p class="muted" style="margin:4px 0 0">Bilge Baykuş seni adınla çağırsın.</p></div><input id="nm" placeholder="Adını yaz" maxlength="20"><button class="btn primary" data-a="setname">Başlayalım! 🚀</button></div>` : ''}
   <h1>${S.name ? `Merhaba ${esc(S.name)}! 👋` : 'Hoş geldin! 👋'}</h1>
   <p class="lead">Bugün ne yapalım? Her doğru cevap bir ⭐ kazandırır.</p>
-  ${Object.keys(MEB2).some(unitOf) ? `<div class="unitbar">${Object.keys(MEB2).map(k => { const t = unitOf(k); return t ? `<button class="unitchip" data-a="unitplay" data-v="${k}">${DERS_EMO[k]} <b>${DERS_AD[k]}</b> ${t.no}. tema · ${esc(t.ad)}</button>` : ''; }).join('')}</div>` : `<div class="unitbar muted small">📅 Okulun ${schoolWeek()}. haftası${fasikulNow('matematik') ? ` · takvime göre Matematik: ${fasikulNow('matematik').no}. fasikül "${esc(fasikulNow('matematik').ad)}"` : ''} — Veli Köşesi'nden üniteyi seçince oyunlar ve Bilge ona göre çalışır ⚙️ <button class="btn soft sm" data-a="autounit">Takvime göre ayarla</button></div>`}
+  ${Object.keys(MEB2).some(unitOf) ? `<div class="unitbar">${Object.keys(MEB2).map(k => { const t = unitOf(k), kc = konuOf(k); return t ? `<button class="unitchip" data-a="unitplay" data-v="${k}">${DERS_EMO[k]} <b>${DERS_AD[k]}</b> ${kc && kc.ad ? `${esc(kc.ad)}${kc.page ? ' · s.' + kc.page : ''}` : `${t.no}. tema · ${esc(t.ad)}`}</button>` : ''; }).join('')}</div>` : `<div class="unitbar muted small">📅 Okulun ${schoolWeek()}. haftası${fasikulNow('matematik') ? ` · takvime göre Matematik: ${fasikulNow('matematik').no}. fasikül "${esc(fasikulNow('matematik').ad)}"` : ''} — Veli Köşesi'nden üniteyi seçince oyunlar ve Bilge ona göre çalışır ⚙️ <button class="btn soft sm" data-a="autounit">Takvime göre ayarla</button></div>`}
   ${gorevCard()}
   <div class="grid">
     <button class="card hero wide" data-a="help"><div class="emo">🦉</div><div><h3>Ödevime Yardım Et</h3><p>Bilge Baykuş'a sor ya da ödevinin fotoğrafını gönder. Cevabı söylemez, birlikte buluruz!</p></div></button>
@@ -904,7 +934,8 @@ function bankToItem(q, mod, konu) {
 function bankItems(ders, tema, n, mod) {
   if (!BANK || !BANK[ders]) return [];
   const lvl = lvlOf(mod + ':' + ders);
-  const konular = BANK[ders].konular.filter(k => !tema || k.tema === tema);
+  let konular = BANK[ders].konular.filter(k => !tema || k.tema === tema);
+  const kc = konuOf(ders); if (kc && tema === kc.tema) { const mm = konuMatches(ders); if (mm.length) { const nq = mm.reduce((a, k) => a + k.sorular.length, 0), hasSab = mm.some(k => k.sorular.some(q => q.tip === 'sablon')); konular = nq >= 8 || hasSab ? mm : [...mm, ...mm, ...konular]; } }
   let pool = konular.flatMap(k => k.sorular.map(q => ({ q, konu: k.konu })));
   if (!pool.length) return [];
   const w = q => (q.zorluk || 1) === lvl ? 6 : (q.zorluk || 1) < lvl ? 2.5 : 1.2;
@@ -2021,6 +2052,7 @@ async function send(text) {
 
 /* ---------- Veli Köşesi ---------- */
 let resetArm = false;
+function settingsWithBook(k, bid) { S.konu = S.konu || {}; S.konu[k] = { book: bid, ad: '', tema: (S.unit || {})[k] || 1, page: null, tmp: true }; settings(); S.konu[k] = null; }
 function settings() {
   VIEW = 'settings'; app.classList.remove('wide'); resetArm = false;
   const names = { math: 'Matematik', turkce: 'Türkçe', bilgi: 'Bil Bakalım' };
@@ -2043,9 +2075,12 @@ function settings() {
     <div class="field"><label><input type="checkbox" id="sLock" ${S.gameLock ? 'checked' : ''}> Oyunlar yıldızla açılsın</label> · Oyun başına: <select id="sCost">${[3, 5, 8, 10, 15].map(c => `<option ${c === S.gameCost ? 'selected' : ''}>${c}</option>`).join('')}</select> ⭐ · Harcanabilir: <b id="wv">${S.wallet || 0}</b> ⭐ <button class="btn soft sm" data-a="walletadd">+5 ⭐ ödül ver</button></div>
     <div class="field"><label><input type="checkbox" id="sSound" ${S.sound ? 'checked' : ''}> Ses efektleri</label></div>
   </div>
-  <div class="panel"><h2>📚 Hangi ünitedeyiz? <span class="muted small">(MEB 2. sınıf programı)</span></h2>
-    ${Object.keys(MEB2).map(k => `<div class="field">${DERS_EMO[k]} ${DERS_AD[k]}: <select data-unit="${k}"><option value="0">Seçilmedi</option>${MEB2[k].temalar.map(t => `<option value="${t.no}" ${(S.unit || {})[k] === t.no ? 'selected' : ''}>${t.no}. ${esc(t.ad)}</option>`).join('')}</select></div>`).join('')}
-    <p class="muted small">Seçilen üniteler ana sayfada kısayol olur; Bilge Baykuş o ünitenin kavram ve kazanımlarını bilerek anlatır. Ünite bitince burayı güncelleyin.</p>
+  <div class="panel"><h2>📚 Okulda şu an hangi konu işleniyor?</h2>
+    <p class="muted small">Önce öğretmenin kullandığı kitabı, sonra o kitapta şu an işlenen konuyu seçin. Kitap Soruları, ana sayfa kısayolları ve Bilge Baykuş bu konuya göre çalışır.</p>
+    ${Object.keys(MEB2).map(k => { const kc = konuOf(k), bid = kc ? kc.book : DERS_BOOKS[k][0], list = bookKonular(bid, k); let lastG = null; return `<div class="kfield"><div class="kders">${DERS_EMO[k]} <b>${DERS_AD[k]}</b></div>
+      <select data-kbook="${k}">${DERS_BOOKS[k].map(b => `<option value="${b}" ${b === bid ? 'selected' : ''}>${esc(bookLabel(b))}</option>`).join('')}</select>
+      <select data-kkonu="${k}"><option value="">— Konu seçin —</option>${list.map((x, i) => { const og = x.grup !== lastG ? `${lastG !== null ? '</optgroup>' : ''}<optgroup label="${esc(x.grup)}">` : ''; lastG = x.grup; return og + `<option value="${i}" ${kc && kc.book === bid && kc.ad === x.ad ? 'selected' : ''}>${esc(x.ad)}${x.page ? ' (s.' + x.page + ')' : ''}</option>`; }).join('')}${lastG !== null ? '</optgroup>' : ''}</select>
+      ${kc ? `<span class="kmatch">${konuMatches(k).length ? `✅ ${konuMatches(k).reduce((a, x) => a + x.sorular.length, 0)} kitap sorusu bu konudan` : `📘 ${kc.tema}. temanın soruları kullanılacak`}</span>` : ''}</div>`; }).join('')}
     <div id="unitinfo" class="muted small"></div>
   </div>
   <div class="panel"><h2>📘 Kitaplar</h2>
@@ -2089,7 +2124,8 @@ function settings() {
   $('#sLock').addEventListener('change', e => { S.gameLock = e.target.checked; save(); updateHeader(); });
   $('#sCost').addEventListener('change', e => { S.gameCost = +e.target.value; save(); });
   $('#sSound').addEventListener('change', e => { S.sound = e.target.checked; save(); });
-  document.querySelectorAll('[data-unit]').forEach(sel => sel.addEventListener('change', e => { S.unit = S.unit || {}; S.unit[e.target.dataset.unit] = +e.target.value; save(); showUnitInfo(); }));
+  document.querySelectorAll('[data-kbook]').forEach(sel => sel.addEventListener('change', e => { const k = e.target.dataset.kbook; S.konu = S.konu || {}; S.konu[k] = null; S.konuBook = S.konuBook || {}; S.konuBook[k] = e.target.value; save(); const y = scrollY; settingsWithBook(k, e.target.value); scrollTo(0, y); }));
+  document.querySelectorAll('[data-kkonu]').forEach(sel => sel.addEventListener('change', async e => { const k = e.target.dataset.kkonu, bid = document.querySelector(`[data-kbook="${k}"]`).value, x = bookKonular(bid, k)[+e.target.value]; S.konu = S.konu || {}; S.unit = S.unit || {}; if (!x) { S.konu[k] = null; } else { S.konu[k] = { book: bid, ad: x.ad, tema: x.tema, page: x.page || null }; S.unit[k] = x.tema; } save(); await loadBank(); const y = scrollY; settings(); scrollTo(0, y); }));
   const showUnitInfo = () => { $('#unitinfo').innerHTML = Object.keys(MEB2).map(k => { const t = unitOf(k); return t ? `<p>${(FASIKUL[k] || []).filter(f => f.tema === t.no).map(f => `📙 Üçgen ${f.no}. fasikül: ${esc(f.ad)} (${f.haftalar[0]}–${f.haftalar[1]}. hafta)<br>`).join('')}<b>${DERS_AD[k]} ${t.no}. tema — ${esc(t.ad)}</b> (${esc(t.sure)}${t.kitap ? ', ' + esc(t.kitap) + (t.sayfa ? ' s.' + t.sayfa : '') : ''})<br>${t.konular ? 'Konular: ' + t.konular.map(esc).join(' · ') + '<br>' : ''}Kavramlar: ${esc(t.kavramlar.join(', '))}${t.kazanimlar ? '<br>Kazanımlar: ' + t.kazanimlar.slice(0, 4).map(esc).join(' · ') + (t.kazanimlar.length > 4 ? ' …' : '') : ''}</p>` : ''; }).join(''); };
   showUnitInfo();
   const renderBooks = async () => { const have = await bookList(); const el = $('#booklist'); if (!el) return; el.innerHTML = BOOKS.map(b => `<div class="field">${b.emo} ${b.ek ? `<input data-bname="${b.id}" value="${esc(bookName(b))}" style="max-width:260px" placeholder="Kitap adı">` : `<b>${esc(b.ad)}</b>`}: ${have.includes(b.id) ? `<span style="color:var(--green)">✅ yüklü</span> <button class="btn danger sm" data-bdel="${b.id}">Kaldır</button>` : `<label class="btn soft sm" style="cursor:pointer">PDF seç<input type="file" accept="application/pdf" data-bup="${b.id}" hidden></label>`}</div>`).join('');
@@ -2140,6 +2176,7 @@ const A = {
   unitplay: async k => {
     const t = unitOf(k); if (!t) return;
     await loadBank(); const dersKey = k;
+    const kc = konuOf(k); if (kc && kc.ad) { if (konuMatches(k).length && Math.random() < .7) return play('bank:' + k + ':' + kc.tema); if (k === 'matematik') return play(konuActivity(k, kc.ad)); }
     if (BANK && BANK[dersKey] && BANK[dersKey].konular.some(x => x.tema === t.no) && Math.random() < .65) return play('bank:' + dersKey + ':' + t.no);
     if (k === 'matematik') return play(t.no === 1 ? 'math:geo' : t.no === 2 ? 'math:sayilar' : t.no === 4 ? pick(['math:olcme', 'math:saat']) : t.no === 5 ? 'math:veri' : t.no === 6 ? 'math:grafik' : 'math:karisik');
     if (k === 'turkce') return play(t.no % 2 ? 'tr:hece' : 'tr:yazim');
