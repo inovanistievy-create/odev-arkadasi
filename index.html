@@ -128,6 +128,9 @@ th{color:var(--muted);font-size:15px}
 .seq{display:inline-flex;flex-direction:column;gap:8px;align-items:flex-start;margin:6px auto}.seqrow{display:flex;align-items:center;gap:8px;font-size:30px;font-weight:800}.sop{min-width:22px;text-align:center}.seqask{font-size:15px;color:#666;margin-top:6px}
 #starPill.lose{animation:shk .5s}@keyframes shk{20%,60%{transform:translateX(-5px)}40%,80%{transform:translateX(5px)}}.starlose{position:fixed;transform:translateX(-50%);z-index:999;background:#FFE2E2;color:#C62828;font-weight:800;padding:4px 10px;border-radius:99px;animation:sl 1.4s forwards;pointer-events:none}@keyframes sl{0%{opacity:0;margin-top:-6px}15%{opacity:1}100%{opacity:0;margin-top:26px}}
 .donebadge{display:inline-block;margin-top:6px;font-size:12px;font-weight:700;color:#1E7A3C;background:#E3F6E8;border-radius:99px;padding:2px 8px}.newbadge{display:inline-block;margin-top:6px;font-size:12px;font-weight:700;color:#8A5A00;background:#FFF1C9;border-radius:99px;padding:2px 8px}.card.done{border-color:#9AD7AA}.mchip.done{border-color:#9AD7AA;background:#F1FBF3}.okuprog{display:flex;align-items:center;gap:12px;margin:8px 0}.okubar{flex:1;height:12px;background:#eee;border-radius:99px;overflow:hidden}.okubar i{display:block;height:100%;background:#3CB371}.okuseg{margin:8px 0 14px}
+.askcard{background:#EAF4FF;border:2px solid #9CC6F5;border-radius:18px;padding:14px 18px;margin:0 0 14px}.askq{font-size:18px;margin-bottom:4px}.askk{font-size:17px;margin-bottom:10px}.klog{margin:10px 0}
+#tokWrap{position:relative}.tokpill{font-size:13px;background:#FFF8E1;border:1px solid #F3D98B;border-radius:99px;padding:4px 10px;display:flex;align-items:center;gap:6px;white-space:nowrap}.tokpill.low{background:#FFE2E2;border-color:#F3A0A0}.tokbar{display:inline-block;width:60px;height:7px;background:#eee;border-radius:99px;overflow:hidden;margin-left:4px}.tokbar i{display:block;height:100%;background:#F4B400;transition:width .6s}.tokpill.low .tokbar i{background:#E53935}.tokfloat{position:absolute;right:8px;top:100%;color:#C62828;font-weight:800;font-size:13px;animation:sl 1.6s forwards;white-space:nowrap}
+.usagebox{background:#FFFBEA;border-radius:14px;padding:12px;margin:10px 0}.ustats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:8px 0}.ustats div{background:#fff;border-radius:10px;padding:8px;display:flex;flex-direction:column}.ustats span{font-size:12px;color:#777}.ustats b{font-size:20px}.ustats small{font-size:12px;color:#777}
 .unitchip{border:2px solid var(--line);background:#fff;border-radius:99px;padding:8px 14px;font-weight:700;font-size:15px;cursor:pointer}.unitchip:hover{background:#FFF1C9}
 .onb{background:#fff;border-radius:28px;padding:26px;margin-bottom:22px;display:flex;gap:18px;align-items:center;flex-wrap:wrap;box-shadow:0 6px 0 rgba(43,42,76,.07)}
 .onb input{font:inherit;font-size:22px;font-weight:800;border:3px solid var(--line);border-radius:16px;padding:12px 16px;min-width:220px}
@@ -288,9 +291,9 @@ const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { c
 let VIEW = 'home';
 
 /* ---------- kayıt ---------- */
-const APP_VERSION = '20261108.0812';
+const APP_VERSION = '20261108.0821';
 const BASEKEY = 'odev-arkadasi-v1', PKEY = 'odev-arkadasi-profiles', SHKEY = 'odev-arkadasi-shared';
-const SHARED = ['apiKey', 'model', 'voice', 'rate', 'sound', 'autoRead', 'links', 'bookNames', 'unitAutoDone'];
+const SHARED = ['usage', 'budget', 'apiKey', 'model', 'voice', 'rate', 'sound', 'autoRead', 'links', 'bookNames', 'unitAutoDone'];
 function lsGet(k) { try { return JSON.parse(localStorage.getItem(k)); } catch (e) { return null; } }
 function lsSet(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
 let PROFILES = lsGet(PKEY) || { active: 'p1', list: [{ id: 'p1', name: (lsGet(BASEKEY) || {}).name || 'Öğrenci', type: 'ogrenci', emo: '🧒' }] };
@@ -310,6 +313,24 @@ function addStar(fromGame, n) { n = Math.max(1, n || 1); rollDay(); const d0 = S
 const ZPTS = z => z >= 3 ? 3 : z === 2 ? 2 : 1;
 let CUR_TOPIC = '';
 function dayLog(d) { S.log = S.log || {}; const k = d || today(); return S.log[k] || (S.log[k] = { sec: 0, n: 0, ok: 0, by: {} }); }
+/* ---------- Bilge token / harcama takibi ---------- */
+const PRICE = { 'claude-sonnet-5-5': [2, 10], 'claude-haiku-5-5': [0.10, 0.50] }; // USD / 1M token (platform.claude.com/docs/en/about-claude/pricing)
+function monthKey() { const d = new Date(); return d.getFullYear() + '-' + (d.getMonth() + 1); }
+function trackUsage(model, i, o) {
+  if (!i && !o) return; const pr = PRICE[model] || PRICE['claude-sonnet-5-5']; const cost = (i * pr[0] + o * pr[1]) / 1e6;
+  const U = S.usage = S.usage || { total: { in: 0, out: 0, usd: 0, n: 0 }, month: {}, last: null };
+  const M = U.month[monthKey()] = U.month[monthKey()] || { in: 0, out: 0, usd: 0, n: 0 };
+  for (const X of [U.total, M]) { X.in += i; X.out += o; X.usd += cost; X.n++; }
+  U.last = { in: i, out: o, usd: cost, t: Date.now(), prof: PROF && PROF.name }; save(); showTokPill(true);
+}
+function usageMonth() { return ((S.usage || {}).month || {})[monthKey()] || { in: 0, out: 0, usd: 0, n: 0 }; }
+const fmtTok = n => n >= 1e6 ? (n / 1e6).toFixed(1).replace('.', ',') + ' milyon' : Math.round(n).toLocaleString('tr-TR');
+const fmtUsd = x => '$' + (x < 0.01 && x > 0 ? x.toFixed(4) : x.toFixed(2)).replace('.', ',');
+function tokPillHTML() {
+  const M = usageMonth(), L = (S.usage || {}).last, B = +S.budget || 0, left = Math.max(0, B - M.usd), pct = B ? Math.round(left / B * 100) : null;
+  return `<div class="tokpill ${pct != null && pct < 20 ? 'low' : ''}" title="Bu ay ${M.n} soru · ${fmtTok(M.in + M.out)} token · ${fmtUsd(M.usd)}">🪙 ${L ? `Son cevap: <b>${fmtTok(L.in + L.out)}</b> token (${fmtUsd(L.usd)})` : 'Henüz token harcanmadı'}${B ? ` · Kalan: <b>${fmtUsd(left)}</b><span class="tokbar"><i style="width:${pct}%"></i></span>` : ` · Bu ay: ${fmtUsd(M.usd)}`}</div>`;
+}
+function showTokPill(anim) { const el = document.getElementById('tokWrap'); if (!el) return; el.innerHTML = tokPillHTML(); if (anim) { const f = document.createElement('span'); const L = S.usage.last; f.className = 'tokfloat'; f.textContent = '−' + fmtTok(L.in + L.out) + ' token'; el.appendChild(f); setTimeout(() => f.remove(), 1600); } }
 function loseStar(n) {
   if (S.wrongPenalty === false || MINI || /^(balloon|car|bal|game)/.test(VIEW)) return;
   rollDay(); n = n || 1; const had = S.wallet || 0; S.wallet = Math.max(0, had - n); S.stars = Math.max(0, S.stars - n); S.dayStars = Math.max(0, S.dayStars - n); save(); updateHeader();
@@ -464,8 +485,8 @@ function bookKonular(bid, ders) {
   return groups.flatMap(gr => (gr.items.length ? gr.items : [{ ad: gr.head[0].replace(/^Theme \d:\s*/, ''), page: gr.head[1] }]).map(it => ({ ad: it.ad, page: it.page, tema: gr.tema, grup: gr.grup })));
 }
 function konuOf(k) { return (S.konu || {})[k] || null; }
-function konuMatches(ders) {
-  const kc = konuOf(ders); if (!kc || !BANK || !BANK[ders]) return [];
+function konuMatches(ders, kcArg) {
+  const kc = kcArg || konuOf(ders); if (!kc || !BANK || !BANK[ders]) return [];
   const nz = t => String(t).toLocaleLowerCase('tr').replace(/[^a-zçğıöşü ]/g, ' ').split(/\s+/).filter(w => w.length > 2 && !/^(ve|ile|için|tema|konu)$/.test(w));
   if (ders === 'ingilizce') { const KW = [[/yerler|bulmaca/, /Places/], [/What is this/, /What is this/], [/Selamlaşma/, /Greetings/], [/günleri/, /Days/], [/eşyaları/, /Classroom Objects/], [/yönergeleri/, /Instructions/], [/Renkler/, /Colour/], [/Sayılar/, /Numbers/], [/Vücud/, /Parts of the Body/], [/Görünüş/, /tall|got/], [/How old|Kendini/, /How old/], [/Aile üyeleri|Aile ağacı/, /Family Members/], [/Who is she/, /Who is he/], [/odalar/, /Rooms/], [/Where is the cat/, /Where is the cat/], [/There is/, /There is/], [/evcil/, /Pets/], [/Meyve/, /Fruits/], [/Yiyecek|Öğün/, /Food, Drinks/], [/Is there any/, /Is there/], [/I like|Favori/, /Do you like/]];
     const hit = KW.find(([r]) => r.test(kc.ad)); if (hit) return BANK[ders].konular.filter(k => k.tema === kc.tema && hit[1].test(k.konu)); }
@@ -478,6 +499,34 @@ function konuActivity(ders, ad) {
   if (ders === 'turkce') return /okuma|metin|anlama/.test(t) ? 'oku:home' : 'tr:hece';
   if (ders === 'ingilizce') return 'ing:' + (konuOf(ders) || {}).tema;
   return 'bilgi:hayat';
+}
+function nextKonu(ders) {
+  const kc = konuOf(ders); if (!kc || !kc.ad) return null;
+  const list = bookKonular(kc.book, ders), i = list.findIndex(x => x.ad === kc.ad);
+  if (i >= 0 && i + 1 < list.length) return Object.assign({ book: kc.book }, list[i + 1]);
+  const bs = DERS_BOOKS[ders].filter(b => b.startsWith('fas:') === kc.book.startsWith('fas:')), j = bs.indexOf(kc.book);
+  if (j >= 0 && j + 1 < bs.length) { const l2 = bookKonular(bs[j + 1], ders); if (l2.length && !(l2[0].grup || '').includes('MEB programı')) return Object.assign({ book: bs[j + 1] }, l2[0]); }
+  return null;
+}
+function konuAskDue() {
+  if (MINI) return null; S.konuAsk = S.konuAsk || {};
+  for (const d of Object.keys(DERS_BOOKS)) { const nx = nextKonu(d); if (!nx) continue; const a = S.konuAsk[d]; if (a && a.d === today()) continue; if (a && a.ans === 'hayir' && (Date.now() - (a.t || 0)) < 2 * 864e5) continue; return { ders: d, nx }; }
+  return null;
+}
+function konuAskCard() {
+  const q = konuAskDue(); if (!q) return '';
+  return `<div class="askcard"><div class="askq">🏫 <b>Okulda bu konuyu işlediniz mi?</b></div><div class="askk">${DERS_EMO[q.ders]} ${DERS_AD[q.ders]}: <b>${esc(q.nx.ad)}</b>${q.nx.page ? ` <span class="muted small">(kitapta s.${q.nx.page})</span>` : ''}</div>
+  <div class="row"><button class="btn green" data-a="konuans" data-v="${q.ders}|evet">✅ Evet, işledik</button><button class="btn soft" data-a="konuans" data-v="${q.ders}|hayir">❌ Henüz değil</button><button class="btn soft" data-a="konuans" data-v="${q.ders}|bilmem">🤔 Bilmiyorum</button></div></div>`;
+}
+function konuAnswer(ders, ans) {
+  const nx = nextKonu(ders), old = konuOf(ders); S.konuAsk = S.konuAsk || {}; S.konuLog = S.konuLog || [];
+  S.konuAsk[ders] = { d: today(), ans, t: Date.now() };
+  if (ans === 'evet' && nx) {
+    S.islenen = S.islenen || {}; (S.islenen[ders] = S.islenen[ders] || []).push({ book: old.book, ad: old.ad, tema: old.tema });
+    S.konu[ders] = { book: nx.book, ad: nx.ad, tema: nx.tema, page: nx.page || null }; S.unit = S.unit || {}; S.unit[ders] = nx.tema;
+    S.konuLog.unshift({ d: today(), ders, ad: nx.ad, ans, prev: old }); toast(`👍 Süper! Artık "${nx.ad}" konusunu çalışıyoruz.`);
+  } else S.konuLog.unshift({ d: today(), ders, ad: nx ? nx.ad : '', ans });
+  S.konuLog = S.konuLog.slice(0, 12); save(); home();
 }
 function unitSummary() {
   return Object.keys(MEB2).map(k => { const t = unitOf(k), kc = konuOf(k); return t ? `${kc ? `ŞU AN OKULDA İŞLENEN KONU: ${DERS_AD[k]} — ${bookLabel(kc.book)} "${kc.ad}"${kc.page ? ' (s.' + kc.page + ')' : ''}. ` : ''}${DERS_AD[k]} ${t.no}. tema "${t.ad}": kavramlar: ${t.kavramlar.join(', ')}${t.kazanimlar ? '; kazanımlar: ' + t.kazanimlar.slice(0, 6).join(' | ') : ''}${t.icerik ? '; içerik: ' + (Array.isArray(t.icerik) ? t.icerik.join(', ') : t.icerik) : ''}${t.terimler ? '; KİTAPTAKİ TERİMLER (bunları kullan): ' + t.terimler.join(' | ') : ''}${t.yontemler ? '; kitaptaki yöntemler: ' + t.yontemler.join(' | ') : ''}${t.konular ? '; kitap konuları: ' + t.konular.join(', ') : ''}${t.kelimeler ? '; kitaptaki kelimeler: ' + t.kelimeler.join(', ') : ''}${(FASIKUL[k] || []).filter(f => f.tema === t.no).map(f => `; öğretmenin ödev verdiği Üçgen ${f.no}. fasikül "${f.ad}" (${f.haftalar[0]}-${f.haftalar[1]}. haftalar) konuları: ${f.konular.join(', ')}`).join('')}` : ''; }).filter(Boolean).join('\n');
@@ -654,6 +703,23 @@ const ING_VOCAB = {
 function speakEN(t) {
   try { const s = window.speechSynthesis; if (!s) return; s.cancel(); const u = new SpeechSynthesisUtterance(t); u.lang = 'en-GB'; u.rate = .85; const vs = s.getVoices(); const v = vs.find(v => /en-GB/i.test(v.lang) && /premium|enhanced|siri|daniel|kate/i.test(v.name)) || vs.find(v => /^en/i.test(v.lang) && /premium|enhanced|siri|samantha/i.test(v.name)) || vs.find(v => /en-GB/i.test(v.lang)) || vs.find(v => /^en/i.test(v.lang)); if (v) u.voice = v; s.speak(u); } catch (e) {}
 }
+const ABC = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+const ABC_SAY = { A: 'ey', B: 'bi', C: 'si', D: 'di', E: 'i', F: 'ef', G: 'ci', H: 'eyç', I: 'ay', J: 'cey', K: 'key', L: 'el', M: 'em', N: 'en', O: 'ou', P: 'pi', Q: 'kyu', R: 'aa(r)', S: 'es', T: 'ti', U: 'yu', V: 'vi', W: 'dabılyu', X: 'eks', Y: 'way', Z: 'zed' };
+function ingWords() { return Object.values(ING_VOCAB).flatMap(t => t.kelimeler).filter(([en]) => /^[a-z]+$/.test(en)); }
+function ingAbcItems(mode, n) {
+  const W = ingWords(), items = [], others = (L, k) => shuffle(ABC.filter(x => x !== L)).slice(0, k);
+  const make = {
+    dinle: () => { const L = pick(ABC); return { kind: 'mcq', mod: 'bilgi', emoji: '🔤', prompt: 'Dinle: hangi harf?', listen: L, options: shuffle([L, ...others(L, 3)]), answer: L, explain: `Duyduğun harf **${L} ${L.toLowerCase()}**. İngilizcede "${ABC_SAY[L]}" diye okunur 🔊`, en: L, key: 'abc:d' + L, konu: 'İngilizce Alfabe' }; },
+    oku: () => { const L = pick(ABC); const o = shuffle([L, ...others(L, 3)]); return { kind: 'mcq', mod: 'bilgi', emoji: '🔤', prompt: `**${L} ${L.toLowerCase()}** harfi İngilizcede nasıl okunur?`, options: o.map(x => ABC_SAY[x]), answer: ABC_SAY[L], explain: `**${L}** harfi "${ABC_SAY[L]}" diye okunur. Türkçedeki "${L === 'Q' || L === 'W' || L === 'X' ? '—' : L.toLocaleLowerCase('tr')}" sesinden farklı olabilir, dikkat! 🔊`, en: L, key: 'abc:o' + L, konu: 'İngilizce Alfabe' }; },
+    buyuk: () => { const L = pick(ABC); return { kind: 'mcq', mod: 'bilgi', emoji: '🔠', prompt: `**${L}** büyük harfinin küçüğü hangisi?`, options: shuffle([L, ...others(L, 3)].map(x => x.toLowerCase())), answer: L.toLowerCase(), explain: `**${L}** ↔ **${L.toLowerCase()}** 👍`, en: L, key: 'abc:b' + L, konu: 'İngilizce Alfabe' }; },
+    ilk: () => { const [en, tr, emo] = pick(W), L = en[0].toUpperCase(); return { kind: 'mcq', mod: 'bilgi', emoji: emo, prompt: `${emo} **${en}** (${tr}) hangi harfle başlar?`, options: shuffle([L, ...others(L, 3)]), answer: L, explain: `**${en}** kelimesi **${L}** ("${ABC_SAY[L]}") harfiyle başlar.`, en, key: 'abc:i' + en, konu: 'İngilizce Alfabe' }; },
+    hecele: () => { const [en, tr, emo] = pick(W.filter(w => w[0].length <= 7)); return { kind: 'hece', mod: 'bilgi', word: en, parts: en.split(''), emoji: emo, label: `Harfleri sırala: ${tr}`, en, tr, key: 'sp:' + en, konu: 'İngilizce Heceleme', explain: `**${en}** = ${tr} ${emo}. Harf harf: ${en.toUpperCase().split('').map(c => c + ' (' + ABC_SAY[c] + ')').join(', ')}` }; },
+    yazdin: () => { const [en, tr, emo] = pick(W.filter(w => w[0].length <= 6)); const pool = W.filter(w => w[0] !== en && w[0].length === en.length); const alt = shuffle(pool).slice(0, 2).map(w => w[0]); const typo = en.slice(0, -2) + en.slice(-1) + en.slice(-2, -1); const opts = [...new Set([en, typo !== en ? typo : null, ...alt].filter(Boolean))].slice(0, 4); return { kind: 'mcq', mod: 'bilgi', emoji: '🎧', prompt: 'Dinle: harf harf hangi kelime söylendi?', listen: en.toUpperCase().split('').join('. ') + '.', options: shuffle(opts), answer: en, explain: `Harfler: **${en.toUpperCase().split('').join(' - ')}** → **${en}** = ${tr} ${emo}`, en, key: 'sp:y' + en, konu: 'İngilizce Heceleme' }; },
+  };
+  const kinds = mode === 'abc' ? ['dinle', 'dinle', 'oku', 'buyuk', 'ilk', 'ilk'] : ['hecele', 'hecele', 'yazdin', 'ilk', 'hecele', 'yazdin'];
+  const seen = new Set(); for (let g = 0; items.length < n && g < 200; g++) { const it = make[kinds[items.length % kinds.length]](); if (seen.has(it.key)) continue; seen.add(it.key); items.push(it); }
+  return items;
+}
 function ingItems(theme, n) {
   const themes = theme ? [theme] : [1, 2, 3, 4, 5, 6];
   const words = themes.flatMap(t => ING_VOCAB[t].kelimeler.map(w => [...w, t])), phr = themes.flatMap(t => ING_VOCAB[t].kaliplar.map(w => [...w, t]));
@@ -748,7 +814,7 @@ function home() {
   <h1>${S.name ? `Merhaba ${esc(S.name)}! 👋` : 'Hoş geldin! 👋'}</h1>
   <p class="lead">Bugün ne yapalım? Her doğru cevap bir ⭐ kazandırır.</p>
   ${Object.keys(MEB2).some(unitOf) ? `<div class="unitbar">${Object.keys(MEB2).map(k => { const t = unitOf(k), kc = konuOf(k); return t ? `<button class="unitchip" data-a="unitplay" data-v="${k}">${DERS_EMO[k]} <b>${DERS_AD[k]}</b> ${kc && kc.ad ? `${esc(kc.ad)}${kc.page ? ' · s.' + kc.page : ''}` : `${t.no}. tema · ${esc(t.ad)}`}</button>` : ''; }).join('')}</div>` : `<div class="unitbar muted small">📅 Okulun ${schoolWeek()}. haftası${fasikulNow('matematik') ? ` · takvime göre Matematik: ${fasikulNow('matematik').no}. fasikül "${esc(fasikulNow('matematik').ad)}"` : ''} — Veli Köşesi'nden üniteyi seçince oyunlar ve Bilge ona göre çalışır ⚙️ <button class="btn soft sm" data-a="autounit">Takvime göre ayarla</button></div>`}
-  ${gorevCard()}
+  ${konuAskCard()}${gorevCard()}
   <div class="grid">
     <button class="card hero wide" data-a="help"><div class="emo">🦉</div><div><h3>Ödevime Yardım Et</h3><p>Bilge Baykuş'a sor ya da ödevinin fotoğrafını gönder. Cevabı söylemez, birlikte buluruz!</p></div></button>
   </div>
@@ -786,7 +852,7 @@ const MENUS = {
     ['~Öğrenme alanına göre', [['bilgi:hb4','🗺️','Yaşadığım Yer ve Ülkem'],['bilgi:hb5','🌦️','Doğa ve Çevre'],['bilgi:hb6','🔬','Bilim, Teknoloji ve Sanat']]],
   ] },
   ing: { t: 'İngilizce 🇬🇧', sections: [
-    ['Alıştırma', [['bank:ingilizce:0','📖','Kitap Soruları','Ders ve çalışma kitabı etkinlikleri; seviyeli','purple'],['ing:0','🎧','Kelime Avı','Dinle, oku, söyle; cümle kur','blue']]],
+    ['Alıştırma', [['bank:ingilizce:0','📖','Kitap Soruları','Ders ve çalışma kitabı etkinlikleri; seviyeli','purple'],['ing:0','🎧','Kelime Avı','Dinle, oku, söyle; cümle kur','blue'],['ing:abc','🔤','Alfabe','Harfleri dinle, oku; büyük-küçük harf','green'],['ing:spell','✍️','Heceleme (Spelling)','Kelimeyi harf harf diz, harfleri dinle','orange']]],
     ['~Temaya göre kelimeler', [['ing:1','🏫','School Life'],['ing:2','🖍️','Classroom Life'],['ing:3','🧥','Personal Life'],['ing:4','👨‍👩‍👧','Family Life'],['ing:5','🏠','Homes & Houses'],['ing:6','🍎','City & World']]],
   ] },
 };
@@ -828,7 +894,7 @@ function sekilItem(z) {
 }
 
 /* ---------- ustalık: öğrendiği kolay alıştırmaları kapat ---------- */
-const MASTER_NEXT = { 'tr:hece': 'tr:yazim', 'tr:yazim': 'bank:turkce:0', 'math:topla': 'math:cikar', 'math:cikar': 'math:carp', 'math:carp': 'math:bol', 'math:bol': 'math:esitlik', 'math:eksik': 'math:esitlik', 'math:esitlik': 'fas:problem', 'math:sayilar': 'math:eksik', 'math:geo': 'math:sekil', 'math:sekil': 'bank:matematik:0', 'math:olcme': 'bank:matematik:0', 'math:veri': 'bank:matematik:0', 'math:atolye-cikar': 'math:cikar', 'math:atolye-carp': 'math:carp', 'fas:alt': 'fas:ayir', 'fas:ayir': 'fas:problem', 'fas:esle': 'fas:buyuk', 'fas:buyuk': 'fas:problem', 'fas:tahmin': 'fas:problem', 'fas:problem': 'fas:hikaye', 'fas:hikaye': 'fas:beceri', 'fas:beceri': 'fas:test', 'ing:0': 'bank:ingilizce:0', 'bilgi:hayat': 'bank:hayat_bilgisi:0' };
+const MASTER_NEXT = { 'tr:hece': 'tr:yazim', 'tr:yazim': 'bank:turkce:0', 'math:topla': 'math:cikar', 'math:cikar': 'math:carp', 'math:carp': 'math:bol', 'math:bol': 'math:esitlik', 'math:eksik': 'math:esitlik', 'math:esitlik': 'fas:problem', 'math:sayilar': 'math:eksik', 'math:geo': 'math:sekil', 'math:sekil': 'bank:matematik:0', 'math:olcme': 'bank:matematik:0', 'math:veri': 'bank:matematik:0', 'math:atolye-cikar': 'math:cikar', 'math:atolye-carp': 'math:carp', 'fas:alt': 'fas:ayir', 'fas:ayir': 'fas:problem', 'fas:esle': 'fas:buyuk', 'fas:buyuk': 'fas:problem', 'fas:tahmin': 'fas:problem', 'fas:problem': 'fas:hikaye', 'fas:hikaye': 'fas:beceri', 'fas:beceri': 'fas:test', 'ing:0': 'bank:ingilizce:0', 'ing:abc': 'ing:spell', 'ing:spell': 'ing:0', 'bilgi:hayat': 'bank:hayat_bilgisi:0' };
 const MASTER_OK = .85;
 function isClosed(k) { return S.autoClose !== false && !!(((S.mastery || {})[k] || {}).closed); }
 function nextOpen(k) { let g = 0; while (isClosed(k) && g++ < 12) k = MASTER_NEXT[k] || (/^ing:/.test(k) ? 'bank:ingilizce:0' : /^bilgi:/.test(k) ? 'bank:hayat_bilgisi:0' : /^tr:/.test(k) ? 'bank:turkce:0' : 'bank:matematik:0'); return k; }
@@ -877,6 +943,7 @@ function play(v) {
   if (m === 'math') { const seen = new Set(); items = []; while (items.length < 10) { const it = mathItem(mode); if (!seen.has(it.key)) { seen.add(it.key); items.push(it); } } title = menuTitle(v); }
   else if (v === 'tr:hece') { items = shuffle(WORDS).slice(0, 8).map(heceItem); title = 'Hece Sırala'; }
   else if (v === 'tr:yazim') { items = shuffle(YAZIM).slice(0, 8).map(yazimItem); title = 'Doğru Yazım'; }
+  else if (v === 'ing:abc' || v === 'ing:spell') { items = ingAbcItems(mode, 10); title = mode === 'abc' ? '🔤 İngilizce Alfabe' : '✍️ İngilizce Heceleme'; }
   else if (m === 'ing') { const th = +mode || 0; items = ingItems(th, 10); title = th ? 'İngilizce: ' + ING_VOCAB[th].ad : 'İngilizce Kelime Avı'; }
   else if (mode === 'hayat' || /^hb\d$/.test(mode)) { const area = /^hb(\d)$/.test(mode) ? +mode[2] : ((S.unit || {}).hayat_bilgisi || 0); const h2 = HAYAT2.map(([a, ...rest]) => Object.assign(bilgiItem(rest), { area: a })); const pool = area >= 4 ? h2.filter(x => x.area === area) : area ? HAYAT.map(bilgiItem) : [...HAYAT.map(bilgiItem), ...h2]; items = shuffle(pool).slice(0, 10); title = area >= 4 ? 'Hayat Bilgisi: ' + MEB2.hayat_bilgisi.temalar[area - 1].ad : 'Hayat Bilgisi'; }
   else { const pool = mode === 'hayat' ? HAYAT : mode === 'ing' ? ING : [...HAYAT, ...ING]; items = shuffle(pool).slice(0, 10).map(bilgiItem); title = menuTitle(v); }
@@ -915,9 +982,36 @@ function renderQ() {
 function blocks(v) {
   return `<div class="blocks">${v.map(n => { const t = Math.floor(n / 10), o = n % 10; return `<div class="bgroup"><div class="blbl">${n} = ${t} onluk ${o} birlik</div><div class="blks">${'<span class="ten"></span>'.repeat(t)}${'<span class="one"></span>'.repeat(o)}</div></div>`; }).join('')}</div>`;
 }
+let HAVE_BOOKS = [];
+function refreshHaveBooks() { try { bookList().then(l => { HAVE_BOOKS = l || []; }).catch(() => {}); } catch (e) {} }
+function bookRef(it) {
+  if (!it || typeof BOOKS === 'undefined') return null;
+  const nz = t => String(t).toLocaleLowerCase('tr').replace(/[^a-zçğıöşü ]/g, ' ').split(/\s+/).filter(w => w.length > 2 && !/^(ve|ile|için|tema|konu|vocabulary|language)$/.test(w));
+  let ders = it.ders; if (!ders && BANK && it.konu) ders = Object.keys(BANK).find(d => BANK[d].konular.some(k => k.konu === it.konu));
+  const books = d => (DERS_BOOKS[d] || []).filter(b => !b.startsWith('fas:'));
+  const find = (d, test) => { for (const bid of books(d)) { const b = BOOKS.find(x => x.id === bid); if (!b) continue; const e = b.temalar.find(([ad]) => !/Sözlük|Glossary/.test(ad) && test(ad)); if (e) return { id: bid, page: e[1], ad: e[0].replace(/^\d\.\s*(Tema|Öğrenme Alanı)\s*(\(devam\))?:\s*/, '') }; } return null; };
+  if (ders && it.konu) {
+    const a = nz(it.konu.replace(/^(Vocabulary|Language|Sözcük Hazinesi|Dil Bilgisi ve Yazım|Okuma ve Anlama|Cümle ve Anlatım):\s*/, ''));
+    let hit = null, best = 0;
+    if (a.length) for (const bid of books(ders)) { const bk = BOOKS.find(x => x.id === bid); if (!bk) continue; for (const [ad, pg] of bk.temalar) { if (/Sözlük|Glossary/.test(ad)) continue; const b = nz(ad); const c = a.filter(w => b.some(x => x.slice(0, 5) === w.slice(0, 5))).length; const sc = c / Math.max(a.length, b.length); if (c >= 1 && sc > best) { best = sc; hit = { id: bid, page: pg, ad: ad.replace(/^\d\.\s*(Tema|Öğrenme Alanı)\s*(\(devam\))?:\s*/, '') }; } } }
+    if (best < .3) hit = null;
+    if (hit) return hit;
+    const kc = konuOf(ders), q = BANK && BANK[ders] && BANK[ders].konular.find(k => k.konu === it.konu);
+    if (kc && kc.page && q && q.tema === kc.tema && !kc.book.startsWith('fas:')) return { id: kc.book, page: kc.page, ad: kc.ad };
+    if (q) { const th = find(ders, ad => new RegExp('^' + q.tema + '\\.\\s*(Tema|Öğrenme)|^Theme ' + q.tema + '\\b').test(ad)); if (th) return th; }
+  }
+  if (it.mod === 'math') {
+    const t = String(it.konu || (R && R.replay) || '') + ' ' + String(it.key || '');
+    const MAP = [[/topla|Toplama|\+/, /Toplama/], [/cikar|Çıkarma|−/, /Çıkarma/], [/carp|Çarpma|×/, /Çarpma/], [/bol|Bölme|÷/, /Bölme/], [/saat|Saat|Zaman/, /Zaman/], [/sekil|Şekil/, /Şekil/], [/geo|Geometri|Cisim/, /Cisim/], [/olcme|Ölçme|Kesir/, /Kesir|Uzunluk|Para/], [/veri|Veri|grafik/, /Veri/], [/esitlik|eksik|Eşitlik/, /Eşitlik/], [/sayilar|Sayı/, /Sayı|Çözümleme|Ritmik/]];
+    for (const [k, r] of MAP) if (k.test(t)) { const h = find('matematik', ad => r.test(ad)); if (h) return h; }
+  }
+  const m = R && typeof R.replay === 'string' && R.replay.match(/^ing:(\d)$/); if (m && +m[1]) return find('ingilizce', ad => new RegExp('^Theme ' + m[1]).test(ad));
+  return null;
+}
+function bookBtn(it) { const r = bookRef(it); if (!r || !HAVE_BOOKS.includes(r.id)) return ''; return `<button class="btn soft" data-a="bookref" data-v="${r.id}|${r.page}" title="${esc(r.ad)}">📘 Kitapta konuya bak (s.${r.page})</button>`; }
 function explainBox(it, withNext) {
   return `<div class="explain"><div class="exh">🦉 Bilge diyor ki:</div><div>${md(it.explain)}</div>${it.visual ? blocks(it.visual) : ''}
-  <div class="row">${withNext ? '<button class="btn primary" data-a="next" id="nextb">Anladım, devam ➜</button>' : ''}${it.mod === 'math' && it.prompt && WS_OK(it.prompt) ? '<button class="btn green" data-a="ws">🧮 Birlikte çözelim</button>' : ''}<button class="btn soft" data-a="ask">🦉 Bilge'ye sor</button><button class="btn soft" data-a="speak" data-t="${esc(strip(it.explain))}">🔊 Dinle</button></div><div id="wsh"></div></div>`;
+  <div class="row">${withNext ? '<button class="btn primary" data-a="next" id="nextb">Anladım, devam ➜</button>' : ''}${it.mod === 'math' && it.prompt && WS_OK(it.prompt) ? '<button class="btn green" data-a="ws">🧮 Birlikte çözelim</button>' : ''}${bookBtn(it)}<button class="btn soft" data-a="ask">🦉 Bilge'ye sor</button><button class="btn soft" data-a="speak" data-t="${esc(strip(it.explain))}">🔊 Dinle</button></div><div id="wsh"></div></div>`;
 }
 function answerMCQ(el, i) {
   if (R.answered) return; R.answered = true;
@@ -927,7 +1021,7 @@ function answerMCQ(el, i) {
   if (ok) win(); else {
     R.lastWrong = { it, val }; R.res[R.i] = 'no'; stat(it.mod, false, it.konu); addMistake(it); sfx('no'); if (R.bankMod) lvlBump(R.bankMod, false);
     if (wsMode) {
-      $('#fb').innerHTML = `<div class="explain"><div class="exh">🦉 Olsun! Doğrusunu birlikte bulalım:</div><div id="wsh"></div><div id="wsafter"></div></div>`;
+      $('#fb').innerHTML = `<div class="explain"><div class="exh">🦉 Olsun! Doğrusunu birlikte bulalım: ${bookBtn(it).replace('btn soft', 'btn soft sm')}</div><div id="wsh"></div><div id="wsafter"></div></div>`;
       speak('Olsun, doğrusunu birlikte bulalım.');
       wsFor(it.prompt, $('#wsh'), () => { addStar(); document.querySelectorAll('.opt').forEach(b => { if (it.options[+b.dataset.v] === it.answer) b.classList.add('ok'); }); $('#wsafter').innerHTML = explainBox(it, true).replace('🧮 Birlikte çözelim', '').replace('data-a="ws"', 'hidden'); });
     } else { $('#fb').innerHTML = explainBox(it, true); autoSpeak('Olsun, birlikte bakalım. ' + strip(it.explain)); }
@@ -945,7 +1039,7 @@ function pickSyl(el) {
     }
   } else {
     el.classList.remove('shake'); void el.offsetWidth; el.classList.add('shake'); sfx('no');
-    if (!R.miss) { R.miss = true; R.lastWrong = { it, val: p }; if (it.en) { speakEN(it.en); $('#fb').innerHTML = `<div class="hint">İpucu: Cümleyi dinle 🎧 ${esc(it.tr || '')} — büyük harfle başlayan kelime ilk sırada!</div>`; } else { speak(it.parts.join(', ')); $('#fb').innerHTML = `<div class="hint">İpucu: Kelimeyi yavaşça söyle, her hecede el çırp 👏 Sonra tekrar dene!</div>`; } }
+    if (!R.miss) { R.miss = true; R.lastWrong = { it, val: p }; if (it.en) { speakEN(it.en); $('#fb').innerHTML = it.konu === 'İngilizce Heceleme' ? `<div class="hint">İpucu: Kelimeyi dinle 🎧 Sıradaki harf: <b>${esc(it.parts[R.pos].toUpperCase())}</b> (${ABC_SAY[it.parts[R.pos].toUpperCase()] || ''})</div>` : `<div class="hint">İpucu: Cümleyi dinle 🎧 ${esc(it.tr || '')} — büyük harfle başlayan kelime ilk sırada!</div>`; } else { speak(it.parts.join(', ')); $('#fb').innerHTML = `<div class="hint">İpucu: Kelimeyi yavaşça söyle, her hecede el çırp 👏 Sonra tekrar dene!</div>`; } }
   }
 }
 function win() {
@@ -1020,7 +1114,7 @@ function bankItems(ders, tema, n, mod) {
   for (let t = 0; t < n * 20 && items.length < n; t++) {
     const tot = pool.reduce((a, x) => a + w(x.q), 0); let r = Math.random() * tot, pick_ = pool[0];
     for (const x of pool) { r -= w(x.q); if (r <= 0) { pick_ = x; break; } }
-    const it = bankToItem(pick_.q, mod, pick_.konu); if (!it || used.has(it.key)) continue; used.add(it.key); items.push(it);
+    const it = bankToItem(pick_.q, mod, pick_.konu); if (!it || used.has(it.key)) continue; it.ders = ders; used.add(it.key); items.push(it);
     if (pick_.q.tip !== 'sablon') pool = pool.filter(x => x !== pick_); else { pick_.n = (pick_.n || 0) + 1; if (pick_.n >= 2) pool = pool.filter(x => x !== pick_); }
   }
   return items;
@@ -1135,7 +1229,7 @@ function loadPdfjs() {
   return pdfjsP;
 }
 let BK = null;
-async function booksHome() {
+async function booksHome() { refreshHaveBooks();
   VIEW = 'books'; app.classList.remove('wide'); stopSpeak();
   const have = await bookList();
   app.innerHTML = `<div class="rtop"><button class="btn soft sm" data-a="home">← Ana sayfa</button><div class="rtitle">📘 Kitaplarım</div></div>
@@ -1145,9 +1239,9 @@ async function booksHome() {
   <p class="muted small" style="margin-top:8px">Bu kitaplar yayıncının sitesinde açılır. Ödev sayfasında takılınca 🦉 Bilge'ye o sayfanın fotoğrafını gönder.</p>
   ${have.length ? '' : '<p class="muted" style="margin-top:16px">Henüz kitap yok. ⚙️ Veli Köşesi › Kitaplar bölümünden PDF\'leri yükleyin; kitaplar yalnızca bu bilgisayarda saklanır.</p>'}`;
 }
-async function openBook(id, page) {
+async function openBook(id, page, fromQ) {
   const meta = BOOKS.find(b => b.id === id); VIEW = 'book'; app.classList.add('wide'); stopSpeak();
-  app.innerHTML = `<div class="rtop"><button class="btn soft sm" data-a="books">← Kitaplar</button><div class="rtitle">${meta.emo} ${esc(bookName(meta))}</div><span class="muted" id="bkstat">Yükleniyor…</span></div>
+  app.innerHTML = `<div class="rtop">${fromQ ? '<button class="btn primary sm" data-a="backq">← Soruya dön</button>' : '<button class="btn soft sm" data-a="books">← Kitaplar</button>'}<div class="rtitle">${meta.emo} ${esc(bookName(meta))}</div><span class="muted" id="bkstat">Yükleniyor…</span></div>
    <div class="bookwrap"><div class="booknav"><select id="bkjump"><option value="">Konuya git…</option>${meta.temalar.map(([n, p]) => `<option value="${p}">${esc(n)} (s.${p})</option>`).join('')}</select>
      <div class="bkpg"><button class="btn soft sm" id="bkprev">◀</button><input id="bkno" type="number" min="1" value="1"> / <span id="bktot">?</span><button class="btn soft sm" id="bknext">▶</button></div>
      <button class="btn green sm" id="bkask">🦉 Bu sayfayı Bilge'ye sor</button><button class="btn soft sm" id="bkzoom">🔍</button></div>
@@ -1280,9 +1374,9 @@ function okumaStop(user) {
 /* ---------- Günün görevi ---------- */
 function gorevSteps() {
   return MINI ? [['📚', 'Kelime kartları', 'mini:kelime'], ['🔤', 'Harf ve ses', 'mini:harf'], ['🔢', 'Sayalım', 'mini:sayi']]
-    : [['🎯', 'Hata defteri + zorlandığın konular (10 soru)', 'gorev'], ['📙', 'Fasikül alıştırması: ' + menuTitle('fas:' + gorevFas()), 'gorevfas'], ['🎤', 'Sesli okuma', 'gorevoku']];
+    : [['🎯', Object.keys(DERS_BOOKS).some(d => konuOf(d) && konuOf(d).ad) ? 'Okulda işlediğin konular + tekrar (10 soru)' : 'Hata defteri + zorlandığın konular (10 soru)', 'gorev'], ['📙', 'Fasikül alıştırması: ' + menuTitle('fas:' + gorevFas()), 'gorevfas'], ['🎤', 'Sesli okuma', 'gorevoku']];
 }
-function gorevFas() { const ks = ['alt', 'esle', 'problem', 'tahmin', 'buyuk', 'ayir', 'hikaye', 'beceri']; const d = new Date(); return ks[(d.getDate() + d.getMonth()) % ks.length]; }
+function gorevFas() { const kc = konuOf('matematik'); if (kc && kc.ad) { const a = konuActivity('matematik', kc.ad); if (a.startsWith('fas:') && !isClosed(a)) return a.slice(4); } const ks = ['alt', 'esle', 'problem', 'tahmin', 'buyuk', 'ayir', 'hikaye', 'beceri']; const d = new Date(); return ks[(d.getDate() + d.getMonth()) % ks.length]; }
 function gorevState() { if (!S.gorev || S.gorev.day !== today()) { S.gorev = { day: today(), steps: [false, false, false], bonus: false }; save(); } return S.gorev; }
 function markGorev(i) {
   const g = gorevState(); if (g.steps[i]) return; g.steps[i] = true; save();
@@ -1302,8 +1396,13 @@ async function gorevRound() {
   if (BANK) for (const t of weak) { for (const [ders, d] of Object.entries(BANK)) { const k = d.konular.find(k => k.konu === t); if (k) extra.push(...shuffle(k.sorular).slice(0, 3).map(q => bankToItem(q, ders === 'matematik' ? 'math' : ders === 'turkce' ? 'turkce' : 'bilgi', k.konu)).filter(Boolean)); } if (extra.length >= 4) break; }
   const genMap = { 'Çıkarma': 'cikar', 'Toplama': 'topla', 'Çarpma': 'carp', 'Bölme': 'bol', 'Eksik Sayı': 'eksik', 'Eşitlik': 'esitlik', 'Onluk bozarak çıkarma': 'cikar' };
   weak.forEach(t => { if (genMap[t] && extra.length < 6) for (let i = 0; i < 2; i++) extra.push(mathItem(genMap[t])); });
-  const fill = [...bankItems('matematik', (S.unit || {}).matematik || 0, 4, 'math'), ...bankItems('turkce', (S.unit || {}).turkce || 0, 3, 'turkce')];
-  const items = shuffle([...mist, ...extra.slice(0, 6)]).concat(shuffle(fill)).slice(0, 10);
+  const MODS = { matematik: 'math', turkce: 'turkce', hayat_bilgisi: 'bilgi', ingilizce: 'bilgi' }, QN = { matematik: 3, turkce: 2, hayat_bilgisi: 2, ingilizce: 2 };
+  let fill = []; const anyKonu = Object.keys(MODS).some(d => konuOf(d) && konuOf(d).ad);
+  if (anyKonu) {
+    for (const d of Object.keys(MODS)) { const kc = konuOf(d); if (!kc || !kc.ad) continue; fill.push(...bankItems(d, kc.tema, QN[d], MODS[d])); }
+    for (const d of Object.keys(MODS)) { const prev = ((S.islenen || {})[d] || []).slice(-4); if (!prev.length || !BANK || !BANK[d]) continue; const pk = pick(prev), mm = konuMatches(d, pk); const pool = mm.length ? mm : BANK[d].konular.filter(k => k.tema === pk.tema); const k = pool.length && pick(pool); if (k) fill.push(...shuffle(k.sorular).slice(0, 1).map(q => { const it = bankToItem(q, MODS[d], k.konu); if (it) it.ders = d; return it; }).filter(Boolean)); }
+  } else fill = [...bankItems('matematik', (S.unit || {}).matematik || 0, 4, 'math'), ...bankItems('turkce', (S.unit || {}).turkce || 0, 3, 'turkce')];
+  const items = (anyKonu ? shuffle([...shuffle(fill).slice(0, 7), ...mist.slice(0, 2), ...extra.slice(0, 1)]) : shuffle([...mist, ...extra.slice(0, 6)]).concat(shuffle(fill))).slice(0, 10);
   if (items.length < 10) for (let i = items.length; i < 10; i++) items.push(mathItem('karisik'));
   startRound('🎯 Günün Görevi', items, false, 'gorev'); CUR_TOPIC = '';
 }
@@ -2027,7 +2126,7 @@ function apiSample() {
       }
       return { role: m.role, content: m.content };
     }));
-    let res;
+    let res, uIn = 0, uOut = 0;
     try {
       res = await fetch(API_URL, { method: 'POST', signal: opts.signal, headers: { 'content-type': 'application/json', 'x-api-key': S.apiKey, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
         body: JSON.stringify({ model: S.model || 'claude-sonnet-5-5', max_tokens: 600, stream: true, messages: msgs }) });
@@ -2039,9 +2138,10 @@ function apiSample() {
       buf += dec.decode(value, { stream: true }); const lines = buf.split('\n'); buf = lines.pop();
       for (const ln of lines) {
         if (!ln.startsWith('data:')) continue;
-        try { const ev = JSON.parse(ln.slice(5)); if (ev.type === 'content_block_delta' && ev.delta && ev.delta.text) { text += ev.delta.text; if (opts.onText) opts.onText({ text, delta: ev.delta.text }); } if (ev.type === 'error') throw { code: 'api', message: ev.error && ev.error.message }; } catch (e) { if (e && e.code) throw e; }
+        try { const ev = JSON.parse(ln.slice(5)); if (ev.type === 'content_block_delta' && ev.delta && ev.delta.text) { text += ev.delta.text; if (opts.onText) opts.onText({ text, delta: ev.delta.text }); } if (ev.type === 'message_start' && ev.message && ev.message.usage) { const u = ev.message.usage; uIn = (u.input_tokens || 0) + (u.cache_creation_input_tokens || 0) + (u.cache_read_input_tokens || 0); uOut = u.output_tokens || 0; } if (ev.type === 'message_delta' && ev.usage) uOut = ev.usage.output_tokens || uOut; if (ev.type === 'error') throw { code: 'api', message: ev.error && ev.error.message }; } catch (e) { if (e && e.code) throw e; }
       }
     }
+    trackUsage(S.model || 'claude-sonnet-5-5', uIn, uOut);
     return { text, truncated: false };
   };
   fn.limits = async () => ({ images: true });
@@ -2074,7 +2174,7 @@ Kurallar:
 function help(prefill) {
   VIEW = 'help'; app.classList.remove('wide');
   const back = R && R.savedHTML;
-  app.innerHTML = `<div class="rtop">${back ? '<button class="btn primary sm" data-a="backq">← Soruya dön</button>' : ''}<button class="btn soft sm" data-a="home">${back ? 'Ana sayfa 🏠' : '← Ana sayfa'}</button><div class="rtitle">🦉 Bilge Baykuş</div><button class="btn soft sm" data-a="newchat">Yeni konu ✨</button></div>
+  app.innerHTML = `<div class="rtop">${back ? '<button class="btn primary sm" data-a="backq">← Soruya dön</button>' : ''}<button class="btn soft sm" data-a="home">${back ? 'Ana sayfa 🏠' : '← Ana sayfa'}</button><div class="rtitle">🦉 Bilge Baykuş</div><div id="tokWrap">${S.apiKey ? tokPillHTML() : ''}</div><button class="btn soft sm" data-a="newchat">Yeni konu ✨</button></div>
   <div class="chat"><div id="msgs" class="msgs"></div>
    <div class="chips" id="chips">${CHIPS.map(c => `<button class="chip" data-a="chip" data-t="${esc(c)}">${esc(c)}</button>`).join('')}</div>
    <div id="imgprev"></div>
@@ -2184,6 +2284,8 @@ function settings() {
       <select data-kbook="${k}">${DERS_BOOKS[k].map(b => `<option value="${b}" ${b === bid ? 'selected' : ''}>${esc(bookLabel(b))}</option>`).join('')}</select>
       <select data-kkonu="${k}"><option value="">— Konu seçin —</option>${list.map((x, i) => { const og = x.grup !== lastG ? `${lastG !== null ? '</optgroup>' : ''}<optgroup label="${esc(x.grup)}">` : ''; lastG = x.grup; return og + `<option value="${i}" ${kc && kc.book === bid && kc.ad === x.ad ? 'selected' : ''}>${esc(x.ad)}${x.page ? ' (s.' + x.page + ')' : ''}</option>`; }).join('')}${lastG !== null ? '</optgroup>' : ''}</select>
       ${kc ? `<span class="kmatch">${konuMatches(k).length ? `✅ ${konuMatches(k).reduce((a, x) => a + x.sorular.length, 0)} kitap sorusu bu konudan` : `📘 ${kc.tema}. temanın soruları kullanılacak`}</span>` : ''}</div>`; }).join('')}
+    ${(S.konuLog || []).length ? `<div class="klog"><b>Mete'nin cevapları:</b>${S.konuLog.map((e, i) => `<div class="mrow">${e.ans === 'evet' ? '✅' : e.ans === 'hayir' ? '❌' : '🤔'} ${DERS_EMO[e.ders]} "${esc(e.ad)}" · ${dayLabel(e.d)}${e.ans === 'evet' && e.prev ? ` <button class="btn soft sm" data-a="konuundo" data-v="${i}">Geri al</button>` : ''}</div>`).join('')}</div>` : ''}
+    <p class="muted small">Seçili konudan sonraki konu için Mete'ye ana sayfada "Okulda işlediniz mi?" diye sorulur; "Evet" derse konu kendiliğinden ilerler, günlük görev de okuldaki konulara göre hazırlanır.</p>
     <div id="unitinfo" class="muted small"></div>
   </div>
   <div class="panel"><h2>🏅 Öğrendiği alıştırmalar</h2>
@@ -2206,6 +2308,9 @@ function settings() {
     <div class="field">API anahtarı: <input id="sKey" type="password" placeholder="sk-ant-..." value="${esc(S.apiKey || '')}" style="min-width:300px" autocomplete="off"><button class="btn soft sm" data-a="showkey" id="skb">Göster</button></div>
     <div class="field">Model: <select id="sModel">${[['claude-sonnet-5-5','Sonnet 5.5 — önerilen (fotoğraf ve açıklamada daha iyi)'],['claude-haiku-5-5','Haiku 5.5 — daha hızlı ve ucuz']].map(([v, l]) => `<option value="${v}" ${(S.model || 'claude-sonnet-5-5') === v ? 'selected' : ''}>${l}</option>`).join('')}</select></div>
     <div class="row"><button class="btn green sm" data-a="testkey" id="tkb">Bağlantıyı dene</button><span id="tkr" class="muted"></span></div>
+    <div class="usagebox"><b>🪙 Token kullanımı</b>${(() => { const M = usageMonth(), T = (S.usage || {}).total || { in: 0, out: 0, usd: 0, n: 0 }, B = +S.budget || 0; return `<div class="ustats"><div><span>Bu ay</span><b>${fmtTok(M.in + M.out)}</b><small>${M.n} cevap · ${fmtUsd(M.usd)}</small></div><div><span>Toplam</span><b>${fmtTok(T.in + T.out)}</b><small>${T.n} cevap · ${fmtUsd(T.usd)}</small></div><div><span>Aylık bütçe kalan</span><b>${B ? fmtUsd(Math.max(0, B - M.usd)) : '—'}</b><small>${B ? '%' + Math.round(Math.max(0, B - M.usd) / B * 100) + ' kaldı' : 'bütçe girilmedi'}</small></div></div>`; })()}
+      <div class="field">Aylık bütçe ($): <input id="sBudget" type="number" min="0" step="0.5" value="${S.budget || ''}" placeholder="ör. 5" style="width:90px"> <button class="btn soft sm" data-a="usagereset">Sayacı sıfırla</button></div>
+      <p class="muted small">Her Bilge cevabının token sayısı API'nin bildirdiği değerdir; dolar karşılığı resmi fiyatlarla tahmini hesaplanır (Sonnet 5.5: 1M token giriş $2 / çıkış $10, Haiku 5.5: $0,10 / $0,50). Hesaptaki gerçek bakiye yalnızca console.anthropic.com'da görünür; sayaç bu bilgisayardaki kullanımı sayar.</p></div>
     <p class="muted small">Anahtar almak için: <a href="https://console.anthropic.com/" target="_blank" rel="noopener">console.anthropic.com</a> → API Keys → Create Key. Kullanım ücretlidir ama çocuk sohbeti için aylık maliyet genelde birkaç dolar düzeyinde kalır; Console'da harcama limiti koyabilirsiniz. Anahtarı çocuğunuzla paylaşmayın.</p>`}
   </div>
   <div class="panel"><h2>🔊 Konuşma sesi</h2>
@@ -2246,7 +2351,7 @@ function settings() {
     el.querySelectorAll('[data-bdel]').forEach(b => b.onclick = async () => { await bookDel(b.dataset.bdel); renderBooks(); }); };
   renderBooks();
   const rf = $('#rsFile'); if (rf) rf.addEventListener('change', e => { const f = e.target.files[0]; if (f) restoreBackup(f); });
-  const sk = $('#sKey'); if (sk) { sk.addEventListener('input', e => { S.apiKey = e.target.value.trim(); save(); resetSample(); }); $('#sModel').addEventListener('change', e => { S.model = e.target.value; save(); }); }
+  const sk = $('#sKey'); if (sk) { sk.addEventListener('input', e => { S.apiKey = e.target.value.trim(); save(); resetSample(); }); $('#sModel').addEventListener('change', e => { S.model = e.target.value; save(); }); const sb = $('#sBudget'); if (sb) sb.addEventListener('change', e => { S.budget = +e.target.value || 0; save(); }); }
   $('#sAuto').addEventListener('change', e => { S.autoRead = e.target.checked; save(); });
   $('#sRate').addEventListener('change', e => { S.rate = +e.target.value; save(); speak('Merhaba! Ben Bilge Baykuş. Bu hızda konuşuyorum.'); });
   $('#sVoice').addEventListener('change', e => { S.voice = e.target.value; save(); speak('Merhaba! Bu sesi beğendin mi?'); });
@@ -2285,6 +2390,9 @@ const A = {
   books: () => booksHome(), profile: () => profilePicker(), mini: v => miniPlay(v), openbook: v => openBook(v),
   balloon: () => balloonStart(), bgo: () => payGame(balloonGo, 'Balon Avı'), car: () => payGame(carStart, 'Hece Yarışı'), cgo: () => payGame(carGo, 'Hece Yarışı'),
   okufilt: v => okumaHome(v),
+  usagereset: () => { S.usage = null; save(); const y = scrollY; settings(); scrollTo(0, y); },
+  konuans: v => { const [d, a] = v.split('|'); konuAnswer(d, a); },
+  konuundo: v => { const L = S.konuLog || [], e = L[+v]; if (e && e.prev) { S.konu[e.ders] = e.prev; S.unit[e.ders] = e.prev.tema; if (S.islenen && S.islenen[e.ders]) S.islenen[e.ders].pop(); L.splice(+v, 1); delete S.konuAsk[e.ders]; save(); } const y = scrollY; settings(); scrollTo(0, y); },
   playforce: v => { FORCE_PLAY = true; play(v); },
   reopen: v => { if (S.mastery && S.mastery[v]) { S.mastery[v].closed = false; S.mastery[v].r = []; } save(); const y = scrollY; settings(); scrollTo(0, y); },
   cmode: v => { S.carMode = v; save(); carStart(); },
@@ -2313,7 +2421,8 @@ const A = {
     R.savedHTML = app.innerHTML; stopSpeak();
     chat = []; chatImg = null; pending = null; help(t);
   },
-  backq: () => { if (!R || !R.savedHTML) return home(); stopSpeak(); VIEW = 'round'; app.innerHTML = R.savedHTML; R.savedHTML = null; },
+  bookref: v => { const [id, pg] = v.split('|'); R.savedHTML = app.innerHTML; openBook(id, +pg, true); },
+  backq: () => { if (!R || !R.savedHTML) return home(); stopSpeak(); VIEW = 'round'; app.classList.remove('wide'); app.innerHTML = R.savedHTML; R.savedHTML = null; },
   setname: () => { const v = ($('#nm') || {}).value; if (v && v.trim()) { S.name = v.trim(); save(); home(); } },
   clrm: () => { S.mistakes = []; save(); settings(); },
   lvlreset: () => { S.lvl = {}; S.streak = {}; save(); settings(); },
@@ -2335,7 +2444,7 @@ document.addEventListener('keydown', e => {
   const n = +e.key; if (n >= 1 && n <= 4 && cur().kind === 'mcq' && !R.answered) { const b = document.querySelector(`.opt[data-v="${n - 1}"]`); if (b) answerMCQ(b, n - 1); }
 });
 try { speechSynthesis.getVoices(); speechSynthesis.onvoiceschanged = () => { if (VIEW === 'settings') settings(); }; } catch (e) {}
-updateHeader(); home(); loadBank();
+updateHeader(); home(); loadBank(); refreshHaveBooks();
 /* sürüm kontrolü: sunucuda yeni sürüm varsa şerit göster */
 (async function checkUpdate() {
   if (!/^https?:/.test(location.protocol)) return;
