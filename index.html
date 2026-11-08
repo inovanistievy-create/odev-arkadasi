@@ -124,6 +124,7 @@ th{color:var(--muted);font-size:15px}
 .mlist{max-height:240px;overflow:auto;font-weight:700;color:var(--muted);padding-left:20px;margin:8px 0}
 .unitbar{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 18px}
 .kfield{display:grid;grid-template-columns:130px 1fr 2fr;gap:8px;align-items:center;margin:8px 0}.kfield select{max-width:100%}.kmatch{grid-column:2/4;font-size:13px;color:#2E7D32}@media(max-width:700px){.kfield{grid-template-columns:1fr}.kmatch{grid-column:1}}
+.mrow{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:6px 0}.card.mastered{opacity:.6;filter:saturate(.5)}.card.mastered:hover{opacity:.85}.mchip.mastered{opacity:.55}
 .unitchip{border:2px solid var(--line);background:#fff;border-radius:99px;padding:8px 14px;font-weight:700;font-size:15px;cursor:pointer}.unitchip:hover{background:#FFF1C9}
 .onb{background:#fff;border-radius:28px;padding:26px;margin-bottom:22px;display:flex;gap:18px;align-items:center;flex-wrap:wrap;box-shadow:0 6px 0 rgba(43,42,76,.07)}
 .onb input{font:inherit;font-size:22px;font-weight:800;border:3px solid var(--line);border-radius:16px;padding:12px 16px;min-width:220px}
@@ -284,7 +285,7 @@ const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { c
 let VIEW = 'home';
 
 /* ---------- kayıt ---------- */
-const APP_VERSION = '20261108.0731';
+const APP_VERSION = '20261108.0744';
 const BASEKEY = 'odev-arkadasi-v1', PKEY = 'odev-arkadasi-profiles', SHKEY = 'odev-arkadasi-shared';
 const SHARED = ['apiKey', 'model', 'voice', 'rate', 'sound', 'autoRead', 'links', 'bookNames', 'unitAutoDone'];
 function lsGet(k) { try { return JSON.parse(localStorage.getItem(k)); } catch (e) { return null; } }
@@ -782,16 +783,38 @@ const MENUS = {
 function menuTitle(v) { for (const m of Object.values(MENUS)) for (const [, items] of (m.sections || [['', m.items]])) { const f = items.find(x => x[0] === v); if (f) return f[2]; } return v; }
 function menu(v) {
   VIEW = 'menu'; app.classList.remove('wide'); const m = MENUS[v];
-  const card = ([id, e, t, d, c], tall) => `<button class="card c-${c} ${tall ? 'tall' : ''}" data-a="play" data-v="${id}"><div class="emo">${e}</div><div><h3>${t}</h3><p>${esc(d)}</p></div></button>`;
-  const chip = ([id, e, t]) => `<button class="mchip" data-a="play" data-v="${id}">${e} ${esc(t)}</button>`;
+  const card = ([id, e, t, d, c], tall) => isClosed(id) ? `<button class="card c-${c} ${tall ? 'tall' : ''} mastered" data-a="play" data-v="${id}"><div class="emo">🏅</div><div><h3>${t}</h3><p>Öğrendin! Kapalı · sıradaki: ${esc(menuTitle(nextOpen(id)))}</p></div></button>` : `<button class="card c-${c} ${tall ? 'tall' : ''}" data-a="play" data-v="${id}"><div class="emo">${e}</div><div><h3>${t}</h3><p>${esc(d)}</p></div></button>`;
+  const chip = ([id, e, t]) => `<button class="mchip ${isClosed(id) ? 'mastered' : ''}" data-a="play" data-v="${id}">${isClosed(id) ? '🏅' : e} ${esc(t)}</button>`;
   const secs = m.sections || [['', m.items]];
   app.innerHTML = `<div class="rtop"><button class="btn soft sm" data-a="${m.back ? 'menu' : 'home'}" ${m.back ? `data-v="${m.back}"` : ''}>← ${m.back ? 'Geri' : 'Ana sayfa'}</button><div class="rtitle">${m.t}</div></div>
   ${secs.map(([h, items]) => h.startsWith('~') ? `<h3 class="msec">${esc(h.slice(1))}</h3><div class="mchips">${items.map(chip).join('')}</div>` : `${h ? `<h3 class="msec">${esc(h)}</h3>` : ''}<div class="grid ${items.length === 4 ? 'four' : items.length > 2 ? 'three' : ''}">${items.map(x => card(x, items.length === 4)).join('')}</div>`).join('')}`;
 }
 
+/* ---------- ustalık: öğrendiği kolay alıştırmaları kapat ---------- */
+const MASTER_NEXT = { 'tr:hece': 'tr:yazim', 'tr:yazim': 'bank:turkce:0', 'math:topla': 'math:cikar', 'math:cikar': 'math:carp', 'math:carp': 'math:bol', 'math:bol': 'math:esitlik', 'math:eksik': 'math:esitlik', 'math:esitlik': 'fas:problem', 'math:sayilar': 'math:eksik', 'math:geo': 'bank:matematik:0', 'math:olcme': 'bank:matematik:0', 'math:veri': 'bank:matematik:0', 'math:atolye-cikar': 'math:cikar', 'math:atolye-carp': 'math:carp', 'fas:alt': 'fas:ayir', 'fas:ayir': 'fas:problem', 'fas:esle': 'fas:buyuk', 'fas:buyuk': 'fas:problem', 'fas:tahmin': 'fas:problem', 'fas:problem': 'fas:hikaye', 'fas:hikaye': 'fas:beceri', 'fas:beceri': 'fas:test', 'ing:0': 'bank:ingilizce:0', 'bilgi:hayat': 'bank:hayat_bilgisi:0' };
+const MASTER_OK = .85;
+function isClosed(k) { return S.autoClose !== false && !!(((S.mastery || {})[k] || {}).closed); }
+function nextOpen(k) { let g = 0; while (isClosed(k) && g++ < 12) k = MASTER_NEXT[k] || (/^ing:/.test(k) ? 'bank:ingilizce:0' : /^bilgi:/.test(k) ? 'bank:hayat_bilgisi:0' : /^tr:/.test(k) ? 'bank:turkce:0' : 'bank:matematik:0'); return k; }
+function recordMastery(k, ok, n) {
+  if (!k || typeof k !== 'string' || /^(bank:|review|gorev|oku:|mini:)/.test(k) || n < 5) return;
+  S.mastery = S.mastery || {}; const m = S.mastery[k] = S.mastery[k] || { r: [] };
+  m.r = [...m.r, Math.round(ok / n * 100)].slice(-3); save();
+  if (!m.closed && S.autoClose !== false && m.r.length >= 2 && m.r.slice(-2).every(x => x >= MASTER_OK * 100)) {
+    m.closed = true; m.day = today(); if (k === 'tr:hece' && !S.carMode) S.carMode = 'kelime'; save();
+    setTimeout(() => { confetti(); toast(`🏅 "${menuTitle(k)}" artık çok kolay geliyor! Bu alıştırmayı kapattık, daha zoruna geçiyoruz.`); }, 900);
+  }
+}
+function masteredView(k) {
+  VIEW = 'end'; const nx = nextOpen(k);
+  app.innerHTML = `<div class="endcard center"><div class="bigemo">🏅</div><h2>"${esc(menuTitle(k))}" alıştırmasında ustalaştın!</h2><p>Bunu artık çok iyi biliyorsun, burada vakit kaybetmeyelim. Sıradaki daha zor alıştırma: <b>${esc(menuTitle(nx))}</b></p>
+  <div class="row center"><button class="btn primary" data-a="play" data-v="${nx}">Daha zoruna geç 🚀</button><button class="btn soft" data-a="playforce" data-v="${k}">Yine de oyna</button><button class="btn soft" data-a="home">Ana sayfa 🏠</button></div></div>`;
+}
+let FORCE_PLAY = false;
+
 /* ---------- oyun turu ---------- */
 let R = null;
 function play(v) {
+  if (!FORCE_PLAY && isClosed(v)) return masteredView(v); FORCE_PLAY = false;
   const [m, mode] = v.split(':'); let items, title;
   if (v.startsWith('bank:')) { const [, ders, tema] = v.split(':'); return bankPlay(ders, +tema || 0, ders === 'matematik' ? 'math' : ders === 'turkce' ? 'turkce' : 'bilgi', '📖 ' + { matematik: 'Matematik', hayat_bilgisi: 'Hayat Bilgisi', ingilizce: 'İngilizce', turkce: 'Türkçe' }[ders] + ' Kitap Soruları'); }
   if (v === 'oku:home') return okumaHome();
@@ -822,7 +845,7 @@ function roundTop() {
   return `<div class="rtop"><button class="btn soft sm" data-a="home">← Çık</button><div class="rtitle">${esc(R.title)}</div><div class="dots">${R.items.map((_, i) => `<i class="${R.res[i] || (i === R.i ? 'now' : '')}"></i>`).join('')}</div></div>`;
 }
 function renderQ() {
-  const it = cur(); R.answered = false;
+  const it = cur(); R.answered = false; R.miss = false;
   if (it.kind === 'hece') {
     R.pos = 0; R.miss = false;
     let sh = shuffle(it.parts); let g = 0; while (sh.join() === it.parts.join() && g++ < 10) sh = shuffle(it.parts);
@@ -878,6 +901,7 @@ function pickSyl(el) {
   }
 }
 function win() {
+  { const it0 = cur(); if (!R.review && R.res[R.i] !== 'no' && !R.miss && it0.key) { S.known = S.known || {}; S.known[it0.key] = (S.known[it0.key] || 0) + 1; } }
   const it = cur(); const pts = R.review ? 1 : ZPTS(it.zorluk || it.pts || 1); R.ok++; R.res[R.i] = 'ok'; if (pts === 3) { S.counters.zor = (S.counters.zor || 0) + 1; } addStar(false, pts); stat(it.mod, true, it.konu); sfx('ok'); if (R.bankMod) lvlBump(R.bankMod, true);
   if (R.review) removeMistake(it.key);
   const pr = pick(PRAISE); $('#fb').innerHTML = `<div class="praise">${pr} +${pts} ⭐${pts === 3 ? ' <span class="zor">Zor soru! 💪</span>' : pts === 2 ? ' <span class="zor orta">Orta soru</span>' : ''}</div>`; if (it.en) { speakEN(it.en); } else autoSpeak(pr);
@@ -885,6 +909,7 @@ function win() {
 }
 function next() { stopSpeak(); R.i++; if (R.i >= R.items.length) endRound(); else renderQ(); }
 function endRound() {
+  if (!R.review) recordMastery(R.replay, R.ok, R.items.length);
   if (R.replay === 'gorev') markGorev(0);
   VIEW = 'end'; const n = R.items.length, k = R.ok, great = k / n >= .7;
   if (great) { confetti(); sfx('win'); }
@@ -939,6 +964,7 @@ function bankItems(ders, tema, n, mod) {
   let konular = BANK[ders].konular.filter(k => !tema || k.tema === tema);
   const kc = konuOf(ders); if (kc && tema === kc.tema) { const mm = konuMatches(ders); if (mm.length) { const nq = mm.reduce((a, k) => a + k.sorular.length, 0), hasSab = mm.some(k => k.sorular.some(q => q.tip === 'sablon')); konular = nq >= 8 || hasSab ? mm : [...mm, ...mm, ...konular]; } }
   let pool = konular.flatMap(k => k.sorular.map(q => ({ q, konu: k.konu })));
+  if (S.autoClose !== false && S.known) { const fresh = pool.filter(x => x.q.tip === 'sablon' || (S.known['b:' + (x.q.soru || '').slice(0, 60)] || 0) < 2); if (fresh.length >= n) pool = fresh; }
   if (!pool.length) return [];
   const w = q => (q.zorluk || 1) === lvl ? 6 : (q.zorluk || 1) < lvl ? 2.5 : 1.2;
   const items = [], used = new Set();
@@ -1549,7 +1575,7 @@ function fasPlay(kind) {
 }
 function fasNext() {
   const meta = MENUS.fas.items.find(x => x[0] === 'fas:' + FS.kind);
-  if (FS.i >= FS.n) { if (FS.gorev) markGorev(1); S.counters.fas = (S.counters.fas || 0) + 1; save(); VIEW = 'end'; const great = FS.ok / FS.n >= .7; if (great) { confetti(); sfx('win'); } app.innerHTML = `<div class="endcard center"><div class="bigemo">${FS.ok === FS.n ? '🏆' : great ? '🌟' : '💪'}</div><h2>${FS.n} alıştırmadan ${FS.ok} tanesi ilk denemede doğru!</h2><p>${great ? 'Fasikül ödevine hazırsın!' : 'Biraz daha çalışınca çok iyi olacak.'}</p><div class="row center"><button class="btn primary" data-a="play" data-v="fas:${FS.kind}">Tekrar 🔁</button><button class="btn soft" data-a="menu" data-v="fas">Diğer alıştırmalar 📙</button><button class="btn soft" data-a="home">Ana sayfa 🏠</button></div></div>`; return; }
+  if (FS.i >= FS.n) { recordMastery('fas:' + FS.kind, FS.ok, FS.n); if (FS.gorev) markGorev(1); S.counters.fas = (S.counters.fas || 0) + 1; save(); VIEW = 'end'; const great = FS.ok / FS.n >= .7; if (great) { confetti(); sfx('win'); } app.innerHTML = `<div class="endcard center"><div class="bigemo">${FS.ok === FS.n ? '🏆' : great ? '🌟' : '💪'}</div><h2>${FS.n} alıştırmadan ${FS.ok} tanesi ilk denemede doğru!</h2><p>${great ? 'Fasikül ödevine hazırsın!' : 'Biraz daha çalışınca çok iyi olacak.'}</p><div class="row center"><button class="btn primary" data-a="play" data-v="fas:${FS.kind}">Tekrar 🔁</button><button class="btn soft" data-a="menu" data-v="fas">Diğer alıştırmalar 📙</button><button class="btn soft" data-a="home">Ana sayfa 🏠</button></div></div>`; return; }
   app.innerHTML = `<div class="rtop"><button class="btn soft sm" data-a="menu" data-v="fas">← Alıştırmalar</button><div class="rtitle">${meta[1]} ${esc(meta[2])}</div><div class="dots">${Array.from({ length: FS.n }, (_, k) => `<i class="${FS.res[k] || (k === FS.i ? 'now' : '')}"></i>`).join('')}</div></div><div class="qcard fas" id="fb0"></div>`;
   const host = $('#fb0');
   FAS[FS.kind](host, ok => { FS.res[FS.i] = ok ? 'ok' : 'no'; if (ok) { FS.ok++; addStar(false, FAS_PTS[FS.kind] || 2); } stat('math', ok); sfx(ok ? 'ok' : 'no'); const nx = document.createElement('div'); nx.className = 'row center'; nx.innerHTML = `${ok ? `<div class="praise small">+${FAS_PTS[FS.kind] || 2} ⭐</div>` : ''}<button class="btn primary" id="fasn">${FS.i + 1 >= FS.n ? 'Bitir 🏁' : 'Sıradaki ➜'}</button>`; host.appendChild(nx); const b = $('#fasn'); b.onclick = () => { FS.i++; fasNext(); }; setTimeout(() => b.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 100); });
@@ -2091,6 +2117,12 @@ function settings() {
       ${kc ? `<span class="kmatch">${konuMatches(k).length ? `✅ ${konuMatches(k).reduce((a, x) => a + x.sorular.length, 0)} kitap sorusu bu konudan` : `📘 ${kc.tema}. temanın soruları kullanılacak`}</span>` : ''}</div>`; }).join('')}
     <div id="unitinfo" class="muted small"></div>
   </div>
+  <div class="panel"><h2>🏅 Öğrendiği alıştırmalar</h2>
+    <p class="muted small">Bir alıştırmayı arka arkaya 2 kez %85 ve üzeri doğru yapınca kapanır, çocuk daha zoruna yönlendirilir. Kitap sorularında 2 kez doğru bildiği soru tekrar sorulmaz.</p>
+    <label><input type="checkbox" id="autoClose" ${S.autoClose !== false ? 'checked' : ''}> Öğrendiklerini otomatik kapat</label>
+    ${Object.entries(S.mastery || {}).filter(([, m]) => m.closed).length ? `<div class="mlist">${Object.entries(S.mastery).filter(([, m]) => m.closed).map(([k, m]) => `<div class="mrow">🏅 <b>${esc(menuTitle(k))}</b> <span class="muted small">son turlar: ${m.r.map(x => '%' + x).join(', ')}</span> <button class="btn soft sm" data-a="reopen" data-v="${k}">Yeniden aç</button></div>`).join('')}</div>` : '<p class="muted small">Henüz kapanan alıştırma yok.</p>'}
+    <p class="muted small">Kitap sorularında öğrenilen soru sayısı: ${Object.values(S.known || {}).filter(x => x >= 2).length}</p>
+  </div>
   <div class="panel"><h2>📘 Kitaplar</h2>
     <p class="muted small">MEB ders kitaplarının PDF'lerini (EBA'dan indirilen) buradan yükleyin. Dosyalar yalnızca bu bilgisayarın tarayıcısında saklanır, internete gönderilmez; "Kitaplarım"dan sayfa sayfa açılır.</p>
     <div id="booklist" class="muted small">Yükleniyor…</div>
@@ -2132,6 +2164,7 @@ function settings() {
   $('#sLock').addEventListener('change', e => { S.gameLock = e.target.checked; save(); updateHeader(); });
   $('#sCost').addEventListener('change', e => { S.gameCost = +e.target.value; save(); });
   $('#sSound').addEventListener('change', e => { S.sound = e.target.checked; save(); });
+  const ac = $('#autoClose'); if (ac) ac.addEventListener('change', e => { S.autoClose = e.target.checked; save(); });
   document.querySelectorAll('[data-kbook]').forEach(sel => sel.addEventListener('change', e => { const k = e.target.dataset.kbook; S.konu = S.konu || {}; S.konu[k] = null; S.konuBook = S.konuBook || {}; S.konuBook[k] = e.target.value; save(); const y = scrollY; settingsWithBook(k, e.target.value); scrollTo(0, y); }));
   document.querySelectorAll('[data-kkonu]').forEach(sel => sel.addEventListener('change', async e => { const k = e.target.dataset.kkonu, bid = document.querySelector(`[data-kbook="${k}"]`).value, x = bookKonular(bid, k)[+e.target.value]; S.konu = S.konu || {}; S.unit = S.unit || {}; if (!x) { S.konu[k] = null; } else { S.konu[k] = { book: bid, ad: x.ad, tema: x.tema, page: x.page || null }; S.unit[k] = x.tema; } save(); await loadBank(); const y = scrollY; settings(); scrollTo(0, y); }));
   const showUnitInfo = () => { $('#unitinfo').innerHTML = Object.keys(MEB2).map(k => { const t = unitOf(k); return t ? `<p>${(FASIKUL[k] || []).filter(f => f.tema === t.no).map(f => `📙 Üçgen ${f.no}. fasikül: ${esc(f.ad)} (${f.haftalar[0]}–${f.haftalar[1]}. hafta)<br>`).join('')}<b>${DERS_AD[k]} ${t.no}. tema — ${esc(t.ad)}</b> (${esc(t.sure)}${t.kitap ? ', ' + esc(t.kitap) + (t.sayfa ? ' s.' + t.sayfa : '') : ''})<br>${t.konular ? 'Konular: ' + t.konular.map(esc).join(' · ') + '<br>' : ''}Kavramlar: ${esc(t.kavramlar.join(', '))}${t.kazanimlar ? '<br>Kazanımlar: ' + t.kazanimlar.slice(0, 4).map(esc).join(' · ') + (t.kazanimlar.length > 4 ? ' …' : '') : ''}</p>` : ''; }).join(''); };
@@ -2180,14 +2213,16 @@ const A = {
   wear: v => { S.avatar.wear = v; save(); updateHeader(); badgesView(); },
   books: () => booksHome(), profile: () => profilePicker(), mini: v => miniPlay(v), openbook: v => openBook(v),
   balloon: () => balloonStart(), bgo: () => payGame(balloonGo, 'Balon Avı'), car: () => payGame(carStart, 'Hece Yarışı'), cgo: () => payGame(carGo, 'Hece Yarışı'),
+  playforce: v => { FORCE_PLAY = true; play(v); },
+  reopen: v => { if (S.mastery && S.mastery[v]) { S.mastery[v].closed = false; S.mastery[v].r = []; } save(); const y = scrollY; settings(); scrollTo(0, y); },
   cmode: v => { S.carMode = v; save(); carStart(); },
   unitplay: async k => {
     const t = unitOf(k); if (!t) return;
     await loadBank(); const dersKey = k;
-    const kc = konuOf(k); if (kc && kc.ad) { if (konuMatches(k).length && Math.random() < .7) return play('bank:' + k + ':' + kc.tema); if (k === 'matematik') return play(konuActivity(k, kc.ad)); }
+    const kc = konuOf(k); if (kc && kc.ad) { if (konuMatches(k).length && Math.random() < .7) return play('bank:' + k + ':' + kc.tema); if (k === 'matematik') return play(nextOpen(konuActivity(k, kc.ad))); }
     if (BANK && BANK[dersKey] && BANK[dersKey].konular.some(x => x.tema === t.no) && Math.random() < .65) return play('bank:' + dersKey + ':' + t.no);
     if (k === 'matematik') return play(t.no === 1 ? 'math:geo' : t.no === 2 ? 'math:sayilar' : t.no === 4 ? pick(['math:olcme', 'math:saat']) : t.no === 5 ? 'math:veri' : t.no === 6 ? 'math:grafik' : 'math:karisik');
-    if (k === 'turkce') return play(t.no % 2 ? 'tr:hece' : 'tr:yazim');
+    if (k === 'turkce') return play(nextOpen(t.no % 2 ? 'tr:hece' : 'tr:yazim'));
     if (k === 'hayat_bilgisi') return play('bilgi:hayat');
     return play('ing:' + t.no);
   },
