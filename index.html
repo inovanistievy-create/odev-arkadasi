@@ -126,6 +126,7 @@ th{color:var(--muted);font-size:15px}
 .kfield{display:grid;grid-template-columns:130px 1fr 2fr;gap:8px;align-items:center;margin:8px 0}.kfield select{max-width:100%}.kmatch{grid-column:2/4;font-size:13px;color:#2E7D32}@media(max-width:700px){.kfield{grid-template-columns:1fr}.kmatch{grid-column:1}}
 .mrow{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:6px 0}.card.mastered{opacity:.6;filter:saturate(.5)}.card.mastered:hover{opacity:.85}.mchip.mastered{opacity:.55}
 .seq{display:inline-flex;flex-direction:column;gap:8px;align-items:flex-start;margin:6px auto}.seqrow{display:flex;align-items:center;gap:8px;font-size:30px;font-weight:800}.sop{min-width:22px;text-align:center}.seqask{font-size:15px;color:#666;margin-top:6px}
+#starPill.lose{animation:shk .5s}@keyframes shk{20%,60%{transform:translateX(-5px)}40%,80%{transform:translateX(5px)}}.starlose{position:fixed;transform:translateX(-50%);z-index:999;background:#FFE2E2;color:#C62828;font-weight:800;padding:4px 10px;border-radius:99px;animation:sl 1.4s forwards;pointer-events:none}@keyframes sl{0%{opacity:0;margin-top:-6px}15%{opacity:1}100%{opacity:0;margin-top:26px}}
 .unitchip{border:2px solid var(--line);background:#fff;border-radius:99px;padding:8px 14px;font-weight:700;font-size:15px;cursor:pointer}.unitchip:hover{background:#FFF1C9}
 .onb{background:#fff;border-radius:28px;padding:26px;margin-bottom:22px;display:flex;gap:18px;align-items:center;flex-wrap:wrap;box-shadow:0 6px 0 rgba(43,42,76,.07)}
 .onb input{font:inherit;font-size:22px;font-weight:800;border:3px solid var(--line);border-radius:16px;padding:12px 16px;min-width:220px}
@@ -286,7 +287,7 @@ const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { c
 let VIEW = 'home';
 
 /* ---------- kayıt ---------- */
-const APP_VERSION = '20261108.0746';
+const APP_VERSION = '20261108.0802';
 const BASEKEY = 'odev-arkadasi-v1', PKEY = 'odev-arkadasi-profiles', SHKEY = 'odev-arkadasi-shared';
 const SHARED = ['apiKey', 'model', 'voice', 'rate', 'sound', 'autoRead', 'links', 'bookNames', 'unitAutoDone'];
 function lsGet(k) { try { return JSON.parse(localStorage.getItem(k)); } catch (e) { return null; } }
@@ -308,7 +309,14 @@ function addStar(fromGame, n) { n = Math.max(1, n || 1); rollDay(); const d0 = S
 const ZPTS = z => z >= 3 ? 3 : z === 2 ? 2 : 1;
 let CUR_TOPIC = '';
 function dayLog(d) { S.log = S.log || {}; const k = d || today(); return S.log[k] || (S.log[k] = { sec: 0, n: 0, ok: 0, by: {} }); }
+function loseStar(n) {
+  if (S.wrongPenalty === false || MINI || /^(balloon|car|bal|game)/.test(VIEW)) return;
+  rollDay(); n = n || 1; const had = S.wallet || 0; S.wallet = Math.max(0, had - n); S.stars = Math.max(0, S.stars - n); S.dayStars = Math.max(0, S.dayStars - n); save(); updateHeader();
+  const pill = document.getElementById('starPill'); if (!pill) return; pill.classList.remove('lose'); void pill.offsetWidth; pill.classList.add('lose');
+  const f = document.createElement('div'); f.className = 'starlose'; f.textContent = had > 0 ? '−' + n + ' ⭐' : 'Dikkat! 🙈'; const r = pill.getBoundingClientRect(); f.style.left = (r.left + r.width / 2) + 'px'; f.style.top = (r.bottom + 4) + 'px'; document.body.appendChild(f); setTimeout(() => f.remove(), 1400);
+}
 function stat(mod, ok, konu) {
+  if (!ok) loseStar(1);
   const s = S.stats[mod] || (S.stats[mod] = { c: 0, w: 0 }); ok ? s.c++ : s.w++;
   const L = dayLog(), t = String(konu || CUR_TOPIC || mod).replace(/\s*·\s*Seviye \d/, '').slice(0, 60); L.n++; if (ok) L.ok++; const b = L.by[t] || (L.by[t] = [0, 0]); if (ok) b[0]++; b[1]++;
   S.counters = S.counters || {}; S.counters[ok ? 'dogru' : 'yanlis'] = (S.counters[ok ? 'dogru' : 'yanlis'] || 0) + 1;
@@ -2148,6 +2156,7 @@ function settings() {
   </div>
   <div class="panel"><h2>🏅 Öğrendiği alıştırmalar</h2>
     <p class="muted small">Bir alıştırmayı arka arkaya 2 kez %85 ve üzeri doğru yapınca kapanır, çocuk daha zoruna yönlendirilir. Kitap sorularında 2 kez doğru bildiği soru tekrar sorulmaz.</p>
+    <label><input type="checkbox" id="wrongPen" ${S.wrongPenalty !== false ? 'checked' : ''}> Yanlış cevapta 1 ⭐ düşsün</label><br>
     <label><input type="checkbox" id="autoClose" ${S.autoClose !== false ? 'checked' : ''}> Öğrendiklerini otomatik kapat</label>
     ${Object.entries(S.mastery || {}).filter(([, m]) => m.closed).length ? `<div class="mlist">${Object.entries(S.mastery).filter(([, m]) => m.closed).map(([k, m]) => `<div class="mrow">🏅 <b>${esc(menuTitle(k))}</b> <span class="muted small">son turlar: ${m.r.map(x => '%' + x).join(', ')}</span> <button class="btn soft sm" data-a="reopen" data-v="${k}">Yeniden aç</button></div>`).join('')}</div>` : '<p class="muted small">Henüz kapanan alıştırma yok.</p>'}
     <p class="muted small">Kitap sorularında öğrenilen soru sayısı: ${Object.values(S.known || {}).filter(x => x >= 2).length}</p>
@@ -2193,6 +2202,7 @@ function settings() {
   $('#sLock').addEventListener('change', e => { S.gameLock = e.target.checked; save(); updateHeader(); });
   $('#sCost').addEventListener('change', e => { S.gameCost = +e.target.value; save(); });
   $('#sSound').addEventListener('change', e => { S.sound = e.target.checked; save(); });
+  const wp = $('#wrongPen'); if (wp) wp.addEventListener('change', e => { S.wrongPenalty = e.target.checked; save(); });
   const ac = $('#autoClose'); if (ac) ac.addEventListener('change', e => { S.autoClose = e.target.checked; save(); });
   document.querySelectorAll('[data-kbook]').forEach(sel => sel.addEventListener('change', e => { const k = e.target.dataset.kbook; S.konu = S.konu || {}; S.konu[k] = null; S.konuBook = S.konuBook || {}; S.konuBook[k] = e.target.value; save(); const y = scrollY; settingsWithBook(k, e.target.value); scrollTo(0, y); }));
   document.querySelectorAll('[data-kkonu]').forEach(sel => sel.addEventListener('change', async e => { const k = e.target.dataset.kkonu, bid = document.querySelector(`[data-kbook="${k}"]`).value, x = bookKonular(bid, k)[+e.target.value]; S.konu = S.konu || {}; S.unit = S.unit || {}; if (!x) { S.konu[k] = null; } else { S.konu[k] = { book: bid, ad: x.ad, tema: x.tema, page: x.page || null }; S.unit[k] = x.tema; } save(); await loadBank(); const y = scrollY; settings(); scrollTo(0, y); }));
