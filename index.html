@@ -131,6 +131,7 @@ th{color:var(--muted);font-size:15px}
 .askcard{background:#EAF4FF;border:2px solid #9CC6F5;border-radius:18px;padding:14px 18px;margin:0 0 14px}.askq{font-size:18px;margin-bottom:4px}.askk{font-size:17px;margin-bottom:10px}.klog{margin:10px 0}
 #tokWrap{position:relative}.tokpill{font-size:13px;background:#FFF8E1;border:1px solid #F3D98B;border-radius:99px;padding:4px 10px;display:flex;align-items:center;gap:6px;white-space:nowrap}.tokpill.low{background:#FFE2E2;border-color:#F3A0A0}.tokbar{display:inline-block;width:60px;height:7px;background:#eee;border-radius:99px;overflow:hidden;margin-left:4px}.tokbar i{display:block;height:100%;background:#F4B400;transition:width .6s}.tokpill.low .tokbar i{background:#E53935}.tokfloat{position:absolute;right:8px;top:100%;color:#C62828;font-weight:800;font-size:13px;animation:sl 1.6s forwards;white-space:nowrap}
 .usagebox{background:#FFFBEA;border-radius:14px;padding:12px;margin:10px 0}.ustats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:8px 0}.ustats div{background:#fff;border-radius:10px;padding:8px;display:flex;flex-direction:column}.ustats span{font-size:12px;color:#777}.ustats b{font-size:20px}.ustats small{font-size:12px;color:#777}
+.pt .opts{margin-top:12px}.ptbarw{height:8px;background:#eee;border-radius:99px;overflow:hidden;margin-bottom:12px}.ptbarw i{display:block;height:100%;width:100%;background:#4F8EF7;transition:width .1s linear}.rmsbig{font-size:90px;font-weight:800;text-align:center;min-height:110px}.rmstyped{font-size:42px;letter-spacing:10px;text-align:center;font-weight:800}.numpad{display:grid;grid-template-columns:repeat(5,70px);gap:8px;justify-content:center;margin-top:10px}.numpad .btn{font-size:24px}.vlrsvg{display:block;margin:10px auto;max-width:420px;max-height:300px}.owtrow{display:flex;gap:16px;justify-content:center;margin:12px 0}.ptres{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin:12px 0}.ptres div{background:#F4F1FF;border-radius:12px;padding:10px;display:flex;flex-direction:column}.ptres b{font-size:24px}.simwrap{background:#fff;border-radius:20px;padding:12px}.simwrap canvas{width:100%;border-radius:14px;display:block}.simhelp{margin-top:8px;font-size:15px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
 .unitchip{border:2px solid var(--line);background:#fff;border-radius:99px;padding:8px 14px;font-weight:700;font-size:15px;cursor:pointer}.unitchip:hover{background:#FFF1C9}
 .onb{background:#fff;border-radius:28px;padding:26px;margin-bottom:22px;display:flex;gap:18px;align-items:center;flex-wrap:wrap;box-shadow:0 6px 0 rgba(43,42,76,.07)}
 .onb input{font:inherit;font-size:22px;font-weight:800;border:3px solid var(--line);border-radius:16px;padding:12px 16px;min-width:220px}
@@ -291,7 +292,7 @@ const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { c
 let VIEW = 'home';
 
 /* ---------- kayıt ---------- */
-const APP_VERSION = '20261108.0821';
+const APP_VERSION = '20261108.0834';
 const BASEKEY = 'odev-arkadasi-v1', PKEY = 'odev-arkadasi-profiles', SHKEY = 'odev-arkadasi-shared';
 const SHARED = ['usage', 'budget', 'apiKey', 'model', 'voice', 'rate', 'sound', 'autoRead', 'links', 'bookNames', 'unitAutoDone'];
 function lsGet(k) { try { return JSON.parse(localStorage.getItem(k)); } catch (e) { return null; } }
@@ -828,6 +829,7 @@ function home() {
   <h3 class="msec">Oyunlar ${S.gameLock ? `<span class="msub">· her oyun ${S.gameCost} ⭐ · sende ${S.wallet || 0} ⭐ · kolay soru 1, orta 2, zor 3 ⭐</span>` : ''}</h3>
   <div class="grid">
     <button class="card c-yellow" data-a="balloon"><div class="emo">🎈</div><div><h3>Balon Avı</h3><p>Doğru balonu patlat! ${S.best ? `Rekor: ${S.best}` : ''}</p>${gameTag()}</div></button>
+    <button class="card c-blue" data-a="pilot"><div class="emo">✈️</div><div><h3>Pilot Akademisi</h3><p>DLR-1 yetenek testleri ve DLR-2 simülatör · ${pilotRank().join(' ')}</p>${gameTag()}</div></button>
     <button class="card c-pink" data-a="car"><div class="emo">🚗</div><div><h3>Hece Yarışı</h3><p>Doğru heceyi topla! ${S.bestCar ? `Rekor: ${S.bestCar}` : ''}</p>${gameTag()}</div></button>
   </div>
   <h3 class="msec">Benim köşem</h3>
@@ -891,6 +893,133 @@ function sekilItem(z) {
     else { const a = rand(2, 9), b = rand(2 * a + 3, 50); rows = [row([A, "+", A, "+", A, '=', 3 * a]), row([B, '−', A, '=', b - a]), row([B, '−', A, '−', A, '=', '?'])]; ans = b - 2 * a; text = `Üç ${nm(A)} ${3 * a}. ${nm(B)} eksi ${nm(A)} ${b - a}. ${nm(B)} eksi iki ${nm(A)} kaç?`; explain = `1) ${nm(A)} = ${3 * a} ÷ 3 = ${a}. 2) ${nm(B)} = ${b - a} + ${a} = ${b}. 3) ${b} − ${a} − ${a} = **${ans}** 🏆`; }
   }
   return { kind: 'mcq', mod: 'math', zorluk: z, konu: 'Şekillerle İşlem', prompt: text, html: `<div class="seq">${rows.join('')}</div><div class="seqask">Soru işareti yerine hangi sayı gelir?</div>`, options: makeOpts(ans), answer: String(ans), explain, key: 'sk:' + text };
+}
+
+/* ---------- ✈️ Pilot Akademisi (DLR-1 / DLR-2 çocuk sürümü) ---------- */
+const PT_TESTS = [['krn', '🧮', 'Kafadan Hesap', 'İşlemi dinle, hızlıca bul'], ['rms', '🔢', 'Sayı Hafızası', 'Sıradaki sayıları aklında tut'], ['vlr', '🧭', 'Dönüş Sayma', 'Uçak kaç kez döndü?'], ['owt', '⏱️', 'Gösterge Okuma', 'Göstergelere bir bakışta bak'], ['rot', '🔄', 'Yön Bulma', 'Dönüşleri kafanda takip et']];
+const PT_N = 5; let PT = null;
+const TR_NUM = n => { const b = ['', 'bir', 'iki', 'üç', 'dört', 'beş', 'altı', 'yedi', 'sekiz', 'dokuz'], o = ['', 'on', 'yirmi', 'otuz', 'kırk', 'elli', 'altmış', 'yetmiş', 'seksen', 'doksan']; return n === 0 ? 'sıfır' : n === 100 ? 'yüz' : (o[Math.floor(n / 10)] + ' ' + b[n % 10]).trim(); };
+function pilotRank() { const P = S.pilot || {}; return (P.b2 || 0) >= 70 ? ['👨‍✈️', 'Kaptan Pilot'] : (P.b1 || 0) >= 70 ? ['🛫', 'Yardımcı Pilot'] : ['🎓', 'Öğrenci Pilot']; }
+function pilotHome() {
+  VIEW = 'pilot'; app.classList.remove('wide'); stopSpeak(); const P = S.pilot || {}, [re, rn] = pilotRank(), open2 = (P.b1 || 0) >= 70;
+  app.innerHTML = `<div class="rtop"><button class="btn soft sm" data-a="home">← Ana sayfa</button><div class="rtitle">✈️ Pilot Akademisi</div><div class="pill">${re} ${rn}</div></div>
+  <p class="lead">Gerçek pilot adayları DLR sınavlarına girer: önce <b>DLR-1</b> (dikkat, hafıza, hesap, yön testleri), sonra <b>DLR-2</b> (uçuş simülatörü). Bu, onların çocuklar için hazırlanmış eğlenceli bir benzeri!</p>
+  <div class="grid">
+    <button class="card c-blue tall" data-a="pilot1"><div class="emo">📝</div><div><h3>DLR-1 · Yetenek Testleri</h3><p>${PT_TESTS.map(t => t[1] + ' ' + t[2]).join(' · ')}</p>${P.b1 != null ? `<span class="donebadge">En iyi: ${P.b1} puan ${P.b1 >= 70 ? '✅ Geçti' : '· 70 ile geçilir'}</span>` : ''}${gameTag()}</div></button>
+    <button class="card c-green tall ${open2 ? '' : 'mastered'}" data-a="${open2 ? 'pilot2' : 'pilotlock'}"><div class="emo">🕹️</div><div><h3>DLR-2 · Uçuş Simülatörü</h3><p>Uçağı halkanın içinde tut, kırmızı ışıkta Boşluk'a bas, işlemleri kontrol et</p>${open2 ? (P.b2 != null ? `<span class="donebadge">En iyi: ${P.b2} puan ${P.b2 >= 70 ? '✅ Kaptan!' : ''}</span>` : '') : '<span class="newbadge">🔒 Önce DLR-1\'i 70 puanla geç</span>'}${open2 ? gameTag() : ''}</div></button>
+  </div>
+  <h3 class="msec">Testleri tek tek çalış</h3><div class="mchips">${PT_TESTS.map(([k, e, t]) => `<button class="mchip" data-a="pilotone" data-v="${k}">${e} ${t}${P.t && P.t[k] != null ? ' · ' + P.t[k] : ''}</button>`).join('')}</div>`;
+}
+function pilotStart1(only) { PT = { tests: only ? PT_TESTS.filter(t => t[0] === only) : PT_TESTS, ti: 0, q: 0, ok: 0, scores: {}, only: !!only }; ptIntro(); }
+function ptShell(body, sub) { const t = PT.tests[PT.ti]; app.innerHTML = `<div class="rtop"><button class="btn soft sm" data-a="pilot">← Akademi</button><div class="rtitle">${t[1]} ${t[2]}</div><div class="pill">${PT.only ? '' : `Test ${PT.ti + 1}/${PT.tests.length} · `}${sub || ''}</div></div><div class="qcard pt">${body}</div>`; }
+function ptIntro() {
+  VIEW = 'pilot'; const t = PT.tests[PT.ti]; PT.q = 0; PT.ok = 0;
+  const how = { krn: 'Bir işlem söyleyeceğim. Kafandan hesapla, doğru cevaba bas. Hızlı ol!', rms: 'Ekranda sayılar tek tek görünecek. Hepsini sırasıyla aklında tut, sonra yaz.', vlr: 'Uçak bir yol çizecek. Uçağın gözünden bak: kaç kez sağa ya da sola döndü?', owt: 'Renkli göstergeler 3 saniye görünecek. Sonra birini soracağım!', rot: 'Uçak yukarı bakıyor. Söylediğim dönüşleri kafanda yap, sonunda nereye baktığını bul.' }[t[0]];
+  ptShell(`<div class="qemo">${t[1]}</div><div class="qtext">${how}</div><div class="row center"><button class="btn primary" data-a="ptgo">Hazırım, başla ▶</button></div>`, `${PT_N} soru`); autoSpeak(how);
+}
+function ptTimer(sec, onEnd) { const bar = $('#ptbar'); const t0 = Date.now(); clearInterval(PT.tm); PT.tm = setInterval(() => { const r = 1 - (Date.now() - t0) / (sec * 1000); if (!bar || !document.body.contains(bar)) return clearInterval(PT.tm); bar.style.width = Math.max(0, r * 100) + '%'; if (r <= 0) { clearInterval(PT.tm); onEnd(); } }, 100); }
+function ptAnswer(ok, msg) {
+  clearInterval(PT.tm); clearTimeout(PT.to); if (PT.answered) return; PT.answered = true; if (ok) PT.ok++; sfx(ok ? 'ok' : 'no');
+  const fb = $('#ptfb'); if (fb) fb.innerHTML = `<div class="${ok ? 'praise' : 'hint'}">${ok ? pick(['Harika pilot! ✈️', 'Doğru! 👍', 'Süper! 🌟']) : '❌ ' + (msg || 'Olmadı')}</div>`;
+  setTimeout(() => { if (VIEW !== 'pilot') return; PT.q++; if (PT.q >= PT_N) ptTestEnd(); else ptQ(); }, ok ? 800 : 1800);
+}
+function ptQ() {
+  PT.answered = false; const k = PT.tests[PT.ti][0], sub = `Soru ${PT.q + 1}/${PT_N}`; const lvl = Math.min(2, Math.floor(PT.q / 2));
+  const opts = (ans, list) => `<div class="opts">${shuffle([...new Set([ans, ...list])].slice(0, 4)).map(o => `<button class="opt" data-a="ptpick" data-v="${esc(String(o))}">${o}</button>`).join('')}</div>`;
+  if (k === 'krn') {
+    const op = pick(lvl ? ['+', '−', '×'] : ['+', '−']); let a, b, ans; if (op === '+') { a = rand(5, 40); b = rand(3, 30); ans = a + b; } else if (op === '−') { a = rand(15, 60); b = rand(3, a - 2); ans = a - b; } else { a = rand(2, 5); b = rand(2, 9); ans = a * b; }
+    PT.ans = String(ans); const say = `${TR_NUM(a)} ${op === '+' ? 'artı' : op === '−' ? 'eksi' : 'çarpı'} ${TR_NUM(b)}`;
+    ptShell(`<div class="ptbarw"><i id="ptbar"></i></div><div class="qemo">🎧</div><div class="qtext">Dinle ve hesapla <button class="iconbtn sm" data-a="speak" data-t="${say}">🔊</button></div><div id="pthide" class="muted small">Duyamadın mı? 🔊'ye bas. (Göster: <a href="#" onclick="this.parentNode.textContent='${a} ${op} ${b}';return false">işlemi göster</a>)</div>${opts(ans, [ans + 1, ans - 1, ans + 10, ans - 10, ans + 2].filter(x => x >= 0))}<div id="ptfb"></div>`, sub);
+    speak(say); ptTimer(12, () => ptAnswer(false, `Süre doldu! Cevap ${ans}`));
+  } else if (k === 'rms') {
+    const len = 3 + lvl, seq = Array.from({ length: len }, () => rand(1, 9)); PT.ans = seq.join(''); PT.typed = '';
+    ptShell(`<div class="qtext">Sayıları aklında tut!</div><div class="rmsbig" id="rmsd">👀</div><div id="rmsin"></div><div id="ptfb"></div>`, sub);
+    let i = 0; const show = () => { const d = $('#rmsd'); if (!d || VIEW !== 'pilot') return; if (i < len) { d.textContent = seq[i]; speak(String(seq[i])); setTimeout(() => { if ($('#rmsd')) $('#rmsd').textContent = ' '; }, 750); i++; PT.to = setTimeout(show, 1100); } else { d.textContent = '❓'; $('#rmsin').innerHTML = `<div class="qtext">Sırasıyla yaz:</div><div class="rmstyped" id="rmst">${'＿'.repeat(len)}</div><div class="numpad">${[1, 2, 3, 4, 5, 6, 7, 8, 9].map(n => `<button class="btn soft" data-a="ptdig" data-v="${n}">${n}</button>`).join('')}<button class="btn soft" data-a="ptdig" data-v="del">⌫</button></div>`; } };
+    PT.to = setTimeout(show, 600);
+  } else if (k === 'vlr') {
+    const n = 3 + lvl + rand(0, 1), dirs = [[0, -1], [1, 0], [0, 1], [-1, 0]]; let d = 0, x = 0, y = 0; const pts = [[0, 0]], turns = [];
+    for (let i = 0; i < n + 1; i++) { const L = rand(2, 3); x += dirs[d][0] * L; y += dirs[d][1] * L; pts.push([x, y]); if (i < n) { const t = pick(['R', 'L']); turns.push(t); d = (d + (t === 'R' ? 1 : 3)) % 4; } }
+    const xs = pts.map(p => p[0]), ys = pts.map(p => p[1]), mx = Math.min(...xs), my = Math.min(...ys), W = Math.max(...xs) - mx || 1, H = Math.max(...ys) - my || 1, sc = Math.min(300 / W, 220 / H, 45);
+    const P = pts.map(([px, py]) => [30 + (px - mx) * sc, 30 + (py - my) * sc]); const ask = pick(['R', 'L']); const ans = turns.filter(t => t === ask).length; PT.ans = String(ans);
+    const svg = `<svg viewBox="0 0 ${60 + W * sc} ${60 + H * sc}" class="vlrsvg"><polyline points="${P.map(p => p.join(',')).join(' ')}" fill="none" stroke="#4F8EF7" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"/><circle cx="${P[0][0]}" cy="${P[0][1]}" r="9" fill="#3CB371"/><text x="${P[0][0]}" y="${P[0][1] + 4}" font-size="10" text-anchor="middle" fill="#fff">B</text><text x="${P[P.length - 1][0]}" y="${P[P.length - 1][1] + 6}" font-size="20" text-anchor="middle">🏁</text></svg>`;
+    ptShell(`<div class="ptbarw"><i id="ptbar"></i></div><div class="qtext">Uçak <b style="color:#3CB371">B</b>'den 🏁'e uçtu. Uçağın gözünden bak: kaç kez <b>${ask === 'R' ? 'SAĞA ➡️' : 'SOLA ⬅️'}</b> döndü?</div>${svg}${opts(ans, [0, 1, 2, 3, 4, 5].filter(v => Math.abs(v - ans) <= 2))}<div id="ptfb"></div>`, sub);
+    ptTimer(20, () => ptAnswer(false, `Süre doldu! Cevap ${ans}`));
+  } else if (k === 'owt') {
+    const cols = [['Kırmızı', '#E53935'], ['Mavi', '#1E88E5'], ['Yeşil', '#43A047'], ['Turuncu', '#FB8C00']].slice(0, 3 + (lvl > 0 ? 1 : 0)); const vals = cols.map(() => rand(1, 8)); const qi = rand(0, cols.length - 1); PT.ans = String(vals[qi]);
+    const dial = (c, v) => { const ang = -135 + (v - 1) * (270 / 7); return `<svg viewBox="0 0 100 100" width="110" height="110"><circle cx="50" cy="50" r="44" fill="#fff" stroke="${c}" stroke-width="6"/>${[1, 2, 3, 4, 5, 6, 7, 8].map(i => { const a = (-135 + (i - 1) * (270 / 7) - 90) * Math.PI / 180; return `<text x="${50 + 32 * Math.cos(a)}" y="${54 + 32 * Math.sin(a)}" font-size="11" text-anchor="middle" font-weight="700">${i}</text>`; }).join('')}<line x1="50" y1="50" x2="${50 + 26 * Math.cos((ang - 90) * Math.PI / 180)}" y2="${50 + 26 * Math.sin((ang - 90) * Math.PI / 180)}" stroke="${c}" stroke-width="4" stroke-linecap="round"/><circle cx="50" cy="50" r="4" fill="#333"/></svg>`; };
+    ptShell(`<div class="qtext" id="owtq">İyi bak! 👀</div><div class="owtrow" id="owtd">${cols.map((c, i) => dial(c[1], vals[i])).join('')}</div><div id="owta"></div><div id="ptfb"></div>`, sub);
+    PT.to = setTimeout(() => { if (!$('#owtd')) return; $('#owtd').innerHTML = cols.map(c => `<svg viewBox="0 0 100 100" width="110" height="110"><circle cx="50" cy="50" r="44" fill="#eee" stroke="${c[1]}" stroke-width="6"/><text x="50" y="58" font-size="26" text-anchor="middle">?</text></svg>`).join(''); $('#owtq').innerHTML = `<b style="color:${cols[qi][1]}">${cols[qi][0]}</b> gösterge kaçı gösteriyordu?`; $('#owta').innerHTML = `<div class="ptbarw"><i id="ptbar"></i></div>` + opts(vals[qi], [1, 2, 3, 4, 5, 6, 7, 8].filter(v => v !== vals[qi]).sort(() => Math.random() - .5).slice(0, 3)); ptTimer(10, () => ptAnswer(false, `Süre doldu! Cevap ${vals[qi]}`)); }, 3000 - lvl * 500);
+  } else if (k === 'rot') {
+    const steps = Array.from({ length: 2 + lvl }, () => pick(['sağa', 'sola', 'geri'].slice(0, lvl ? 3 : 2))); let d = 0; steps.forEach(s => { d = (d + (s === 'sağa' ? 1 : s === 'sola' ? 3 : 2)) % 4; });
+    const D = [['⬆️', 'yukarı'], ['➡️', 'sağa'], ['⬇️', 'aşağı'], ['⬅️', 'sola']]; PT.ans = D[d][0];
+    ptShell(`<div class="qemo" id="rotp">✈️⬆️</div><div class="qtext" id="rots">Uçak yukarı bakıyor. Dinle!</div><div id="rota"></div><div id="ptfb"></div>`, sub);
+    let i = 0; const nx = () => { if (!$('#rots') || VIEW !== 'pilot') return; if (i < steps.length) { const t = steps[i] === 'geri' ? 'Geri dön!' : steps[i][0].toUpperCase() + steps[i].slice(1) + ' dön!'; $('#rots').textContent = t; speak(t); i++; PT.to = setTimeout(nx, 1700); } else { $('#rots').textContent = 'Şimdi uçak nereye bakıyor?'; $('#rotp').textContent = '✈️❓'; $('#rota').innerHTML = `<div class="ptbarw"><i id="ptbar"></i></div><div class="opts">${D.map(x => `<button class="opt" data-a="ptpick" data-v="${x[0]}">${x[0]} ${x[1]}</button>`).join('')}</div>`; ptTimer(8, () => ptAnswer(false, `Süre doldu! Cevap ${D[d][0]}`)); } };
+    PT.to = setTimeout(nx, 1500);
+  }
+}
+function ptTestEnd() {
+  const k = PT.tests[PT.ti][0], sc = Math.round(PT.ok / PT_N * 100); PT.scores[k] = sc; S.pilot = S.pilot || {}; S.pilot.t = S.pilot.t || {}; S.pilot.t[k] = Math.max(S.pilot.t[k] || 0, sc); save();
+  PT.ti++; if (PT.ti < PT.tests.length) { ptShell(`<div class="qemo">${sc >= 70 ? '✅' : '💪'}</div><div class="qtext">${PT.tests[PT.ti - 1][2]}: <b>${sc} puan</b></div><div class="row center"><button class="btn primary" data-a="ptnext">Sıradaki test: ${PT.tests[PT.ti][1]} ${PT.tests[PT.ti][2]} ▶</button></div>`); return; }
+  const vals = Object.values(PT.scores), tot = Math.round(vals.reduce((a, b) => a + b, 0) / vals.length); VIEW = 'end';
+  if (!PT.only) { S.pilot.b1 = Math.max(S.pilot.b1 || 0, tot); S.pilot.n1 = (S.pilot.n1 || 0) + 1; }
+  addStar(true, Math.max(1, Math.round(tot / 25))); save(); if (tot >= 70) { confetti(); sfx('win'); }
+  app.innerHTML = `<div class="endcard center"><div class="bigemo">${tot >= 70 ? '🛫' : '🎓'}</div><h2>${PT.only ? PT.tests[0][2] : 'DLR-1'} sonucu: ${tot} puan</h2>
+  <div class="ptres">${Object.entries(PT.scores).map(([k, v]) => { const t = PT_TESTS.find(x => x[0] === k); return `<div><span>${t[1]} ${t[2]}</span><b>${v}</b></div>`; }).join('')}</div>
+  <p>${PT.only ? '' : tot >= 70 ? 'Tebrikler! DLR-1\'i geçtin, artık <b>Yardımcı Pilot</b>sun. Simülatör (DLR-2) açıldı! 🕹️' : '70 puanla geçilir. Biraz daha çalışınca olacak! 💪'}</p>
+  <div class="row center"><button class="btn primary" data-a="pilot">Akademiye dön ✈️</button><button class="btn soft" data-a="home">Ana sayfa 🏠</button></div></div>`;
+}
+/* DLR-2: uçuş simülatörü (takip + kırmızı ışık + işlem kontrolü) */
+let SIM = null;
+function pilotStart2() {
+  VIEW = 'sim'; app.classList.add('wide'); stopSpeak();
+  app.innerHTML = `<div class="rtop"><button class="btn soft sm" data-a="pilot">← Akademi</button><div class="rtitle">🕹️ DLR-2 Simülatör</div><div class="pill" id="simt">60 sn</div></div>
+  <div class="simwrap"><canvas id="simc" width="960" height="520"></canvas><div class="simhelp">⬅️⬆️➡️⬇️ ile uçağı <b>halkanın içinde</b> tut · 🔴 kırmızı ışık yanınca <b>Boşluk</b> · İşlem çıkınca doğruysa <b>D</b>, yanlışsa <b>Y</b> <button class="btn primary sm" id="simgo">Başla ▶</button></div></div>`;
+  $('#simgo').onclick = () => { $('#simgo').remove(); simRun(); };
+}
+function simRun() {
+  const c = $('#simc'), g = c.getContext('2d'), W = c.width, H = c.height;
+  SIM = { x: W / 2, y: H / 2 + H * .28, vx: 0, vy: 0, keys: {}, t0: performance.now(), inT: 0, tot: 0, light: null, nextL: 3000, lHit: 0, lN: 0, math: null, nextM: 7000, mHit: 0, mN: 0, msg: '', msgT: 0 };
+  const kd = e => { if (VIEW !== 'sim') return; const k = e.key.toLowerCase(); if (['arrowup', 'arrowdown', 'arrowleft', 'arrowright', ' '].includes(k)) e.preventDefault(); SIM.keys[k] = true;
+    if (k === ' ' && SIM.light) { if (SIM.light.red) { SIM.lHit++; SIM.msg = '✅ Kırmızıyı yakaladın!'; } else SIM.msg = '❌ Yeşilde basma!'; SIM.light.done = true; SIM.msgT = 1200; }
+    if ((k === 'd' || k === 'y') && SIM.math && !SIM.math.done) { const ok = (k === 'd') === SIM.math.ok; if (ok) SIM.mHit++; SIM.msg = ok ? '✅ İşlem kontrolü doğru' : '❌ İşlem kontrolü yanlış'; SIM.msgT = 1200; SIM.math.done = true; } };
+  const ku = e => { SIM.keys[e.key.toLowerCase()] = false; };
+  addEventListener('keydown', kd); addEventListener('keyup', ku);
+  let last = performance.now();
+  const loop = now => {
+    if (VIEW !== 'sim') { removeEventListener('keydown', kd); removeEventListener('keyup', ku); return; }
+    const dt = Math.min(50, now - last); last = now; const el = now - SIM.t0, left = Math.max(0, 60000 - el);
+    // hedef halka
+    const tx = W / 2 + Math.sin(el / 2300) * W * .32 + Math.sin(el / 870) * 40, ty = H / 2 + Math.cos(el / 3100) * H * .28 + Math.sin(el / 1300) * 25, R = 48;
+    // rüzgâr + kontrol
+    const ax = (SIM.keys.arrowright ? 1 : 0) - (SIM.keys.arrowleft ? 1 : 0), ay = (SIM.keys.arrowdown ? 1 : 0) - (SIM.keys.arrowup ? 1 : 0);
+    SIM.vx = (SIM.vx + ax * .045 * dt + Math.sin(el / 1700) * .006 * dt) * .93; SIM.vy = (SIM.vy + ay * .045 * dt + Math.cos(el / 2100) * .006 * dt) * .93;
+    SIM.x = Math.max(15, Math.min(W - 15, SIM.x + SIM.vx * dt * .03)); SIM.y = Math.max(15, Math.min(H - 49, SIM.y + SIM.vy * dt * .03));
+    const inside = Math.hypot(SIM.x - tx, SIM.y - ty) < R; SIM.tot += dt; if (inside) SIM.inT += dt;
+    // ışık
+    SIM.nextL -= dt; if (!SIM.light && SIM.nextL <= 0) { SIM.light = { red: Math.random() < .6, t: 1600 }; if (SIM.light.red) SIM.lN++; }
+    if (SIM.light) { SIM.light.t -= dt; if (SIM.light.t <= 0) { if (SIM.light.red && !SIM.light.done) { SIM.msg = '⏰ Kırmızıyı kaçırdın'; SIM.msgT = 1000; } if (!SIM.light.red && !SIM.light.done) SIM.lHit += 0; SIM.light = null; SIM.nextL = 2500 + Math.random() * 3000; } }
+    // işlem
+    SIM.nextM -= dt; if (!SIM.math && SIM.nextM <= 0) { const a = rand(2, 15), b = rand(2, 15), ok = Math.random() < .5, r = a + b + (ok ? 0 : pick([-2, -1, 1, 2])); SIM.math = { txt: `${a} + ${b} = ${r}`, ok, t: 4000 }; SIM.mN++; }
+    if (SIM.math) { SIM.math.t -= dt; if (SIM.math.t <= 0 || SIM.math.done && SIM.math.t < 3000) { if (!SIM.math.done) { SIM.msg = '⏰ İşlemi kontrol etmedin'; SIM.msgT = 1000; } SIM.math = null; SIM.nextM = 6000 + Math.random() * 3000; } }
+    // çizim
+    g.fillStyle = '#BFE3FF'; g.fillRect(0, 0, W, H); g.fillStyle = '#fff'; for (let i = 0; i < 6; i++) { const cx = ((i * 190 - el * .03) % (W + 200) + W + 200) % (W + 200) - 100; g.beginPath(); g.arc(cx, 60 + (i % 3) * 140, 30, 0, 7); g.arc(cx + 30, 55 + (i % 3) * 140, 38, 0, 7); g.arc(cx + 65, 62 + (i % 3) * 140, 28, 0, 7); g.fill(); }
+    g.lineWidth = 6; g.strokeStyle = inside ? '#2E7D32' : '#F4B400'; g.setLineDash([12, 8]); g.beginPath(); g.arc(tx, ty, R, 0, 7); g.stroke(); g.setLineDash([]);
+    g.font = '40px serif'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.save(); g.translate(SIM.x, SIM.y); g.rotate(Math.PI / 4 + SIM.vx * .15); g.fillText('✈️', 0, 0); g.restore();
+    g.beginPath(); g.arc(W - 50, 50, 26, 0, 7); g.fillStyle = SIM.light ? (SIM.light.red ? '#E53935' : '#43A047') : '#666'; g.fill(); g.strokeStyle = '#333'; g.lineWidth = 3; g.stroke();
+    if (SIM.math) { g.fillStyle = 'rgba(255,255,255,.92)'; g.fillRect(20, 20, 250, 60); g.fillStyle = '#2B2550'; g.font = 'bold 26px sans-serif'; g.textAlign = 'left'; g.fillText(SIM.math.txt + ' ?', 34, 50); g.font = '13px sans-serif'; g.fillText('Doğru: D   Yanlış: Y', 34, 72); }
+    g.fillStyle = 'rgba(0,0,0,.55)'; g.fillRect(0, H - 34, W, 34); g.fillStyle = '#fff'; g.font = 'bold 16px sans-serif'; g.textAlign = 'left'; g.fillText(`Halkada: %${Math.round(SIM.inT / SIM.tot * 100) || 0}   Işık: ${SIM.lHit}/${SIM.lN}   İşlem: ${SIM.mHit}/${SIM.mN}`, 14, H - 12);
+    if (SIM.msgT > 0) { SIM.msgT -= dt; g.textAlign = 'center'; g.font = 'bold 22px sans-serif'; g.fillStyle = '#2B2550'; g.fillText(SIM.msg, W / 2, 40); }
+    const st = $('#simt'); if (st) st.textContent = Math.ceil(left / 1000) + ' sn';
+    if (left <= 0) { removeEventListener('keydown', kd); removeEventListener('keyup', ku); return simEnd(); }
+    requestAnimationFrame(loop);
+  };
+  requestAnimationFrame(loop);
+}
+function simEnd() {
+  const tr = SIM.inT / SIM.tot, la = SIM.lN ? SIM.lHit / SIM.lN : 1, ma = SIM.mN ? SIM.mHit / SIM.mN : 1, sc = Math.round(Math.min(1, tr * 1.25) * 60 + la * 20 + ma * 20);
+  S.pilot = S.pilot || {}; S.pilot.b2 = Math.max(S.pilot.b2 || 0, sc); S.pilot.n2 = (S.pilot.n2 || 0) + 1; addStar(true, Math.max(1, Math.round(sc / 25))); save(); VIEW = 'end'; app.classList.remove('wide'); if (sc >= 70) { confetti(); sfx('win'); }
+  app.innerHTML = `<div class="endcard center"><div class="bigemo">${sc >= 70 ? '👨‍✈️' : '🛫'}</div><h2>Simülatör puanın: ${sc}</h2><div class="ptres"><div><span>🎯 Halkada kalma</span><b>%${Math.round(tr * 100)}</b></div><div><span>🔴 Kırmızı ışık</span><b>${SIM.lHit}/${SIM.lN}</b></div><div><span>🧮 İşlem kontrolü</span><b>${SIM.mHit}/${SIM.mN}</b></div></div>
+  <p>${sc >= 70 ? 'Muhteşem! Artık <b>Kaptan Pilot</b>sun! 👨‍✈️' : '70 puanla Kaptan olursun. Uçağı halkada tutmaya odaklan!'}</p><div class="row center"><button class="btn primary" data-a="pilot2">Tekrar uç 🔁</button><button class="btn soft" data-a="pilot">Akademiye dön</button></div></div>`;
 }
 
 /* ---------- ustalık: öğrendiği kolay alıştırmaları kapat ---------- */
@@ -1194,8 +1323,8 @@ const LINKS = [
   { ad: 'Üçgen Hayat Bilgisi Fasikülleri', emo: '📗', url: 'https://fliphtml5.com/bookcase/vpszg/', not: '6 fasikül, öğrenme alanlarına göre' },
 ];
 const BOOKS = [
-  { id: 'mat1', ad: 'Matematik 1. Kitap', emo: '🔢', temalar: [['1. Tema: Nesnelerin Geometrisi (1)', 10], ['Geometrik Cisimler', 12], ['Geometrik Cisim Modelleri', 22], ['Geometrik Şekil Modelleri', 27], ['Biçimsel Özellikler', 35], ['Sıvı Miktarını Tahmin Etme', 42], ['2. Tema: Sayılar ve Nicelikler (1)', 54], ['Sayılar', 56], ['Sayıları Çözümleme', 72], ['Sayıların Sırası', 90], ['Ritmik Sayma', 103], ['Sayı ve Şekil Örüntüleri', 116], ['Nesne Sayısını Tahmin Etme', 121], ['3. Tema: İşlemlerden Cebirsel Düşünmeye', 132], ['Toplama-Çıkarma Problemleri', 134], ['Tahmin ve Zihinden İşlem', 146], ['Toplama-Çıkarma İlişkisi', 154], ['Sözlük', 160]] },
-  { id: 'mat2', ad: 'Matematik 2. Kitap', emo: '🔢', temalar: [['3. Tema (devam): Çarpma ve Bölme', 12], ['Çarpma-Bölme Tahmin ve Zihinden', 32], ['Dört İşlemde Eşitlik', 42], ['4. Tema: Sayılar ve Nicelikler (2)', 54], ['Kesirler', 56], ['Paralarımız', 66], ['Zaman Ölçme', 80], ['Uzunluk ve Kütle Ölçme', 100], ['Uzunluk ve Kütlede Tahmin', 122], ['5. Tema: Nesnelerin Geometrisi (2)', 136], ['Yer ve Yön Bulma', 138], ['Simetri', 148], ['6. Tema: Veriye Dayalı Araştırma', 160], ['Veriyle Çalışma', 162], ['Sözlük', 188]] },
+  { id: 'mat1', ofs: 1, ad: 'Matematik 1. Kitap', emo: '🔢', temalar: [['1. Tema: Nesnelerin Geometrisi (1)', 10], ['Geometrik Cisimler', 12], ['Geometrik Cisim Modelleri', 22], ['Geometrik Şekil Modelleri', 27], ['Biçimsel Özellikler', 35], ['Sıvı Miktarını Tahmin Etme', 42], ['2. Tema: Sayılar ve Nicelikler (1)', 54], ['Sayılar', 56], ['Sayıları Çözümleme', 72], ['Sayıların Sırası', 90], ['Ritmik Sayma', 103], ['Sayı ve Şekil Örüntüleri', 116], ['Nesne Sayısını Tahmin Etme', 121], ['3. Tema: İşlemlerden Cebirsel Düşünmeye', 132], ['Toplama-Çıkarma Problemleri', 134], ['Tahmin ve Zihinden İşlem', 146], ['Toplama-Çıkarma İlişkisi', 154], ['Sözlük', 160]] },
+  { id: 'mat2', ofs: 1, ad: 'Matematik 2. Kitap', emo: '🔢', temalar: [['3. Tema (devam): Çarpma ve Bölme', 12], ['Çarpma-Bölme Tahmin ve Zihinden', 32], ['Dört İşlemde Eşitlik', 42], ['4. Tema: Sayılar ve Nicelikler (2)', 54], ['Kesirler', 56], ['Paralarımız', 66], ['Zaman Ölçme', 80], ['Uzunluk ve Kütle Ölçme', 100], ['Uzunluk ve Kütlede Tahmin', 122], ['5. Tema: Nesnelerin Geometrisi (2)', 136], ['Yer ve Yön Bulma', 138], ['Simetri', 148], ['6. Tema: Veriye Dayalı Araştırma', 160], ['Veriyle Çalışma', 162], ['Sözlük', 188]] },
   { id: 'ing', ad: 'İngilizce Ders Kitabı', emo: '🇬🇧', temalar: [['Theme 1: School Life', 11], ['Theme 2: Classroom Life', 27], ['Theme 3: Personal Life', 43], ['Theme 4: Family Life', 59], ['Theme 5: Homes & Houses', 75], ['Theme 6: Life in the City', 91], ['Glossary', 129]] },
   { id: 'ingck', ad: 'İngilizce Çalışma Kitabı', emo: '🇬🇧', temalar: [
     ['Theme 1: School Life', 9], ['Okuldaki yerler ve kişiler (classroom, canteen, teacher)', 10], ['What is this? / Who is he? / Where is…? soruları', 12], ['Selamlaşma: Hello, How are you?, Goodbye', 13], ['Haftanın günleri', 14], ['Okuma: My School', 15], ['Bulmaca: okuldaki kişi ve yerler', 16],
@@ -1214,7 +1343,7 @@ const BOOKS = [
   { ek: true, id: 'x1', ad: 'Diğer kitap 1 (ödev/yardımcı)', emo: '📙', temalar: [] },
   { ek: true, id: 'x2', ad: 'Diğer kitap 2', emo: '📙', temalar: [] },
   { ek: true, id: 'x3', ad: 'Diğer kitap 3', emo: '📙', temalar: [] },
-  { id: 'hb2', ad: 'Hayat Bilgisi 2. Kitap', emo: '🏡', temalar: [['4. Öğrenme Alanı: Yaşadığım Yer ve Ülkem', 10], ['Belirli Gün ve Haftalar', 12], ['Tarihin ve Doğanın İzinde', 14], ['Yönetim Birimlerini Tanıyorum', 20], ['Mustafa Kemal Atatürk Nasıl Bir Öğrenciydi?', 26], ['Bayramlarımızla Gururluyuz', 32], ['Bayram Gelince', 38], ['Tekrar Zamanı (4. alan)', 44], ['5. Öğrenme Alanı: Doğa ve Çevre', 48], ['Hava Olayları ve Mevsimler', 52], ['Doğadan Yararlanarak Yön Bulma', 60], ['Afetlere Karşı Alınacak Önlemler', 68], ['Tasarruf Bizim İşimiz', 76], ['Tekrar Zamanı (5. alan)', 84], ['6. Öğrenme Alanı: Bilim, Teknoloji ve Sanat', 88], ['Bilim İnsanları İyi ki Var', 92], ['Eskisi, Yenisi', 100], ['Hayat Sanatla Güzel', 106], ['Tekrar Zamanı (6. alan)', 114], ['Sözlük', 125]] },
+  { id: 'hb2', ofs: 1, ad: 'Hayat Bilgisi 2. Kitap', emo: '🏡', temalar: [['4. Öğrenme Alanı: Yaşadığım Yer ve Ülkem', 10], ['Belirli Gün ve Haftalar', 12], ['Tarihin ve Doğanın İzinde', 14], ['Yönetim Birimlerini Tanıyorum', 20], ['Mustafa Kemal Atatürk Nasıl Bir Öğrenciydi?', 26], ['Bayramlarımızla Gururluyuz', 32], ['Bayram Gelince', 38], ['Tekrar Zamanı (4. alan)', 44], ['5. Öğrenme Alanı: Doğa ve Çevre', 48], ['Hava Olayları ve Mevsimler', 52], ['Doğadan Yararlanarak Yön Bulma', 60], ['Afetlere Karşı Alınacak Önlemler', 68], ['Tasarruf Bizim İşimiz', 76], ['Tekrar Zamanı (5. alan)', 84], ['6. Öğrenme Alanı: Bilim, Teknoloji ve Sanat', 88], ['Bilim İnsanları İyi ki Var', 92], ['Eskisi, Yenisi', 100], ['Hayat Sanatla Güzel', 106], ['Tekrar Zamanı (6. alan)', 114], ['Sözlük', 125]] },
 ];
 function bookName(b) { return (S.bookNames || {})[b.id] || b.ad; }
 function bookDB() { return new Promise((res, rej) => { const q = indexedDB.open('odev-kitap', 1); q.onupgradeneeded = () => q.result.createObjectStore('pdf'); q.onsuccess = () => res(q.result); q.onerror = () => rej(q.error); }); }
@@ -1242,7 +1371,7 @@ async function booksHome() { refreshHaveBooks();
 async function openBook(id, page, fromQ) {
   const meta = BOOKS.find(b => b.id === id); VIEW = 'book'; app.classList.add('wide'); stopSpeak();
   app.innerHTML = `<div class="rtop">${fromQ ? '<button class="btn primary sm" data-a="backq">← Soruya dön</button>' : '<button class="btn soft sm" data-a="books">← Kitaplar</button>'}<div class="rtitle">${meta.emo} ${esc(bookName(meta))}</div><span class="muted" id="bkstat">Yükleniyor…</span></div>
-   <div class="bookwrap"><div class="booknav"><select id="bkjump"><option value="">Konuya git…</option>${meta.temalar.map(([n, p]) => `<option value="${p}">${esc(n)} (s.${p})</option>`).join('')}</select>
+   <div class="bookwrap"><div class="booknav"><select id="bkjump"><option value="">Konuya git…</option>${meta.temalar.map(([n, p]) => `<option value="${p + (meta.ofs || 0)}">${esc(n)} (s.${p})</option>`).join('')}</select>
      <div class="bkpg"><button class="btn soft sm" id="bkprev">◀</button><input id="bkno" type="number" min="1" value="1"> / <span id="bktot">?</span><button class="btn soft sm" id="bknext">▶</button></div>
      <button class="btn green sm" id="bkask">🦉 Bu sayfayı Bilge'ye sor</button><button class="btn soft sm" id="bkzoom">🔍</button></div>
    <div class="bookpage"><canvas id="bkc"></canvas></div></div>`;
@@ -2388,6 +2517,8 @@ const A = {
   buyacc: v => { const a = ACCS.find(x => x[0] === v); if (!a || (S.wallet || 0) < a[3]) return; S.wallet -= a[3]; S.avatar.owned = [...(S.avatar.owned || []), v]; S.avatar.wear = v; save(); updateHeader(); sfx('win'); toast(a[1] + ' ' + a[2] + ' Bilge\'ye çok yakıştı!'); badgesView(); },
   wear: v => { S.avatar.wear = v; save(); updateHeader(); badgesView(); },
   books: () => booksHome(), profile: () => profilePicker(), mini: v => miniPlay(v), openbook: v => openBook(v),
+  pilot: () => pilotHome(), pilot1: () => payGame(() => pilotStart1(), 'Pilot Akademisi'), pilot2: () => payGame(pilotStart2, 'Uçuş Simülatörü'), pilotone: v => pilotStart1(v), pilotlock: () => toast('🔒 Simülatör için önce DLR-1 testlerinden 70 puan almalısın!'),
+  ptgo: () => ptQ(), ptnext: () => ptIntro(), ptpick: v => ptAnswer(v === PT.ans, 'Doğrusu ' + PT.ans), ptdig: v => { if (PT.answered) return; PT.typed = v === 'del' ? PT.typed.slice(0, -1) : PT.typed + v; const L = PT.ans.length; $('#rmst').textContent = PT.typed.padEnd(L, '＿'); if (PT.typed.length >= L) ptAnswer(PT.typed === PT.ans, 'Doğrusu ' + PT.ans.split('').join(' ')); },
   balloon: () => balloonStart(), bgo: () => payGame(balloonGo, 'Balon Avı'), car: () => payGame(carStart, 'Hece Yarışı'), cgo: () => payGame(carGo, 'Hece Yarışı'),
   okufilt: v => okumaHome(v),
   usagereset: () => { S.usage = null; save(); const y = scrollY; settings(); scrollTo(0, y); },
@@ -2421,7 +2552,7 @@ const A = {
     R.savedHTML = app.innerHTML; stopSpeak();
     chat = []; chatImg = null; pending = null; help(t);
   },
-  bookref: v => { const [id, pg] = v.split('|'); R.savedHTML = app.innerHTML; openBook(id, +pg, true); },
+  bookref: v => { const [id, pg] = v.split('|'); R.savedHTML = app.innerHTML; const bm = BOOKS.find(b => b.id === id); openBook(id, +pg + ((bm && bm.ofs) || 0), true); },
   backq: () => { if (!R || !R.savedHTML) return home(); stopSpeak(); VIEW = 'round'; app.classList.remove('wide'); app.innerHTML = R.savedHTML; R.savedHTML = null; },
   setname: () => { const v = ($('#nm') || {}).value; if (v && v.trim()) { S.name = v.trim(); save(); home(); } },
   clrm: () => { S.mistakes = []; save(); settings(); },
