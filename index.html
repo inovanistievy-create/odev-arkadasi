@@ -125,6 +125,7 @@ th{color:var(--muted);font-size:15px}
 .unitbar{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 18px}
 .kfield{display:grid;grid-template-columns:130px 1fr 2fr;gap:8px;align-items:center;margin:8px 0}.kfield select{max-width:100%}.kmatch{grid-column:2/4;font-size:13px;color:#2E7D32}@media(max-width:700px){.kfield{grid-template-columns:1fr}.kmatch{grid-column:1}}
 .mrow{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:6px 0}.card.mastered{opacity:.6;filter:saturate(.5)}.card.mastered:hover{opacity:.85}.mchip.mastered{opacity:.55}
+.seq{display:inline-flex;flex-direction:column;gap:8px;align-items:flex-start;margin:6px auto}.seqrow{display:flex;align-items:center;gap:8px;font-size:30px;font-weight:800}.sop{min-width:22px;text-align:center}.seqask{font-size:15px;color:#666;margin-top:6px}
 .unitchip{border:2px solid var(--line);background:#fff;border-radius:99px;padding:8px 14px;font-weight:700;font-size:15px;cursor:pointer}.unitchip:hover{background:#FFF1C9}
 .onb{background:#fff;border-radius:28px;padding:26px;margin-bottom:22px;display:flex;gap:18px;align-items:center;flex-wrap:wrap;box-shadow:0 6px 0 rgba(43,42,76,.07)}
 .onb input{font:inherit;font-size:22px;font-weight:800;border:3px solid var(--line);border-radius:16px;padding:12px 16px;min-width:220px}
@@ -285,7 +286,7 @@ const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { c
 let VIEW = 'home';
 
 /* ---------- kayıt ---------- */
-const APP_VERSION = '20261108.0744';
+const APP_VERSION = '20261108.0746';
 const BASEKEY = 'odev-arkadasi-v1', PKEY = 'odev-arkadasi-profiles', SHKEY = 'odev-arkadasi-shared';
 const SHARED = ['apiKey', 'model', 'voice', 'rate', 'sound', 'autoRead', 'links', 'bookNames', 'unitAutoDone'];
 function lsGet(k) { try { return JSON.parse(localStorage.getItem(k)); } catch (e) { return null; } }
@@ -766,7 +767,7 @@ const MENUS = {
   fas: { t: '📙 Fasikül Alıştırmaları', items: [['fas:alt','✍️','Alt Alta İşlem','Toplama, üç sayı toplama, çıkarma; kutulara yaz','blue'],['fas:esle','🔗','İşlem–Sonuç Eşleştir','İşlemi yap, sonucuyla eşleştir','purple'],['fas:buyuk','⚖️','Hangisi Büyük?','Toplamı/farkı en büyük ya da en küçük olanı bul','orange'],['fas:ayir','🧱','Ayırarak Çıkarma','Onluk ve birliklerine ayırarak çıkar','green'],['fas:problem','🧩','Problemi Anlayalım, Çözelim','Oku → Planla → Uygula → Kontrol et','pink'],['fas:hikaye','📖','Oku – Anla – Bağlam Kur','Kısa hikâye + 6 soru','yellow'],['fas:tahmin','🎯','Sonucu Tahmin Et','Yakın onluğa yuvarla, tahmin ile gerçeği karşılaştır','blue'],['fas:beceri','🧠','Beceri Temelli Sorular','Sihirli kare, A−B=C işlem zinciri','purple'],['fas:test','📝','Ölçme ve İzleme','A/B/C şıklı 10 soruluk mini test','orange']] },
   math: { t: 'Matematik 🔢', sections: [
     ['Alıştırma', [['bank:matematik:0','📖','Kitap Soruları','Ders kitabındaki biçimler; seviyen arttıkça zorlaşır','purple'],['menu:fas','📙','Fasikül Alıştırmaları','Alt alta işlem, eşleştirme, adım adım problem, mini test','yellow'],['menu:ops','⚡','Hızlı İşlem','Toplama, çıkarma, çarpma, bölme, eksik sayı, eşitlik','blue']]],
-    ['Atölyeler', [['math:atolye-cikar','🧮','Çıkarma Atölyesi','Blokları çıkar, onluğu boz','pink'],['math:atolye-carp','🍪','Çarpma Atölyesi','Tabakları doldur, ritmik say','yellow'],['math:saat','⏰','Saat Atölyesi','Akrep ve yelkovanı çevir','pink'],['math:grafik','📊','Grafik Atölyesi','Çetele → tablo → grafik','green']]],
+    ['Atölyeler', [['math:atolye-cikar','🧮','Çıkarma Atölyesi','Blokları çıkar, onluğu boz','pink'],['math:atolye-carp','🍪','Çarpma Atölyesi','Tabakları doldur, ritmik say','yellow'],['math:saat','⏰','Saat Atölyesi','Akrep ve yelkovanı çevir','pink'],['math:sekil','🔺','Şekillerle İşlem','Üçgen, kare, daire bulmacası: topla, çıkar, böl','orange'],['math:grafik','📊','Grafik Atölyesi','Çetele → tablo → grafik','green']]],
     ['Konular', [['math:sayilar','🧱','Sayılar','Onluk-birlik, deste-düzine, ritmik sayma','green'],['math:geo','🧊','Geometri','Cisimler, şekiller','purple'],['math:olcme','📏','Ölçme & Kesirler','Yarım-çeyrek, para, zaman, uzunluk, kütle','blue'],['math:veri','🧭','Veri, Yön & Simetri','Tablo, grafik, sağ-sol, simetri','orange']]],
   ] },
   ops: { t: '⚡ Hızlı İşlem', back: 'math', items: [['math:topla','➕','Toplama',"100'e kadar, eldeli",'blue'],['math:cikar','➖','Çıkarma','Onluk bozarak','blue'],['math:carp','✖️','Çarpma','Kere kere','purple'],['math:bol','➗','Bölme','Eşit paylaştırma','pink'],['math:eksik','🔍','Eksik Sayı','▢ yerine ne gelir?','green'],['math:esitlik','⚖️','Eşitlik','İki taraf eşit olsun','yellow'],['math:karisik','🎲','Karışık','Hepsinden biraz','orange']] },
@@ -790,8 +791,35 @@ function menu(v) {
   ${secs.map(([h, items]) => h.startsWith('~') ? `<h3 class="msec">${esc(h.slice(1))}</h3><div class="mchips">${items.map(chip).join('')}</div>` : `${h ? `<h3 class="msec">${esc(h)}</h3>` : ''}<div class="grid ${items.length === 4 ? 'four' : items.length > 2 ? 'three' : ''}">${items.map(x => card(x, items.length === 4)).join('')}</div>`).join('')}`;
 }
 
+/* ---------- Şekillerle işlem (geometrik şekil bulmacaları) ---------- */
+const SHP = { ucgen: ['üçgen', '<polygon points="20,3 37,35 3,35" fill="#F4B400" stroke="#B07F00" stroke-width="2"/>'], kare: ['kare', '<rect x="4" y="4" width="30" height="30" rx="3" fill="#4F8EF7" stroke="#2457B5" stroke-width="2"/>'], daire: ['daire', '<circle cx="19" cy="19" r="16" fill="#3CB371" stroke="#1F7A47" stroke-width="2"/>'], dikdortgen: ['dikdörtgen', '<rect x="1" y="9" width="38" height="20" rx="3" fill="#E85D9E" stroke="#A3306A" stroke-width="2"/>'] };
+const shp = k => `<svg class="shp" viewBox="0 0 40 38" width="40" height="38" aria-label="${SHP[k][0]}">${SHP[k][1]}</svg>`;
+function sekilItem(z) {
+  const [A, B, C] = shuffle(Object.keys(SHP)).slice(0, 3), nm = k => SHP[k][0];
+  const row = parts => `<div class="seqrow">${parts.map(x => SHP[x] ? shp(x) : `<span class="sop">${x}</span>`).join('')}</div>`;
+  let rows, ask, ans, explain, text, t;
+  if (z === 1) {
+    t = pick(['topla', 'cikar']); const a = rand(5, 40), b = rand(3, t === 'cikar' ? a - 1 : 40);
+    rows = [row([A, '=', a]), row([B, '=', b]), row([A, t === 'topla' ? '+' : '−', B, '=', '?'])]; ans = t === 'topla' ? a + b : a - b;
+    text = `${nm(A)} ${a}, ${nm(B)} ${b}. ${nm(A)} ${t === 'topla' ? 'artı' : 'eksi'} ${nm(B)} kaç?`;
+    explain = `Şekillerin yerine sayılarını koy: ${a} ${t === 'topla' ? '+' : '−'} ${b} = **${ans}** ✨`;
+  } else if (z === 2) {
+    t = pick(['iki', 'uc', 'bol', 'karma']);
+    if (t === 'iki') { const a = rand(2, 20); rows = [row([A, '+', A, '=', 2 * a]), row([A, '=', '?'])]; ans = a; text = `${nm(A)} artı ${nm(A)} ${2 * a} ediyor. Bir ${nm(A)} kaç?`; explain = `İki aynı şekil ${2 * a} ediyor. ${2 * a}'yi 2 eşit parçaya böl: ${2 * a} ÷ 2 = **${a}** 🍰`; }
+    else if (t === 'uc') { const a = rand(2, 10); rows = [row([A, '+', A, '+', A, '=', 3 * a]), row([A, '=', '?'])]; ans = a; text = `Üç ${nm(A)} toplamı ${3 * a}. Bir ${nm(A)} kaç?`; explain = `Üç eşit şekil ${3 * a} ediyor: ${3 * a} ÷ 3 = **${a}**. Kontrol: ${a} + ${a} + ${a} = ${3 * a} ✅`; }
+    else if (t === 'bol') { const d = pick([2, 3, 4, 5]), q = rand(2, 10); rows = [row([A, '=', d * q]), row([A, '÷', d, '=', '?'])]; ans = q; text = `${nm(A)} ${d * q}. ${nm(A)} bölü ${d} kaç?`; explain = `${d * q} tane şeyi ${d} gruba eşit paylaştır: her gruba **${q}** düşer. Çünkü ${d} × ${q} = ${d * q} 🍪`; }
+    else { const a = rand(2, 15), b = rand(2, 30); rows = [row([A, '+', A, '=', 2 * a]), row([A, '+', B, '=', a + b]), row([B, '=', '?'])]; ans = b; text = `${nm(A)} artı ${nm(A)} ${2 * a}. ${nm(A)} artı ${nm(B)} ${a + b}. ${nm(B)} kaç?`; explain = `1) ${nm(A)}: ${2 * a} ÷ 2 = ${a}. 2) ${a} + ${nm(B)} = ${a + b} → ${nm(B)} = ${a + b} − ${a} = **${b}** 🕵️`; }
+  } else {
+    t = pick(['zincir', 'bolzincir', 'fark']);
+    if (t === 'zincir') { const a = rand(2, 12), b = a + rand(3, 20), c = a + b; rows = [row([A, '+', A, '=', 2 * a]), row([B, '−', A, '=', b - a]), row([C, '=', B, '+', A]), row([C, '=', '?'])]; ans = c; text = `Üç adımlı şekil bulmacası. ${nm(C)} kaç?`; explain = `1) ${nm(A)} = ${2 * a} ÷ 2 = ${a}. 2) ${nm(B)} − ${a} = ${b - a} → ${nm(B)} = ${b - a} + ${a} = ${b}. 3) ${nm(C)} = ${b} + ${a} = **${c}** 🏆`; }
+    else if (t === 'bolzincir') { const d = pick([2, 3, 4, 5]), q = rand(2, 9), a = d * q; rows = [row([A, '+', A, '=', 2 * a]), row([A, '÷', d, '=', B]), row([B, '=', '?'])]; ans = q; text = `${nm(A)} artı ${nm(A)} ${2 * a}. ${nm(A)} bölü ${d}, ${nm(B)} ediyor. ${nm(B)} kaç?`; explain = `1) ${nm(A)} = ${2 * a} ÷ 2 = ${a}. 2) ${a} ÷ ${d} = **${q}**, çünkü ${d} × ${q} = ${a} 🍪`; }
+    else { const a = rand(2, 9), b = rand(2 * a + 3, 50); rows = [row([A, "+", A, "+", A, '=', 3 * a]), row([B, '−', A, '=', b - a]), row([B, '−', A, '−', A, '=', '?'])]; ans = b - 2 * a; text = `Üç ${nm(A)} ${3 * a}. ${nm(B)} eksi ${nm(A)} ${b - a}. ${nm(B)} eksi iki ${nm(A)} kaç?`; explain = `1) ${nm(A)} = ${3 * a} ÷ 3 = ${a}. 2) ${nm(B)} = ${b - a} + ${a} = ${b}. 3) ${b} − ${a} − ${a} = **${ans}** 🏆`; }
+  }
+  return { kind: 'mcq', mod: 'math', zorluk: z, konu: 'Şekillerle İşlem', prompt: text, html: `<div class="seq">${rows.join('')}</div><div class="seqask">Soru işareti yerine hangi sayı gelir?</div>`, options: makeOpts(ans), answer: String(ans), explain, key: 'sk:' + text };
+}
+
 /* ---------- ustalık: öğrendiği kolay alıştırmaları kapat ---------- */
-const MASTER_NEXT = { 'tr:hece': 'tr:yazim', 'tr:yazim': 'bank:turkce:0', 'math:topla': 'math:cikar', 'math:cikar': 'math:carp', 'math:carp': 'math:bol', 'math:bol': 'math:esitlik', 'math:eksik': 'math:esitlik', 'math:esitlik': 'fas:problem', 'math:sayilar': 'math:eksik', 'math:geo': 'bank:matematik:0', 'math:olcme': 'bank:matematik:0', 'math:veri': 'bank:matematik:0', 'math:atolye-cikar': 'math:cikar', 'math:atolye-carp': 'math:carp', 'fas:alt': 'fas:ayir', 'fas:ayir': 'fas:problem', 'fas:esle': 'fas:buyuk', 'fas:buyuk': 'fas:problem', 'fas:tahmin': 'fas:problem', 'fas:problem': 'fas:hikaye', 'fas:hikaye': 'fas:beceri', 'fas:beceri': 'fas:test', 'ing:0': 'bank:ingilizce:0', 'bilgi:hayat': 'bank:hayat_bilgisi:0' };
+const MASTER_NEXT = { 'tr:hece': 'tr:yazim', 'tr:yazim': 'bank:turkce:0', 'math:topla': 'math:cikar', 'math:cikar': 'math:carp', 'math:carp': 'math:bol', 'math:bol': 'math:esitlik', 'math:eksik': 'math:esitlik', 'math:esitlik': 'fas:problem', 'math:sayilar': 'math:eksik', 'math:geo': 'math:sekil', 'math:sekil': 'bank:matematik:0', 'math:olcme': 'bank:matematik:0', 'math:veri': 'bank:matematik:0', 'math:atolye-cikar': 'math:cikar', 'math:atolye-carp': 'math:carp', 'fas:alt': 'fas:ayir', 'fas:ayir': 'fas:problem', 'fas:esle': 'fas:buyuk', 'fas:buyuk': 'fas:problem', 'fas:tahmin': 'fas:problem', 'fas:problem': 'fas:hikaye', 'fas:hikaye': 'fas:beceri', 'fas:beceri': 'fas:test', 'ing:0': 'bank:ingilizce:0', 'bilgi:hayat': 'bank:hayat_bilgisi:0' };
 const MASTER_OK = .85;
 function isClosed(k) { return S.autoClose !== false && !!(((S.mastery || {})[k] || {}).closed); }
 function nextOpen(k) { let g = 0; while (isClosed(k) && g++ < 12) k = MASTER_NEXT[k] || (/^ing:/.test(k) ? 'bank:ingilizce:0' : /^bilgi:/.test(k) ? 'bank:hayat_bilgisi:0' : /^tr:/.test(k) ? 'bank:turkce:0' : 'bank:matematik:0'); return k; }
@@ -825,6 +853,7 @@ function play(v) {
   if (v === 'math:grafik') return grafPlay();
   if (v === 'math:olcme') return startRound('Ölçme & Kesirler', shuffle(OLCME).slice(0, 10).map(g => Object.assign(bilgiItem(g), { mod: 'math', key: 'o:' + g[0] })), false, v);
   if (v === 'math:veri') return startRound('Veri & Yön', shuffle(VERI).slice(0, 10).map(g => Object.assign(bilgiItem(g), { mod: 'math', key: 'v:' + g[0] })), false, v);
+  if (v === 'math:sekil') return startRound('Şekillerle İşlem', [1, 1, 1, 2, 2, 2, 3, 3].map(sekilItem), false, v);
   if (v === 'math:geo') return startRound('Geometri', shuffle(GEO).slice(0, 10).map(g => Object.assign(bilgiItem(g), { mod: 'math', key: 'g:' + g[0] })), false, v);
   if (m === 'math') { const seen = new Set(); items = []; while (items.length < 10) { const it = mathItem(mode); if (!seen.has(it.key)) { seen.add(it.key); items.push(it); } } title = menuTitle(v); }
   else if (v === 'tr:hece') { items = shuffle(WORDS).slice(0, 8).map(heceItem); title = 'Hece Sırala'; }
@@ -858,7 +887,7 @@ function renderQ() {
   } else {
     app.innerHTML = roundTop() + `<div class="qcard" style="position:relative"><div class="zbadge" title="Bu soru kaç yıldız getirir">${R.review ? '⭐' : '⭐'.repeat(ZPTS(it.zorluk || it.pts || 1))}</div>
       ${it.emoji ? `<div class="qemo">${it.emoji}</div>` : ''}
-      <div class="qtext ${it.mod === 'math' && it.prompt.length < 22 ? 'big' : ''}">${md(it.prompt)}${it.listen ? `<button class="btn primary sm" data-a="speaken" data-t="${esc(it.listen)}" style="margin-left:10px">🎧 Dinle</button>` : it.en ? `<button class="iconbtn sm" data-a="speaken" data-t="${esc(it.en)}" title="İngilizce dinle">🔊</button>` : `<button class="iconbtn sm" data-a="speak" data-t="${esc(it.prompt)}" title="Sesli oku">🔊</button>`}</div>
+      <div class="qtext ${it.mod === 'math' && it.prompt.length < 22 ? 'big' : ''}">${it.html || md(it.prompt)}${it.listen ? `<button class="btn primary sm" data-a="speaken" data-t="${esc(it.listen)}" style="margin-left:10px">🎧 Dinle</button>` : it.en ? `<button class="iconbtn sm" data-a="speaken" data-t="${esc(it.en)}" title="İngilizce dinle">🔊</button>` : `<button class="iconbtn sm" data-a="speak" data-t="${esc(it.prompt)}" title="Sesli oku">🔊</button>`}</div>
       <div class="opts n${it.options.length}">${it.options.map((o, i) => `<button class="opt" data-a="opt" data-v="${i}"><span class="k">${it.abc ? 'ABC'[i] : i + 1}</span>${esc(o)}</button>`).join('')}</div>
       <div id="fb"></div></div>`;
     if (it.listen) { setTimeout(() => speakEN(it.listen), 300); } else if (it.en) { if (S.autoRead) { speak(it.prompt.replace(/"[^"]+"/, m => m)); setTimeout(() => speakEN(it.en), 1400); } } else autoSpeak(it.mod === 'math' ? it.prompt : it.prompt + '. ' + it.options.map((o, i) => (i + 1) + ': ' + o).join('. '));
