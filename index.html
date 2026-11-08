@@ -284,7 +284,7 @@ const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { c
 let VIEW = 'home';
 
 /* ---------- kayıt ---------- */
-const APP_VERSION = '20261108.0715';
+const APP_VERSION = '20261108.0731';
 const BASEKEY = 'odev-arkadasi-v1', PKEY = 'odev-arkadasi-profiles', SHKEY = 'odev-arkadasi-shared';
 const SHARED = ['apiKey', 'model', 'voice', 'rate', 'sound', 'autoRead', 'links', 'bookNames', 'unitAutoDone'];
 function lsGet(k) { try { return JSON.parse(localStorage.getItem(k)); } catch (e) { return null; } }
@@ -456,6 +456,8 @@ function konuOf(k) { return (S.konu || {})[k] || null; }
 function konuMatches(ders) {
   const kc = konuOf(ders); if (!kc || !BANK || !BANK[ders]) return [];
   const nz = t => String(t).toLocaleLowerCase('tr').replace(/[^a-zçğıöşü ]/g, ' ').split(/\s+/).filter(w => w.length > 2 && !/^(ve|ile|için|tema|konu)$/.test(w));
+  if (ders === 'ingilizce') { const KW = [[/yerler|bulmaca/, /Places/], [/What is this/, /What is this/], [/Selamlaşma/, /Greetings/], [/günleri/, /Days/], [/eşyaları/, /Classroom Objects/], [/yönergeleri/, /Instructions/], [/Renkler/, /Colour/], [/Sayılar/, /Numbers/], [/Vücud/, /Parts of the Body/], [/Görünüş/, /tall|got/], [/How old|Kendini/, /How old/], [/Aile üyeleri|Aile ağacı/, /Family Members/], [/Who is she/, /Who is he/], [/odalar/, /Rooms/], [/Where is the cat/, /Where is the cat/], [/There is/, /There is/], [/evcil/, /Pets/], [/Meyve/, /Fruits/], [/Yiyecek|Öğün/, /Food, Drinks/], [/Is there any/, /Is there/], [/I like|Favori/, /Do you like/]];
+    const hit = KW.find(([r]) => r.test(kc.ad)); if (hit) return BANK[ders].konular.filter(k => k.tema === kc.tema && hit[1].test(k.konu)); }
   const a = nz(kc.ad); if (!a.length) return [];
   return BANK[ders].konular.filter(k => { if (k.tema !== kc.tema) return false; const b = nz(k.konu); const common = a.filter(w => b.some(x => x.slice(0, 5) === w.slice(0, 5))).length; return common >= Math.max(1, Math.ceil(Math.min(a.length, b.length) / 2)); });
 }
@@ -1026,7 +1028,13 @@ const BOOKS = [
   { id: 'mat1', ad: 'Matematik 1. Kitap', emo: '🔢', temalar: [['1. Tema: Nesnelerin Geometrisi (1)', 10], ['Geometrik Cisimler', 12], ['Geometrik Cisim Modelleri', 22], ['Geometrik Şekil Modelleri', 27], ['Biçimsel Özellikler', 35], ['Sıvı Miktarını Tahmin Etme', 42], ['2. Tema: Sayılar ve Nicelikler (1)', 54], ['Sayılar', 56], ['Sayıları Çözümleme', 72], ['Sayıların Sırası', 90], ['Ritmik Sayma', 103], ['Sayı ve Şekil Örüntüleri', 116], ['Nesne Sayısını Tahmin Etme', 121], ['3. Tema: İşlemlerden Cebirsel Düşünmeye', 132], ['Toplama-Çıkarma Problemleri', 134], ['Tahmin ve Zihinden İşlem', 146], ['Toplama-Çıkarma İlişkisi', 154], ['Sözlük', 160]] },
   { id: 'mat2', ad: 'Matematik 2. Kitap', emo: '🔢', temalar: [['3. Tema (devam): Çarpma ve Bölme', 12], ['Çarpma-Bölme Tahmin ve Zihinden', 32], ['Dört İşlemde Eşitlik', 42], ['4. Tema: Sayılar ve Nicelikler (2)', 54], ['Kesirler', 56], ['Paralarımız', 66], ['Zaman Ölçme', 80], ['Uzunluk ve Kütle Ölçme', 100], ['Uzunluk ve Kütlede Tahmin', 122], ['5. Tema: Nesnelerin Geometrisi (2)', 136], ['Yer ve Yön Bulma', 138], ['Simetri', 148], ['6. Tema: Veriye Dayalı Araştırma', 160], ['Veriyle Çalışma', 162], ['Sözlük', 188]] },
   { id: 'ing', ad: 'İngilizce Ders Kitabı', emo: '🇬🇧', temalar: [['Theme 1: School Life', 11], ['Theme 2: Classroom Life', 27], ['Theme 3: Personal Life', 43], ['Theme 4: Family Life', 59], ['Theme 5: Homes & Houses', 75], ['Theme 6: Life in the City', 91], ['Glossary', 129]] },
-  { id: 'ingck', ad: 'İngilizce Çalışma Kitabı', emo: '🇬🇧', temalar: [['Theme 1', 9], ['Theme 2', 17], ['Theme 3', 25], ['Theme 4', 33], ['Theme 5', 41], ['Theme 6', 49]] },
+  { id: 'ingck', ad: 'İngilizce Çalışma Kitabı', emo: '🇬🇧', temalar: [
+    ['Theme 1: School Life', 9], ['Okuldaki yerler ve kişiler (classroom, canteen, teacher)', 10], ['What is this? / Who is he? / Where is…? soruları', 12], ['Selamlaşma: Hello, How are you?, Goodbye', 13], ['Haftanın günleri', 14], ['Okuma: My School', 15], ['Bulmaca: okuldaki kişi ve yerler', 16],
+    ['Theme 2: Classroom Life', 17], ['Sınıf eşyaları (desk, ruler, pencil case)', 18], ['Sınıf yönergeleri: Open your book!, Be quiet, please!', 19], ['Renkler: It\'s red / orange', 21], ['Sayılar 1–20 ve How many…?', 22], ['Okuma: My Classroom', 23],
+    ['Theme 3: Personal Life', 25], ['Vücudumuz (head, eye, hand, leg)', 26], ['Görünüş: has got green eyes / long hair', 28], ['How old are you? / Yaş sorma', 29], ['Okuma: Hayvan bilmecesi', 30], ['Kendini tanıt: My name is… I\'m … years old', 32],
+    ['Theme 4: Family Life', 33], ['Aile üyeleri (mother, brother, grandmother)', 34], ['Who is she? / Who are they? / Is he handsome?', 36], ['Okuma: Arda\'nın ailesi', 38], ['Aile ağacı ve ailemi tanıtıyorum', 40],
+    ['Theme 5: Homes & Houses', 41], ['Evdeki odalar (bedroom, kitchen, bathroom)', 42], ['Where is the cat? It is in the…', 44], ['Okuma: Cindy\'nin evi', 45], ['There is / There are', 46], ['True / False: evcil hayvanlar', 48],
+    ['Theme 6: Life in the City', 49], ['Meyve ve sebzeler (pear, banana, courgette)', 50], ['Yiyecek ve içecekler: Farklı olanı bul', 51], ['Is there any…? / Are there any…?', 53], ['I like / I don\'t like', 54], ['Öğünler: breakfast, hungry, thirsty, delicious', 55], ['Favori yiyeceğim: Write about you', 56]] },
   { id: 'tr1', ad: 'Türkçe 1. Kitap', emo: '🔤', temalar: [] },
   { id: 'tr2', ad: 'Türkçe 2. Kitap', emo: '🔤', temalar: [['5. Tema: Yeteneklerimizi Tanıyoruz', 17], ['Unutulan Oyunlar (dinleme)', 20], ['Türkülerin Babası Neşet Ertaş', 26], ['Şu Oyuna Bak! İşte Şapalak!', 34], ['Lokum, Oyun ve Oyuncak Müzesinde', 40], ['Meslekler', 48], ['Kendimizi Değerlendirelim (5)', 54], ['6. Tema: Mucit Çocuk', 57], ['ASLAN-TEKNOFEST (izleme)', 60], ['Çok Merak, Çok Eğlence', 68], ['Meraklı, Cesur ve Maceracı Alper Gezeravcı', 74], ['Bilgi Çağı', 80], ['Neler Oluyor?', 86], ['Kendimizi Değerlendirelim (6)', 92], ['7. Tema: Kültür Hazinemiz', 95], ['Nasreddin Hoca', 98], ['23 Nisan Ulusal Egemenlik ve Çocuk Bayramı', 104], ['Anadolu', 110], ['Bayrak Töreni', 116], ['Bir Bayram Sürprizi', 124], ['Kendimizi Değerlendirelim (7)', 132], ['8. Tema: Haklarımızı Biliyoruz', 135], ['Çocuklar Haklarıyla Var', 138], ['Bir Dünya Bırakın', 144], ['Mırnav Dostları', 150], ['Kararla Gelen Başarı', 158], ['Yaz Tatilini Nasıl Değerlendirelim?', 166], ['Kendimizi Değerlendirelim (8)', 172]] },
   { id: 'hb1', ad: 'Hayat Bilgisi 1. Kitap', emo: '🏡', temalar: [] },
