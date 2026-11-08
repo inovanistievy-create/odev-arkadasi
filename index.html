@@ -132,6 +132,8 @@ th{color:var(--muted);font-size:15px}
 #tokWrap{position:relative}.tokpill{font-size:13px;background:#FFF8E1;border:1px solid #F3D98B;border-radius:99px;padding:4px 10px;display:flex;align-items:center;gap:6px;white-space:nowrap}.tokpill.low{background:#FFE2E2;border-color:#F3A0A0}.tokbar{display:inline-block;width:60px;height:7px;background:#eee;border-radius:99px;overflow:hidden;margin-left:4px}.tokbar i{display:block;height:100%;background:#F4B400;transition:width .6s}.tokpill.low .tokbar i{background:#E53935}.tokfloat{position:absolute;right:8px;top:100%;color:#C62828;font-weight:800;font-size:13px;animation:sl 1.6s forwards;white-space:nowrap}
 .usagebox{background:#FFFBEA;border-radius:14px;padding:12px;margin:10px 0}.ustats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:8px 0}.ustats div{background:#fff;border-radius:10px;padding:8px;display:flex;flex-direction:column}.ustats span{font-size:12px;color:#777}.ustats b{font-size:20px}.ustats small{font-size:12px;color:#777}
 .pt .opts{margin-top:12px}.ptbarw{height:8px;background:#eee;border-radius:99px;overflow:hidden;margin-bottom:12px}.ptbarw i{display:block;height:100%;width:100%;background:#4F8EF7;transition:width .1s linear}.rmsbig{font-size:90px;font-weight:800;text-align:center;min-height:110px}.rmstyped{font-size:42px;letter-spacing:10px;text-align:center;font-weight:800}.numpad{display:grid;grid-template-columns:repeat(5,70px);gap:8px;justify-content:center;margin-top:10px}.numpad .btn{font-size:24px}.vlrsvg{display:block;margin:10px auto;max-width:420px;max-height:300px}.owtrow{display:flex;gap:16px;justify-content:center;margin:12px 0}.ptres{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin:12px 0}.ptres div{background:#F4F1FF;border-radius:12px;padding:10px;display:flex;flex-direction:column}.ptres b{font-size:24px}.simwrap{background:#fff;border-radius:20px;padding:12px}.simwrap canvas{width:100%;border-radius:14px;display:block}.simhelp{margin-top:8px;font-size:15px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.lvgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin:12px 0}.lvcard{border:2px solid var(--line);background:#fff;border-radius:16px;padding:10px;text-align:center;cursor:pointer;font-family:inherit}.lvcard:hover{background:#F4F1FF}.lvcard.locked{opacity:.45;cursor:not-allowed}.lvcard.passed{border-color:#7CC58F;background:#F1FBF3}.lvcard.next{border-color:#4F8EF7;box-shadow:0 0 0 3px #CFE0FD}.lvn{font-size:20px;font-weight:800}.lvr{font-size:12px;color:#555;min-height:30px}.lvt{font-size:14px;letter-spacing:1px;margin:4px 0}.lvb{font-size:13px;font-weight:700}.seri{display:flex;justify-content:center;align-items:center;gap:8px;font-size:36px;font-weight:800;margin:14px 0;flex-wrap:wrap}.seri .q{color:#E53935}.seri i{font-style:normal;color:#999}.opts.six{grid-template-columns:repeat(3,1fr)}.netsvg{max-width:340px;margin:10px auto;display:block}.vmcgrid{display:grid;gap:8px;justify-content:center;margin:14px 0}.vmccell{width:64px;height:64px;border-radius:10px;border:2px solid #ccc;background:#fff;cursor:pointer}.vmccell.on{background:#1E88E5;border-color:#1565C0}.vmccell.pick{background:#FFD54F}.vmccell.bad{background:#EF9A9A}.big2{font-size:24px}@media(max-width:800px){.lvgrid{grid-template-columns:repeat(2,1fr)}}
+#cTime.warn{background:#FFE2E2;color:#C62828;animation:shk .5s infinite}
 .unitchip{border:2px solid var(--line);background:#fff;border-radius:99px;padding:8px 14px;font-weight:700;font-size:15px;cursor:pointer}.unitchip:hover{background:#FFF1C9}
 .onb{background:#fff;border-radius:28px;padding:26px;margin-bottom:22px;display:flex;gap:18px;align-items:center;flex-wrap:wrap;box-shadow:0 6px 0 rgba(43,42,76,.07)}
 .onb input{font:inherit;font-size:22px;font-weight:800;border:3px solid var(--line);border-radius:16px;padding:12px 16px;min-width:220px}
@@ -292,7 +294,7 @@ const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { c
 let VIEW = 'home';
 
 /* ---------- kayıt ---------- */
-const APP_VERSION = '20261108.0834';
+const APP_VERSION = '20261108.0903';
 const BASEKEY = 'odev-arkadasi-v1', PKEY = 'odev-arkadasi-profiles', SHKEY = 'odev-arkadasi-shared';
 const SHARED = ['usage', 'budget', 'apiKey', 'model', 'voice', 'rate', 'sound', 'autoRead', 'links', 'bookNames', 'unitAutoDone'];
 function lsGet(k) { try { return JSON.parse(localStorage.getItem(k)); } catch (e) { return null; } }
@@ -829,7 +831,7 @@ function home() {
   <h3 class="msec">Oyunlar ${S.gameLock ? `<span class="msub">· her oyun ${S.gameCost} ⭐ · sende ${S.wallet || 0} ⭐ · kolay soru 1, orta 2, zor 3 ⭐</span>` : ''}</h3>
   <div class="grid">
     <button class="card c-yellow" data-a="balloon"><div class="emo">🎈</div><div><h3>Balon Avı</h3><p>Doğru balonu patlat! ${S.best ? `Rekor: ${S.best}` : ''}</p>${gameTag()}</div></button>
-    <button class="card c-blue" data-a="pilot"><div class="emo">✈️</div><div><h3>Pilot Akademisi</h3><p>DLR-1 yetenek testleri ve DLR-2 simülatör · ${pilotRank().join(' ')}</p>${gameTag()}</div></button>
+    <button class="card c-blue" data-a="pilot"><div class="emo">✈️</div><div><h3>Pilot Akademisi</h3><p>DLR-1'den DLR-10'a 10 seviye · ${pilotRank().join(' ')}</p>${gameTag()}</div></button>
     <button class="card c-pink" data-a="car"><div class="emo">🚗</div><div><h3>Hece Yarışı</h3><p>Doğru heceyi topla! ${S.bestCar ? `Rekor: ${S.bestCar}` : ''}</p>${gameTag()}</div></button>
   </div>
   <h3 class="msec">Benim köşem</h3>
@@ -895,118 +897,227 @@ function sekilItem(z) {
   return { kind: 'mcq', mod: 'math', zorluk: z, konu: 'Şekillerle İşlem', prompt: text, html: `<div class="seq">${rows.join('')}</div><div class="seqask">Soru işareti yerine hangi sayı gelir?</div>`, options: makeOpts(ans), answer: String(ans), explain, key: 'sk:' + text };
 }
 
-/* ---------- ✈️ Pilot Akademisi (DLR-1 / DLR-2 çocuk sürümü) ---------- */
-const PT_TESTS = [['krn', '🧮', 'Kafadan Hesap', 'İşlemi dinle, hızlıca bul'], ['rms', '🔢', 'Sayı Hafızası', 'Sıradaki sayıları aklında tut'], ['vlr', '🧭', 'Dönüş Sayma', 'Uçak kaç kez döndü?'], ['owt', '⏱️', 'Gösterge Okuma', 'Göstergelere bir bakışta bak'], ['rot', '🔄', 'Yön Bulma', 'Dönüşleri kafanda takip et']];
-const PT_N = 5; let PT = null;
-const TR_NUM = n => { const b = ['', 'bir', 'iki', 'üç', 'dört', 'beş', 'altı', 'yedi', 'sekiz', 'dokuz'], o = ['', 'on', 'yirmi', 'otuz', 'kırk', 'elli', 'altmış', 'yetmiş', 'seksen', 'doksan']; return n === 0 ? 'sıfır' : n === 100 ? 'yüz' : (o[Math.floor(n / 10)] + ' ' + b[n % 10]).trim(); };
-function pilotRank() { const P = S.pilot || {}; return (P.b2 || 0) >= 70 ? ['👨‍✈️', 'Kaptan Pilot'] : (P.b1 || 0) >= 70 ? ['🛫', 'Yardımcı Pilot'] : ['🎓', 'Öğrenci Pilot']; }
+/* ---------- ✈️ Pilot Akademisi: DLR-1 … DLR-10 (çocuk sürümü, artan zorluk; 10. seviye ≈ 5. sınıf) ---------- */
+const PT_ALL = { krn: ['🧮', 'Kafadan Hesap', 'İşlemi dinle, kafandan hesapla. Hızlı ol!'], rms: ['🔢', 'Sayı Hafızası', 'Sayılar tek tek görünecek. Aklında tut, sonra yaz.'], seri: ['📈', 'Sayı Dizileri', 'Sayılar bir kurala göre dizilmiş. Kuralı bul, soru işaretini doldur.'], vlr: ['🧭', 'Dönüş Sayma', 'Uçağın gözünden bak: yolda kaç kez döndü?'], rot: ['🔄', 'Yön Bulma', 'Uçak yukarı bakıyor. Dönüşleri kafanda yap, sonunda nereye baktığını bul.'], kup: ['🧊', 'Küp Döndürme', 'Küpün üstünde yıldız var. Küpü kafanda yuvarla, yıldız en sonda hangi yüzde?'], ppt: ['🎲', 'Küp Açınımı', 'Kâğıt açınımı kafanda katla ve küpü düşün.'], owt: ['⏱️', 'Gösterge Okuma', 'Göstergeler kısa süre görünecek. Sonra birini soracağım!'], vmc: ['🟦', 'Görsel Hafıza', 'Bazı kareler yanıp sönecek. Yerlerini aklında tut, sonra aynı karelere bas.'], tvt: ['⚙️', 'Teknik Anlayış', 'Dişliler, tahterevalliler, makaralar… Nasıl çalıştığını düşün!'], ing: ['🇬🇧', 'İngilizce', 'İngilizce kelime ve cümle soruları.'], sim: ['🕹️', 'Uçuş Simülatörü', 'Uçağı halkada tut, kırmızı ışıkta Boşluk, işlem doğruysa D yanlışsa Y.'] };
+const PT_RANKS = ['🎓 Öğrenci Pilot', '🪂 Pilot Adayı', '🛩️ Planör Pilotu', '🛫 Özel Pilot', '✈️ Ticari Pilot', '🧑‍✈️ Yardımcı Pilot', '🎖️ Kıdemli Yardımcı Pilot', '👨‍✈️ Kaptan Pilot', '🏅 Eğitmen Pilot', '🏆 As Pilot'];
+let PT = null;
+function ptData() { const P = S.pilot = S.pilot || {}; P.best = P.best || {}; P.t = P.t || {}; if (P.lv == null) { P.lv = 0; if ((P.b1 || 0) >= 70) P.lv = 1; if ((P.b2 || 0) >= 70) P.lv = 2; } return P; }
+function pilotRank() { const lv = ptData().lv; const r = lv ? PT_RANKS[lv - 1] : '🎒 Yolcu'; const i = r.indexOf(' '); return [r.slice(0, i), r.slice(i + 1)]; }
+function levelTests(L) { const t = ['krn', 'rms']; if (L >= 3) t.push('seri'); t.push('vlr', L < 6 ? 'rot' : 'kup'); if (L >= 5) t.push('ppt'); t.push('owt'); if (L >= 3) t.push('vmc'); if (L >= 4) t.push('tvt'); if (L >= 6) t.push('ing'); if (L >= 2) t.push('sim'); return t; }
+const ptQN = L => L <= 3 ? 5 : 4;
+const TR_NUM = n => { if (n >= 1000) return String(n); const b = ['', 'bir', 'iki', 'üç', 'dört', 'beş', 'altı', 'yedi', 'sekiz', 'dokuz'], o = ['', 'on', 'yirmi', 'otuz', 'kırk', 'elli', 'altmış', 'yetmiş', 'seksen', 'doksan']; if (n === 0) return 'sıfır'; const y = Math.floor(n / 100), r = n % 100; return ((y ? (y > 1 ? b[y] + ' ' : '') + 'yüz ' : '') + (o[Math.floor(r / 10)] + ' ' + b[r % 10])).replace(/\s+/g, ' ').trim(); };
 function pilotHome() {
-  VIEW = 'pilot'; app.classList.remove('wide'); stopSpeak(); const P = S.pilot || {}, [re, rn] = pilotRank(), open2 = (P.b1 || 0) >= 70;
+  VIEW = 'pilot'; app.classList.remove('wide'); stopSpeak(); const P = ptData(), [re, rn] = pilotRank(), nextL = Math.min(10, P.lv + 1);
   app.innerHTML = `<div class="rtop"><button class="btn soft sm" data-a="home">← Ana sayfa</button><div class="rtitle">✈️ Pilot Akademisi</div><div class="pill">${re} ${rn}</div></div>
-  <p class="lead">Gerçek pilot adayları DLR sınavlarına girer: önce <b>DLR-1</b> (dikkat, hafıza, hesap, yön testleri), sonra <b>DLR-2</b> (uçuş simülatörü). Bu, onların çocuklar için hazırlanmış eğlenceli bir benzeri!</p>
-  <div class="grid">
-    <button class="card c-blue tall" data-a="pilot1"><div class="emo">📝</div><div><h3>DLR-1 · Yetenek Testleri</h3><p>${PT_TESTS.map(t => t[1] + ' ' + t[2]).join(' · ')}</p>${P.b1 != null ? `<span class="donebadge">En iyi: ${P.b1} puan ${P.b1 >= 70 ? '✅ Geçti' : '· 70 ile geçilir'}</span>` : ''}${gameTag()}</div></button>
-    <button class="card c-green tall ${open2 ? '' : 'mastered'}" data-a="${open2 ? 'pilot2' : 'pilotlock'}"><div class="emo">🕹️</div><div><h3>DLR-2 · Uçuş Simülatörü</h3><p>Uçağı halkanın içinde tut, kırmızı ışıkta Boşluk'a bas, işlemleri kontrol et</p>${open2 ? (P.b2 != null ? `<span class="donebadge">En iyi: ${P.b2} puan ${P.b2 >= 70 ? '✅ Kaptan!' : ''}</span>` : '') : '<span class="newbadge">🔒 Önce DLR-1\'i 70 puanla geç</span>'}${open2 ? gameTag() : ''}</div></button>
-  </div>
-  <h3 class="msec">Testleri tek tek çalış</h3><div class="mchips">${PT_TESTS.map(([k, e, t]) => `<button class="mchip" data-a="pilotone" data-v="${k}">${e} ${t}${P.t && P.t[k] != null ? ' · ' + P.t[k] : ''}</button>`).join('')}</div>`;
+  <p class="lead">Gerçek pilot adayları DLR yetenek sınavına girer. Burada <b>10 seviye</b> var; her seviye bir öncekinden zor. 70 puan alınca sonraki seviye açılır. <b>10. seviye gerçekten zor</b> — 5. sınıf düzeyinde!</p>
+  <div class="lvgrid">${Array.from({ length: 10 }, (_, i) => { const L = i + 1, open = L <= P.lv + 1, b = P.best[L]; return `<button class="lvcard ${open ? '' : 'locked'} ${b >= 70 ? 'passed' : ''} ${L === nextL && open && !(b >= 70) ? 'next' : ''}" data-a="${open ? 'pilotlv' : 'pilotlock'}" data-v="${L}"><div class="lvn">DLR-${L}</div><div class="lvr">${PT_RANKS[L - 1]}</div><div class="lvt">${levelTests(L).map(t => PT_ALL[t][0]).join('')}</div><div class="lvb">${open ? (b != null ? (b >= 70 ? '✅ ' : '') + 'En iyi: ' + b : 'Başla ▶') : '🔒'}</div></button>`; }).join('')}</div>
+  <p class="muted small">Seviye başlatmak ${S.gameLock ? S.gameCost + ' ⭐' : 'ücretsiz'}. Testler: ${Object.values(PT_ALL).map(x => x[0] + ' ' + x[1]).join(' · ')}</p>
+  <h3 class="msec">DLR-${nextL} testlerini tek tek çalış (ücretsiz)</h3><div class="mchips">${levelTests(nextL).map(k => `<button class="mchip" data-a="pilotone" data-v="${k}">${PT_ALL[k][0]} ${PT_ALL[k][1]}${P.t[k] && P.t[k][nextL] != null ? ' · ' + P.t[k][nextL] : ''}</button>`).join('')}</div>`;
 }
-function pilotStart1(only) { PT = { tests: only ? PT_TESTS.filter(t => t[0] === only) : PT_TESTS, ti: 0, q: 0, ok: 0, scores: {}, only: !!only }; ptIntro(); }
-function ptShell(body, sub) { const t = PT.tests[PT.ti]; app.innerHTML = `<div class="rtop"><button class="btn soft sm" data-a="pilot">← Akademi</button><div class="rtitle">${t[1]} ${t[2]}</div><div class="pill">${PT.only ? '' : `Test ${PT.ti + 1}/${PT.tests.length} · `}${sub || ''}</div></div><div class="qcard pt">${body}</div>`; }
+function pilotStartLevel(L, only) { PT = { L, tests: only ? [only] : levelTests(L), ti: 0, q: 0, ok: 0, scores: {}, only: !!only }; ptIntro(); }
+function ptShell(body, sub) { const k = PT.tests[PT.ti]; app.innerHTML = `<div class="rtop"><button class="btn soft sm" data-a="pilot">← Akademi</button><div class="rtitle">${PT_ALL[k][0]} ${PT_ALL[k][1]} <span class="muted small">DLR-${PT.L}</span></div><div class="pill">${PT.only ? '' : `Test ${PT.ti + 1}/${PT.tests.length} · `}${sub || ''}</div></div><div class="qcard pt">${body}</div>`; }
 function ptIntro() {
-  VIEW = 'pilot'; const t = PT.tests[PT.ti]; PT.q = 0; PT.ok = 0;
-  const how = { krn: 'Bir işlem söyleyeceğim. Kafandan hesapla, doğru cevaba bas. Hızlı ol!', rms: 'Ekranda sayılar tek tek görünecek. Hepsini sırasıyla aklında tut, sonra yaz.', vlr: 'Uçak bir yol çizecek. Uçağın gözünden bak: kaç kez sağa ya da sola döndü?', owt: 'Renkli göstergeler 3 saniye görünecek. Sonra birini soracağım!', rot: 'Uçak yukarı bakıyor. Söylediğim dönüşleri kafanda yap, sonunda nereye baktığını bul.' }[t[0]];
-  ptShell(`<div class="qemo">${t[1]}</div><div class="qtext">${how}</div><div class="row center"><button class="btn primary" data-a="ptgo">Hazırım, başla ▶</button></div>`, `${PT_N} soru`); autoSpeak(how);
+  VIEW = 'pilot'; const k = PT.tests[PT.ti]; PT.q = 0; PT.ok = 0; if (k === 'sim') return pilotSim();
+  ptShell(`<div class="qemo">${PT_ALL[k][0]}</div><div class="qtext">${PT_ALL[k][2]}</div><div class="row center"><button class="btn primary" data-a="ptgo">Hazırım, başla ▶</button></div>`, `${ptQN(PT.L)} soru`); autoSpeak(PT_ALL[k][2]);
 }
 function ptTimer(sec, onEnd) { const bar = $('#ptbar'); const t0 = Date.now(); clearInterval(PT.tm); PT.tm = setInterval(() => { const r = 1 - (Date.now() - t0) / (sec * 1000); if (!bar || !document.body.contains(bar)) return clearInterval(PT.tm); bar.style.width = Math.max(0, r * 100) + '%'; if (r <= 0) { clearInterval(PT.tm); onEnd(); } }, 100); }
 function ptAnswer(ok, msg) {
   clearInterval(PT.tm); clearTimeout(PT.to); if (PT.answered) return; PT.answered = true; if (ok) PT.ok++; sfx(ok ? 'ok' : 'no');
   const fb = $('#ptfb'); if (fb) fb.innerHTML = `<div class="${ok ? 'praise' : 'hint'}">${ok ? pick(['Harika pilot! ✈️', 'Doğru! 👍', 'Süper! 🌟']) : '❌ ' + (msg || 'Olmadı')}</div>`;
-  setTimeout(() => { if (VIEW !== 'pilot') return; PT.q++; if (PT.q >= PT_N) ptTestEnd(); else ptQ(); }, ok ? 800 : 1800);
+  setTimeout(() => { if (VIEW !== 'pilot') return; PT.q++; if (PT.q >= ptQN(PT.L)) ptTestEnd(); else ptQ(); }, ok ? 800 : 2200);
 }
-function ptQ() {
-  PT.answered = false; const k = PT.tests[PT.ti][0], sub = `Soru ${PT.q + 1}/${PT_N}`; const lvl = Math.min(2, Math.floor(PT.q / 2));
-  const opts = (ans, list) => `<div class="opts">${shuffle([...new Set([ans, ...list])].slice(0, 4)).map(o => `<button class="opt" data-a="ptpick" data-v="${esc(String(o))}">${o}</button>`).join('')}</div>`;
-  if (k === 'krn') {
-    const op = pick(lvl ? ['+', '−', '×'] : ['+', '−']); let a, b, ans; if (op === '+') { a = rand(5, 40); b = rand(3, 30); ans = a + b; } else if (op === '−') { a = rand(15, 60); b = rand(3, a - 2); ans = a - b; } else { a = rand(2, 5); b = rand(2, 9); ans = a * b; }
-    PT.ans = String(ans); const say = `${TR_NUM(a)} ${op === '+' ? 'artı' : op === '−' ? 'eksi' : 'çarpı'} ${TR_NUM(b)}`;
-    ptShell(`<div class="ptbarw"><i id="ptbar"></i></div><div class="qemo">🎧</div><div class="qtext">Dinle ve hesapla <button class="iconbtn sm" data-a="speak" data-t="${say}">🔊</button></div><div id="pthide" class="muted small">Duyamadın mı? 🔊'ye bas. (Göster: <a href="#" onclick="this.parentNode.textContent='${a} ${op} ${b}';return false">işlemi göster</a>)</div>${opts(ans, [ans + 1, ans - 1, ans + 10, ans - 10, ans + 2].filter(x => x >= 0))}<div id="ptfb"></div>`, sub);
-    speak(say); ptTimer(12, () => ptAnswer(false, `Süre doldu! Cevap ${ans}`));
-  } else if (k === 'rms') {
-    const len = 3 + lvl, seq = Array.from({ length: len }, () => rand(1, 9)); PT.ans = seq.join(''); PT.typed = '';
-    ptShell(`<div class="qtext">Sayıları aklında tut!</div><div class="rmsbig" id="rmsd">👀</div><div id="rmsin"></div><div id="ptfb"></div>`, sub);
-    let i = 0; const show = () => { const d = $('#rmsd'); if (!d || VIEW !== 'pilot') return; if (i < len) { d.textContent = seq[i]; speak(String(seq[i])); setTimeout(() => { if ($('#rmsd')) $('#rmsd').textContent = ' '; }, 750); i++; PT.to = setTimeout(show, 1100); } else { d.textContent = '❓'; $('#rmsin').innerHTML = `<div class="qtext">Sırasıyla yaz:</div><div class="rmstyped" id="rmst">${'＿'.repeat(len)}</div><div class="numpad">${[1, 2, 3, 4, 5, 6, 7, 8, 9].map(n => `<button class="btn soft" data-a="ptdig" data-v="${n}">${n}</button>`).join('')}<button class="btn soft" data-a="ptdig" data-v="del">⌫</button></div>`; } };
+const ptOpts = (ans, list) => { const a = String(ans); const o = [...new Set([a, ...list.map(String)].filter(x => x !== 'NaN'))]; const four = [a, ...shuffle(o.filter(x => x !== a)).slice(0, 3)]; return `<div class="opts">${shuffle(four).map(x => `<button class="opt" data-a="ptpick" data-v="${esc(x)}">${x}</button>`).join('')}</div>`; };
+const near = (a, ...d) => d.map(x => a + x).filter(x => x >= 0 && x !== a);
+const timeBar = '<div class="ptbarw"><i id="ptbar"></i></div>';
+const PT_GEN = {
+  krn(L) {
+    let a, b, c, ans, say, txt;
+    const t = L <= 2 ? pick(['+', '−']) : L <= 4 ? pick(['+', '−', '×']) : L <= 6 ? pick(['+', '−', '×', '÷']) : L <= 8 ? pick(['+', '−', '×', '÷', 'x2']) : pick(['×', '÷', 'x2', 'zincir', 'zincir']);
+    const mx = L <= 2 ? 50 : L <= 4 ? 100 : L <= 6 ? 100 : 1000;
+    if (t === '+') { a = rand(L <= 2 ? 5 : 10, mx * .6 | 0); b = rand(3, mx - a); ans = a + b; txt = `${a} + ${b}`; say = `${TR_NUM(a)} artı ${TR_NUM(b)}`; }
+    else if (t === '−') { a = rand(L <= 2 ? 15 : 30, mx); b = rand(3, a - 2); ans = a - b; txt = `${a} − ${b}`; say = `${TR_NUM(a)} eksi ${TR_NUM(b)}`; }
+    else if (t === '×') { a = rand(2, L <= 4 ? 5 : 10); b = rand(2, L <= 6 ? 10 : L <= 8 ? 12 : 25); ans = a * b; txt = `${a} × ${b}`; say = `${TR_NUM(a)} çarpı ${TR_NUM(b)}`; }
+    else if (t === '÷') { b = rand(2, L <= 6 ? 9 : 12); ans = rand(2, L <= 6 ? 10 : 25); a = ans * b; txt = `${a} ÷ ${b}`; say = `${TR_NUM(a)} bölü ${TR_NUM(b)}`; }
+    else if (t === 'x2') { a = rand(12, L <= 8 ? 99 : 250); b = rand(3, 9); ans = a * b; txt = `${a} × ${b}`; say = `${TR_NUM(a)} çarpı ${TR_NUM(b)}`; }
+    else { a = rand(3, 12); b = rand(3, 12); c = rand(5, 60); const plus = Math.random() < .5 || a * b <= c; ans = plus ? a * b + c : a * b - c; txt = `${a} × ${b} ${plus ? '+' : '−'} ${c}`; say = `${TR_NUM(a)} çarpı ${TR_NUM(b)} ${plus ? 'artı' : 'eksi'} ${TR_NUM(c)}`; }
+    PT.ans = String(ans); const sec = Math.max(8, 15 - L * .7);
+    ptShell(`${timeBar}<div class="qemo">🎧</div><div class="qtext">Dinle ve hesapla <button class="iconbtn sm" data-a="speak" data-t="${say}">🔊</button></div>${L <= 5 ? `<div class="muted small"><a href="#" onclick="this.parentNode.innerHTML='<b style=font-size:28px>${txt}</b>';return false">İşlemi göster</a></div>` : '<div class="muted small">Bu seviyede işlem yazılı görünmez, iyi dinle!</div>'}${ptOpts(ans, near(ans, 1, -1, 10, -10, 2, -2, 100, -100))}<div id="ptfb"></div>`); speak(say);
+    ptTimer(sec, () => ptAnswer(false, `Süre doldu! ${txt} = ${ans}`)); return;
+  },
+  rms(L) {
+    const len = 3 + Math.floor((L - 1) / 2), back = L >= 6 && Math.random() < .5, seq = Array.from({ length: len }, () => rand(1, 9)); PT.ans = (back ? [...seq].reverse() : seq).join(''); PT.typed = '';
+    ptShell(`<div class="qtext">Sayıları aklında tut!${back ? ' <b>Sonra TERSTEN yazacaksın!</b>' : ''}</div><div class="rmsbig" id="rmsd">👀</div><div id="rmsin"></div><div id="ptfb"></div>`);
+    let i = 0; const sp = Math.max(700, 1150 - L * 45); const show = () => { const d = $('#rmsd'); if (!d || VIEW !== 'pilot') return; if (i < len) { d.textContent = seq[i]; speak(String(seq[i])); setTimeout(() => { if ($('#rmsd')) $('#rmsd').textContent = ' '; }, sp * .65); i++; PT.to = setTimeout(show, sp); } else { d.textContent = '❓'; $('#rmsin').innerHTML = `<div class="qtext">${back ? 'Sondan başa doğru (tersten) yaz:' : 'Sırasıyla yaz:'}</div><div class="rmstyped" id="rmst">${'＿'.repeat(len)}</div><div class="numpad">${[1, 2, 3, 4, 5, 6, 7, 8, 9].map(n => `<button class="btn soft" data-a="ptdig" data-v="${n}">${n}</button>`).join('')}<button class="btn soft" data-a="ptdig" data-v="del">⌫</button></div>`; } };
     PT.to = setTimeout(show, 600);
-  } else if (k === 'vlr') {
-    const n = 3 + lvl + rand(0, 1), dirs = [[0, -1], [1, 0], [0, 1], [-1, 0]]; let d = 0, x = 0, y = 0; const pts = [[0, 0]], turns = [];
-    for (let i = 0; i < n + 1; i++) { const L = rand(2, 3); x += dirs[d][0] * L; y += dirs[d][1] * L; pts.push([x, y]); if (i < n) { const t = pick(['R', 'L']); turns.push(t); d = (d + (t === 'R' ? 1 : 3)) % 4; } }
-    const xs = pts.map(p => p[0]), ys = pts.map(p => p[1]), mx = Math.min(...xs), my = Math.min(...ys), W = Math.max(...xs) - mx || 1, H = Math.max(...ys) - my || 1, sc = Math.min(300 / W, 220 / H, 45);
-    const P = pts.map(([px, py]) => [30 + (px - mx) * sc, 30 + (py - my) * sc]); const ask = pick(['R', 'L']); const ans = turns.filter(t => t === ask).length; PT.ans = String(ans);
+  },
+  seri(L) {
+    const R = [
+      [1, () => { const s = rand(1, 10), k = rand(1, 5); return [s, k, 'ar', `Her seferinde +${k}`]; }],
+      [3, () => { const k = rand(2, 5), s = rand(30, 60); return [s, -k, 'ar', `Her seferinde −${k}`]; }],
+      [4, () => { const s = rand(10, 40), k = rand(5, 12); return [s, k, 'ar', `Her seferinde +${k}`]; }],
+      [5, () => [rand(1, 4), 2, 'geo', 'Her seferinde ×2']],
+      [6, () => { const a = rand(3, 9), b = rand(1, a - 1); return [rand(10, 30), [a, -b], 'alt', `Sırayla +${a}, −${b}`]; }],
+      [7, () => [rand(1, 10), 1, 'inc', 'Fark her seferinde 1 artıyor (+1, +2, +3…)']],
+      [7, () => [rand(1, 3), 3, 'geo', 'Her seferinde ×3']],
+      [8, () => [rand(1, 5), 0, 'x2p1', 'Her seferinde ×2 ve +1']],
+      [8, () => [rand(1, 9), [rand(2, 5), rand(10, 30)], 'inter', 'İki ayrı dizi iç içe']],
+      [9, () => [rand(1, 4), 0, 'sq', 'Kare sayılar (1×1, 2×2, 3×3…)']],
+      [9, () => [rand(2, 6), 2, 'incd', 'Fark iki katına çıkıyor (+2, +4, +8…)']],
+      [10, () => [rand(1, 4), 0, 'fib', 'Her sayı önceki iki sayının toplamı']],
+      [10, () => [rand(2, 4), 0, 'x3m1', 'Her seferinde ×3 ve −1']],
+    ].filter(r => r[0] <= L && r[0] >= L - 4);
+    const [s, k, typ, rule] = pick(R)[1](); const seq = [s]; const N = 5;
+    for (let i = 1; i <= N; i++) { const p = seq[i - 1]; let v;
+      if (typ === 'ar') v = p + k; else if (typ === 'geo') v = p * k; else if (typ === 'alt') v = p + k[(i - 1) % 2]; else if (typ === 'inc') v = p + i; else if (typ === 'x2p1') v = p * 2 + 1; else if (typ === 'sq') v = (s + i) ** 2; else if (typ === 'incd') v = p + 2 ** i; else if (typ === 'fib') v = i === 1 ? s + 1 : p + seq[i - 2]; else if (typ === 'x3m1') v = p * 3 - 1; else if (typ === 'inter') v = i % 2 ? (i === 1 ? k[1] : seq[i - 2] + 1) : seq[i - 2] + k[0];
+      seq.push(v); }
+    if (typ === 'sq') seq[0] = s * s;
+    const ans = seq[N]; PT.ans = String(ans); const show = seq.slice(0, N);
+    ptShell(`${timeBar}<div class="qtext">Kuralı bul: sıradaki sayı ne?</div><div class="seri">${show.map(x => `<span>${x}</span>`).join('<i>,</i>')}<i>,</i><span class="q">?</span></div>${ptOpts(ans, near(ans, 1, -1, 2, -2, show[N - 1] - show[N - 2], 10, -10).concat([show[N - 1] + (show[N - 1] - show[N - 2])]))}<div id="ptfb"></div>`);
+    PT.rule = rule; ptTimer(Math.max(15, 30 - L), () => ptAnswer(false, `Süre doldu! Kural: ${rule} → ${ans}`));
+  },
+  vlr(L) {
+    const n = 3 + Math.round((L - 1) * .65) + rand(0, 1), dirs = [[0, -1], [1, 0], [0, 1], [-1, 0]]; let d = L >= 4 ? rand(0, 3) : 0, x = 0, y = 0; const pts = [[0, 0]], turns = [];
+    for (let i = 0; i < n + 1; i++) { const len = rand(2, 3); x += dirs[d][0] * len; y += dirs[d][1] * len; pts.push([x, y]); if (i < n) { const t = pick(['R', 'L']); turns.push(t); d = (d + (t === 'R' ? 1 : 3)) % 4; } }
+    const xs = pts.map(p => p[0]), ys = pts.map(p => p[1]), mx = Math.min(...xs), my = Math.min(...ys), W = Math.max(...xs) - mx || 1, H = Math.max(...ys) - my || 1, sc = Math.min(380 / W, 260 / H, 45);
+    const P = pts.map(([px, py]) => [30 + (px - mx) * sc, 30 + (py - my) * sc]); const ask = L >= 9 && Math.random() < .4 ? 'T' : pick(['R', 'L']); const ans = ask === 'T' ? turns.length : turns.filter(t => t === ask).length; PT.ans = String(ans);
     const svg = `<svg viewBox="0 0 ${60 + W * sc} ${60 + H * sc}" class="vlrsvg"><polyline points="${P.map(p => p.join(',')).join(' ')}" fill="none" stroke="#4F8EF7" stroke-width="5" stroke-linejoin="round" stroke-linecap="round"/><circle cx="${P[0][0]}" cy="${P[0][1]}" r="9" fill="#3CB371"/><text x="${P[0][0]}" y="${P[0][1] + 4}" font-size="10" text-anchor="middle" fill="#fff">B</text><text x="${P[P.length - 1][0]}" y="${P[P.length - 1][1] + 6}" font-size="20" text-anchor="middle">🏁</text></svg>`;
-    ptShell(`<div class="ptbarw"><i id="ptbar"></i></div><div class="qtext">Uçak <b style="color:#3CB371">B</b>'den 🏁'e uçtu. Uçağın gözünden bak: kaç kez <b>${ask === 'R' ? 'SAĞA ➡️' : 'SOLA ⬅️'}</b> döndü?</div>${svg}${opts(ans, [0, 1, 2, 3, 4, 5].filter(v => Math.abs(v - ans) <= 2))}<div id="ptfb"></div>`, sub);
-    ptTimer(20, () => ptAnswer(false, `Süre doldu! Cevap ${ans}`));
-  } else if (k === 'owt') {
-    const cols = [['Kırmızı', '#E53935'], ['Mavi', '#1E88E5'], ['Yeşil', '#43A047'], ['Turuncu', '#FB8C00']].slice(0, 3 + (lvl > 0 ? 1 : 0)); const vals = cols.map(() => rand(1, 8)); const qi = rand(0, cols.length - 1); PT.ans = String(vals[qi]);
-    const dial = (c, v) => { const ang = -135 + (v - 1) * (270 / 7); return `<svg viewBox="0 0 100 100" width="110" height="110"><circle cx="50" cy="50" r="44" fill="#fff" stroke="${c}" stroke-width="6"/>${[1, 2, 3, 4, 5, 6, 7, 8].map(i => { const a = (-135 + (i - 1) * (270 / 7) - 90) * Math.PI / 180; return `<text x="${50 + 32 * Math.cos(a)}" y="${54 + 32 * Math.sin(a)}" font-size="11" text-anchor="middle" font-weight="700">${i}</text>`; }).join('')}<line x1="50" y1="50" x2="${50 + 26 * Math.cos((ang - 90) * Math.PI / 180)}" y2="${50 + 26 * Math.sin((ang - 90) * Math.PI / 180)}" stroke="${c}" stroke-width="4" stroke-linecap="round"/><circle cx="50" cy="50" r="4" fill="#333"/></svg>`; };
-    ptShell(`<div class="qtext" id="owtq">İyi bak! 👀</div><div class="owtrow" id="owtd">${cols.map((c, i) => dial(c[1], vals[i])).join('')}</div><div id="owta"></div><div id="ptfb"></div>`, sub);
-    PT.to = setTimeout(() => { if (!$('#owtd')) return; $('#owtd').innerHTML = cols.map(c => `<svg viewBox="0 0 100 100" width="110" height="110"><circle cx="50" cy="50" r="44" fill="#eee" stroke="${c[1]}" stroke-width="6"/><text x="50" y="58" font-size="26" text-anchor="middle">?</text></svg>`).join(''); $('#owtq').innerHTML = `<b style="color:${cols[qi][1]}">${cols[qi][0]}</b> gösterge kaçı gösteriyordu?`; $('#owta').innerHTML = `<div class="ptbarw"><i id="ptbar"></i></div>` + opts(vals[qi], [1, 2, 3, 4, 5, 6, 7, 8].filter(v => v !== vals[qi]).sort(() => Math.random() - .5).slice(0, 3)); ptTimer(10, () => ptAnswer(false, `Süre doldu! Cevap ${vals[qi]}`)); }, 3000 - lvl * 500);
-  } else if (k === 'rot') {
-    const steps = Array.from({ length: 2 + lvl }, () => pick(['sağa', 'sola', 'geri'].slice(0, lvl ? 3 : 2))); let d = 0; steps.forEach(s => { d = (d + (s === 'sağa' ? 1 : s === 'sola' ? 3 : 2)) % 4; });
+    ptShell(`${timeBar}<div class="qtext">Uçak <b style="color:#3CB371">B</b>'den 🏁'e uçtu. Uçağın gözünden bak: ${ask === 'T' ? '<b>toplam kaç kez</b> döndü?' : `kaç kez <b>${ask === 'R' ? 'SAĞA ➡️' : 'SOLA ⬅️'}</b> döndü?`}</div>${svg}${ptOpts(ans, near(ans, 1, -1, 2, -2, 3))}<div id="ptfb"></div>`);
+    ptTimer(Math.max(12, 24 - L), () => ptAnswer(false, `Süre doldu! Cevap ${ans}`));
+  },
+  rot(L) {
+    const steps = Array.from({ length: 2 + Math.floor((L - 1) / 2) }, () => pick(L >= 2 ? ['sağa', 'sola', 'geri'] : ['sağa', 'sola'])); let d = 0; steps.forEach(s => { d = (d + (s === 'sağa' ? 1 : s === 'sola' ? 3 : 2)) % 4; });
     const D = [['⬆️', 'yukarı'], ['➡️', 'sağa'], ['⬇️', 'aşağı'], ['⬅️', 'sola']]; PT.ans = D[d][0];
-    ptShell(`<div class="qemo" id="rotp">✈️⬆️</div><div class="qtext" id="rots">Uçak yukarı bakıyor. Dinle!</div><div id="rota"></div><div id="ptfb"></div>`, sub);
-    let i = 0; const nx = () => { if (!$('#rots') || VIEW !== 'pilot') return; if (i < steps.length) { const t = steps[i] === 'geri' ? 'Geri dön!' : steps[i][0].toUpperCase() + steps[i].slice(1) + ' dön!'; $('#rots').textContent = t; speak(t); i++; PT.to = setTimeout(nx, 1700); } else { $('#rots').textContent = 'Şimdi uçak nereye bakıyor?'; $('#rotp').textContent = '✈️❓'; $('#rota').innerHTML = `<div class="ptbarw"><i id="ptbar"></i></div><div class="opts">${D.map(x => `<button class="opt" data-a="ptpick" data-v="${x[0]}">${x[0]} ${x[1]}</button>`).join('')}</div>`; ptTimer(8, () => ptAnswer(false, `Süre doldu! Cevap ${D[d][0]}`)); } };
+    ptShell(`<div class="qemo" id="rotp">✈️⬆️</div><div class="qtext" id="rots">Uçak yukarı bakıyor. Dinle!</div><div id="rota"></div><div id="ptfb"></div>`);
+    let i = 0; const nx = () => { if (!$('#rots') || VIEW !== 'pilot') return; if (i < steps.length) { const t = steps[i] === 'geri' ? 'Geri dön!' : steps[i][0].toUpperCase() + steps[i].slice(1) + ' dön!'; $('#rots').textContent = t; speak(t); i++; PT.to = setTimeout(nx, 1700); } else { $('#rots').textContent = 'Şimdi uçak nereye bakıyor?'; $('#rotp').textContent = '✈️❓'; $('#rota').innerHTML = timeBar + `<div class="opts">${D.map(x => `<button class="opt" data-a="ptpick" data-v="${x[0]}">${x[0]} ${x[1]}</button>`).join('')}</div>`; ptTimer(8, () => ptAnswer(false, `Süre doldu! Cevap ${D[d][0]} ${D[d][1]}`)); } };
     PT.to = setTimeout(nx, 1500);
-  }
+  },
+  kup(L) {
+    const ROLL = { 'öne': { 'üst': 'ön', 'ön': 'alt', 'alt': 'arka', 'arka': 'üst' }, 'arkaya': { 'üst': 'arka', 'arka': 'alt', 'alt': 'ön', 'ön': 'üst' }, 'sağa': { 'üst': 'sağ', 'sağ': 'alt', 'alt': 'sol', 'sol': 'üst' }, 'sola': { 'üst': 'sol', 'sol': 'alt', 'alt': 'sağ', 'sağ': 'üst' } };
+    const steps = Array.from({ length: Math.min(7, L - 3) }, () => pick(Object.keys(ROLL))); let f = 'üst'; steps.forEach(s => { f = ROLL[s][f] || f; }); PT.ans = f;
+    const cube = `<svg viewBox="0 0 120 110" width="130" height="120"><polygon points="60,8 108,30 60,52 12,30" fill="#FFE082" stroke="#333" stroke-width="2"/><polygon points="12,30 60,52 60,104 12,82" fill="#90CAF9" stroke="#333" stroke-width="2"/><polygon points="108,30 60,52 60,104 108,82" fill="#A5D6A7" stroke="#333" stroke-width="2"/><text x="60" y="37" font-size="20" text-anchor="middle">⭐</text><text x="36" y="76" font-size="10" text-anchor="middle">ön</text><text x="84" y="76" font-size="10" text-anchor="middle">sağ</text></svg>`;
+    ptShell(`<div id="kupc" class="center">${cube}</div><div class="qtext" id="rots">Yıldız <b>üstte</b>. Ön yüz sana bakıyor. Dinle!</div><div id="rota"></div><div id="ptfb"></div>`);
+    let i = 0; const gap = Math.max(1300, 2000 - (L - 6) * 150); const nx = () => { if (!$('#rots') || VIEW !== 'pilot') return; if (i < steps.length) { const t = `${i + 1}. ${steps[i][0].toUpperCase() + steps[i].slice(1)} yuvarla!`; $('#rots').textContent = t; speak(steps[i] + ' yuvarla'); i++; PT.to = setTimeout(nx, gap); } else { $('#kupc').innerHTML = '<div class="qemo">🧊❓</div>'; $('#rots').textContent = 'Yıldız şimdi hangi yüzde?'; $('#rota').innerHTML = timeBar + `<div class="opts six">${['üst', 'alt', 'ön', 'arka', 'sağ', 'sol'].map(x => `<button class="opt" data-a="ptpick" data-v="${x}">${x}</button>`).join('')}</div>`; ptTimer(10, () => ptAnswer(false, `Süre doldu! Yıldız ${f} yüzde`)); } };
+    PT.to = setTimeout(nx, 1800);
+  },
+  ppt(L) {
+    const OPP = { 'alt': 'üst', 'üst': 'alt', 'ön': 'arka', 'arka': 'ön', 'sağ': 'sol', 'sol': 'sağ' };
+    const grow = () => { const c = [[0, 0]]; const has = (x, y) => c.some(p => p[0] === x && p[1] === y); while (c.length < 6) { const [x, y] = pick(c), [dx, dy] = pick([[1, 0], [-1, 0], [0, 1], [0, -1]]); if (!has(x + dx, y + dy)) c.push([x + dx, y + dy]); } return c; };
+    const fold = c => { const key = (x, y) => x + ',' + y, F = {}; F[key(...c[0])] = { F: 'alt', N: 'arka', E: 'sağ' }; const q = [c[0]]; while (q.length) { const [x, y] = q.shift(), fr = F[key(x, y)]; for (const [dx, dy, f] of [[1, 0, o => ({ F: o.E, N: o.N, E: OPP[o.F] })], [-1, 0, o => ({ F: OPP[o.E], N: o.N, E: o.F })], [0, -1, o => ({ F: o.N, N: OPP[o.F], E: o.E })], [0, 1, o => ({ F: OPP[o.N], N: o.F, E: o.E })]]) { const k = key(x + dx, y + dy); if (c.some(p => key(...p) === k) && !F[k]) { F[k] = f(fr); q.push([x + dx, y + dy]); } } } const faces = c.map(p => F[key(...p)].F); return { ok: new Set(faces).size === 6, faces }; };
+    const SYM = ['⭐', '❤️', '🔺', '🟦', '🌙', '⚡'];
+    const draw = (c, syms) => { const mx = Math.min(...c.map(p => p[0])), my = Math.min(...c.map(p => p[1])), W = Math.max(...c.map(p => p[0])) - mx + 1, H = Math.max(...c.map(p => p[1])) - my + 1, s = 46; return `<svg viewBox="0 0 ${W * s + 4} ${H * s + 4}" width="${W * s + 4}" class="netsvg">${c.map((p, i) => `<rect x="${(p[0] - mx) * s + 2}" y="${(p[1] - my) * s + 2}" width="${s}" height="${s}" fill="#FFF8E1" stroke="#333" stroke-width="2"/>${syms ? `<text x="${(p[0] - mx) * s + 2 + s / 2}" y="${(p[1] - my) * s + 2 + s / 2 + 8}" font-size="22" text-anchor="middle">${syms[i]}</text>` : ''}`).join('')}</svg>`; };
+    const askOpp = L >= 7 && Math.random() < (L >= 9 ? .75 : .5);
+    if (!askOpp) {
+      const want = Math.random() < .5; let c, r, g = 0; do { c = grow(); r = fold(c); } while (r.ok !== want && g++ < 500);
+      PT.ans = r.ok ? 'Evet, küp olur' : 'Hayır, olmaz';
+      ptShell(`${timeBar}<div class="qtext">Bu açınım katlanınca <b>küp</b> olur mu?</div><div class="center">${draw(c)}</div><div class="opts"><button class="opt" data-a="ptpick" data-v="Evet, küp olur">✅ Evet, küp olur</button><button class="opt" data-a="ptpick" data-v="Hayır, olmaz">❌ Hayır, olmaz</button></div><div id="ptfb"></div>`);
+      ptTimer(Math.max(12, 25 - L), () => ptAnswer(false, `Süre doldu! Cevap: ${PT.ans}`));
+    } else {
+      let c, r, g = 0; do { c = grow(); r = fold(c); } while (!r.ok && g++ < 800); const syms = shuffle(SYM); const ai = rand(0, 5); const oppFace = OPP[r.faces[ai]]; const bi = r.faces.indexOf(oppFace); PT.ans = syms[bi];
+      ptShell(`${timeBar}<div class="qtext">Küp katlanınca <b>${syms[ai]}</b> yüzünün <b>karşısına</b> hangisi gelir?</div><div class="center">${draw(c, syms)}</div><div class="opts">${shuffle([syms[bi], ...shuffle(syms.filter((_, i) => i !== ai && i !== bi)).slice(0, 3)]).map(x => `<button class="opt" data-a="ptpick" data-v="${x}">${x}</button>`).join('')}</div><div id="ptfb"></div>`);
+      ptTimer(Math.max(15, 30 - L), () => ptAnswer(false, `Süre doldu! Karşısı: ${PT.ans}`));
+    }
+  },
+  owt(L) {
+    const cols = [['Kırmızı', '#E53935'], ['Mavi', '#1E88E5'], ['Yeşil', '#43A047'], ['Turuncu', '#FB8C00'], ['Mor', '#8E24AA']].slice(0, Math.min(5, 3 + (L >= 4) + (L >= 7)));
+    const mxv = L >= 5 ? 12 : 8, vals = cols.map(() => rand(1, mxv)), qi = rand(0, cols.length - 1), qj = (qi + 1 + rand(0, cols.length - 2)) % cols.length, sum = L >= 8 && Math.random() < .5;
+    const ans = sum ? vals[qi] + vals[qj] : vals[qi]; PT.ans = String(ans);
+    const dial = (c, v) => { const step = 270 / (mxv - 1), ang = -135 + (v - 1) * step; return `<svg viewBox="0 0 100 100" width="104" height="104"><circle cx="50" cy="50" r="44" fill="#fff" stroke="${c}" stroke-width="6"/>${Array.from({ length: mxv }, (_, i) => { const a = (-135 + i * step - 90) * Math.PI / 180; return `<text x="${50 + 33 * Math.cos(a)}" y="${54 + 33 * Math.sin(a)}" font-size="${mxv > 8 ? 9 : 11}" text-anchor="middle" font-weight="700">${i + 1}</text>`; }).join('')}<line x1="50" y1="50" x2="${50 + 25 * Math.cos((ang - 90) * Math.PI / 180)}" y2="${50 + 25 * Math.sin((ang - 90) * Math.PI / 180)}" stroke="${c}" stroke-width="4" stroke-linecap="round"/><circle cx="50" cy="50" r="4" fill="#333"/></svg>`; };
+    ptShell(`<div class="qtext" id="owtq">İyi bak! 👀</div><div class="owtrow" id="owtd">${cols.map((c, i) => dial(c[1], vals[i])).join('')}</div><div id="owta"></div><div id="ptfb"></div>`);
+    PT.to = setTimeout(() => { if (!$('#owtd')) return; $('#owtd').innerHTML = cols.map(c => `<svg viewBox="0 0 100 100" width="104" height="104"><circle cx="50" cy="50" r="44" fill="#eee" stroke="${c[1]}" stroke-width="6"/><text x="50" y="58" font-size="26" text-anchor="middle">?</text></svg>`).join(''); $('#owtq').innerHTML = sum ? `<b style="color:${cols[qi][1]}">${cols[qi][0]}</b> + <b style="color:${cols[qj][1]}">${cols[qj][0]}</b> göstergelerin toplamı kaç?` : `<b style="color:${cols[qi][1]}">${cols[qi][0]}</b> gösterge kaçı gösteriyordu?`; $('#owta').innerHTML = timeBar + ptOpts(ans, near(ans, 1, -1, 2, -2, 3)); ptTimer(10, () => ptAnswer(false, `Süre doldu! Cevap ${ans}`)); }, Math.max(1300, 3200 - L * 190));
+  },
+  vmc(L) {
+    const n = L <= 4 ? 3 : L <= 7 ? 4 : 5, K = Math.min(n * n - 2, 2 + Math.ceil(L / 2)); const cells = shuffle([...Array(n * n).keys()]).slice(0, K); PT.vmc = { cells, n, K, sel: [] };
+    ptShell(`<div class="qtext" id="vmcq">Mavi kareleri aklında tut! (${K} kare)</div><div class="vmcgrid" style="grid-template-columns:repeat(${n},64px)">${[...Array(n * n).keys()].map(i => `<button class="vmccell ${cells.includes(i) ? 'on' : ''}" data-a="ptcell" data-v="${i}" disabled></button>`).join('')}</div><div id="vmca"></div><div id="ptfb"></div>`);
+    PT.to = setTimeout(() => { document.querySelectorAll('.vmccell').forEach(b => { b.classList.remove('on'); b.disabled = false; }); $('#vmcq').textContent = `Şimdi o ${K} kareye bas!`; $('#vmca').innerHTML = timeBar; ptTimer(Math.max(10, 18 - L * .6), () => ptAnswer(false, 'Süre doldu!')); }, Math.max(1500, 3000 - L * 140));
+  },
+  tvt(L) {
+    const kinds = ['disli', 'tahta']; if (L >= 7) kinds.push('oran'); if (L >= 9) kinds.push('makara'); const k = pick(kinds);
+    if (k === 'disli') {
+      const n = Math.min(7, 2 + Math.floor(L / 2)), belt = L >= 8 ? rand(1, n - 1) : -1; let dir = 1; const dirs = [1]; for (let i = 1; i < n; i++) { dir = i === belt ? dir : -dir; dirs.push(dir); }
+      const ans = dirs[n - 1] === 1 ? '↻ Saat yönünde' : '↺ Saatin tersine'; PT.ans = ans; const r = 26, gx = i => 40 + i * 62 + (belt >= 0 && i >= belt ? 40 : 0);
+      const svg = `<svg viewBox="0 0 ${gx(n - 1) + 50} 100" class="vlrsvg">${belt >= 0 ? `<line x1="${gx(belt - 1)}" y1="${50 - r}" x2="${gx(belt)}" y2="${50 - r}" stroke="#555" stroke-width="3"/><line x1="${gx(belt - 1)}" y1="${50 + r}" x2="${gx(belt)}" y2="${50 + r}" stroke="#555" stroke-width="3"/>` : ''}${Array.from({ length: n }, (_, i) => `<circle cx="${gx(i)}" cy="50" r="${r}" fill="${i === 0 ? '#FFE082' : i === n - 1 ? '#A5D6A7' : '#E0E0E0'}" stroke="#555" stroke-width="4" stroke-dasharray="6 3"/><text x="${gx(i)}" y="56" font-size="16" text-anchor="middle">${i === 0 ? '↻' : i === n - 1 ? '?' : ''}</text>`).join('')}</svg>`;
+      ptShell(`${timeBar}<div class="qtext">Sarı dişli <b>saat yönünde ↻</b> dönüyor. Yeşil dişli hangi yöne döner?${belt >= 0 ? ' <span class="muted small">(Kayışla bağlı tekerlekler aynı yöne döner.)</span>' : ''}</div>${svg}<div class="opts"><button class="opt" data-a="ptpick" data-v="↻ Saat yönünde">↻ Saat yönünde</button><button class="opt" data-a="ptpick" data-v="↺ Saatin tersine">↺ Saatin tersine</button></div><div id="ptfb"></div>`);
+    } else if (k === 'tahta') {
+      let wl, wr, dl, dr; if (L < 6) { dl = dr = 3; wl = rand(1, 9); wr = rand(1, 9); } else { do { wl = rand(1, 9); wr = rand(1, 9); dl = rand(1, 4); dr = rand(1, 4); } while (L >= 8 ? false : (wl * dl === wr * dr && Math.random() < .5)); if (L >= 8 && Math.random() < .3) { dl = rand(1, 4); dr = rand(1, 4); wr = dl * wl % dr === 0 ? dl * wl / dr : wr; } }
+      const tl = wl * dl, tr = wr * dr, ans = tl > tr ? 'Sol taraf iner' : tr > tl ? 'Sağ taraf iner' : 'Dengede kalır'; PT.ans = ans;
+      const x = d => 150 + d * 30, svg = `<svg viewBox="0 0 300 120" class="vlrsvg"><polygon points="150,70 135,105 165,105" fill="#8D6E63"/><rect x="20" y="64" width="260" height="8" rx="3" fill="#A1887F"/>${[1, 2, 3, 4].map(d => `<line x1="${x(d)}" y1="72" x2="${x(d)}" y2="78" stroke="#555"/><line x1="${x(-d)}" y1="72" x2="${x(-d)}" y2="78" stroke="#555"/>`).join('')}<rect x="${x(-dl) - 16}" y="30" width="32" height="34" fill="#90CAF9" stroke="#333"/><text x="${x(-dl)}" y="53" font-size="13" text-anchor="middle" font-weight="700">${wl}kg</text><rect x="${x(dr) - 16}" y="30" width="32" height="34" fill="#FFAB91" stroke="#333"/><text x="${x(dr)}" y="53" font-size="13" text-anchor="middle" font-weight="700">${wr}kg</text></svg>`;
+      ptShell(`${timeBar}<div class="qtext">Tahterevalli bırakılınca ne olur?${L >= 6 ? ' <span class="muted small">(Merkezden uzaklık da önemli! Çizgiler 1, 2, 3, 4 birim uzaklığı gösterir.)</span>' : ''}</div>${svg}<div class="opts">${['Sol taraf iner', 'Sağ taraf iner', 'Dengede kalır'].map(o => `<button class="opt" data-a="ptpick" data-v="${o}">${o}</button>`).join('')}</div><div id="ptfb"></div>`);
+      PT.ans = ans;
+    } else if (k === 'oran') {
+      const small = pick([6, 8, 10, 12]), mult = rand(2, L >= 9 ? 5 : 3), big = small * mult, turns = L >= 9 ? rand(2, 4) : 1, ans = mult * turns; PT.ans = String(ans);
+      ptShell(`${timeBar}<div class="qtext">Büyük dişlide <b>${big}</b> diş, küçük dişlide <b>${small}</b> diş var. Büyük dişli <b>${turns}</b> tur dönerse küçük dişli kaç tur döner?</div><div class="qemo">⚙️⚙️</div>${ptOpts(ans, near(ans, 1, -1, 2, -mult, mult))}<div id="ptfb"></div>`);
+    } else {
+      const w = pick([10, 20, 30, 40, 60, 80]), m = pick([1, 2]), ans = w / (m === 1 ? 1 : 2); PT.ans = String(ans);
+      ptShell(`${timeBar}<div class="qtext">${m === 1 ? '<b>Sabit makara</b> (tavana bağlı)' : '<b>Hareketli makara</b> (yükle birlikte yükselen)'} ile <b>${w} kg</b> yükü kaldırmak için yaklaşık kaç kg'lık güç gerekir?</div><div class="qemo">🪝${m === 1 ? '' : '🔄'}📦</div>${ptOpts(ans, [w, w / 2, w * 2, w / 4].filter(x => x !== ans && Number.isInteger(x)))}<div class="muted small">İpucu: Sabit makara sadece yönü değiştirir; hareketli makara yükü ikiye böler.</div><div id="ptfb"></div>`);
+    }
+    ptTimer(Math.max(12, 25 - L), () => ptAnswer(false, `Süre doldu! Cevap: ${PT.ans}`));
+  },
+  ing(L) {
+    const all = Object.values(ING_VOCAB), words = all.flatMap(t => t.kelimeler), phr = all.flatMap(t => t.kaliplar);
+    const kinds = ['tr2en', 'dinle', 'cumle', 'yazim', 'bosluk'].slice(0, Math.max(1, L - 5)); const k = pick(L >= 9 ? kinds.slice(-3) : kinds);
+    if (k === 'tr2en') { const [en, tr, emo] = pick(words); PT.ans = en; ptShell(`${timeBar}<div class="qemo">${emo}</div><div class="qtext">"${tr}" İngilizcesi hangisi?</div>${ptOpts(en, shuffle(words.filter(w => w[0] !== en)).slice(0, 5).map(w => w[0]))}<div id="ptfb"></div>`); }
+    else if (k === 'dinle') { const [en, tr, emo] = pick(words); PT.ans = emo + ' ' + tr; ptShell(`${timeBar}<div class="qemo">🎧</div><div class="qtext">Dinle: hangisi? <button class="iconbtn sm" data-a="speaken" data-t="${esc(en)}">🔊</button></div>${ptOpts(PT.ans, shuffle(words.filter(w => w[0] !== en)).slice(0, 5).map(w => w[2] + ' ' + w[1]))}<div id="ptfb"></div>`); speakEN(en); }
+    else if (k === 'cumle') { const [en, tr] = pick(phr); PT.ans = tr; ptShell(`${timeBar}<div class="qtext">"<b>${esc(en)}</b>" ne demek?</div>${ptOpts(tr, shuffle(phr.filter(p => p[1] !== tr)).slice(0, 5).map(p => p[1]))}<div id="ptfb"></div>`); }
+    else if (k === 'yazim') { const [en, tr, emo] = pick(words.filter(w => w[0].length >= 5 && /^[a-z]+$/.test(w[0]))); const v = new Set(); while (v.size < 3) { const i = rand(1, en.length - 2), t = rand(0, 2); const w2 = t === 0 ? en.slice(0, i) + en[i + 1] + en[i] + en.slice(i + 2) : t === 1 ? en.slice(0, i) + en.slice(i + 1) : en.slice(0, i) + en[i] + en.slice(i); if (w2 !== en) v.add(w2); } PT.ans = en; ptShell(`${timeBar}<div class="qemo">${emo}</div><div class="qtext">"${tr}" kelimesinin <b>doğru yazılışı</b> hangisi?</div>${ptOpts(en, [...v])}<div id="ptfb"></div>`); }
+    else { const cand = phr.filter(p => p[0].split(' ').some(w => /^[A-Za-z]{3,}$/.test(w))); const [en, tr] = pick(cand); const ws = en.split(' '); const idx = shuffle(ws.map((w, i) => i).filter(i => /^[A-Za-z]{3,}$/.test(ws[i])))[0]; const gap = ws[idx]; PT.ans = gap; const pool = [...new Set(phr.flatMap(p => p[0].split(' ')).filter(w => /^[A-Za-z]{3,}$/.test(w) && w.toLowerCase() !== gap.toLowerCase()))]; ptShell(`${timeBar}<div class="qtext">Boşluğa hangisi gelir?</div><div class="qtext big2">${esc(ws.map((w, i) => i === idx ? '_____' : w).join(' '))}</div><div class="muted small">(${esc(tr)})</div>${ptOpts(gap, shuffle(pool).slice(0, 5))}<div id="ptfb"></div>`); }
+    ptTimer(Math.max(12, 22 - L), () => ptAnswer(false, `Süre doldu! Cevap: ${PT.ans}`));
+  },
+};
+function ptQ() { PT.answered = false; const k = PT.tests[PT.ti]; PT_GEN[k](PT.L); const pill = document.querySelector('.rtop .pill'); if (pill) pill.textContent = `${PT.only ? '' : `Test ${PT.ti + 1}/${PT.tests.length} · `}Soru ${PT.q + 1}/${ptQN(PT.L)}`; }
+function ptCell(i) {
+  const V = PT.vmc; if (!V || PT.answered) return; i = +i; const b = document.querySelector(`.vmccell[data-v="${i}"]`); if (V.sel.includes(i)) { V.sel = V.sel.filter(x => x !== i); b.classList.remove('pick'); return; }
+  V.sel.push(i); b.classList.add('pick'); if (V.sel.length >= V.K) { const ok = V.sel.every(x => V.cells.includes(x)); document.querySelectorAll('.vmccell').forEach(c => { const j = +c.dataset.v; if (V.cells.includes(j)) c.classList.add('on'); if (c.classList.contains('pick') && !V.cells.includes(j)) c.classList.add('bad'); c.disabled = true; }); ptAnswer(ok, 'Mavi kareler doğru yerleri gösteriyor'); }
 }
 function ptTestEnd() {
-  const k = PT.tests[PT.ti][0], sc = Math.round(PT.ok / PT_N * 100); PT.scores[k] = sc; S.pilot = S.pilot || {}; S.pilot.t = S.pilot.t || {}; S.pilot.t[k] = Math.max(S.pilot.t[k] || 0, sc); save();
-  PT.ti++; if (PT.ti < PT.tests.length) { ptShell(`<div class="qemo">${sc >= 70 ? '✅' : '💪'}</div><div class="qtext">${PT.tests[PT.ti - 1][2]}: <b>${sc} puan</b></div><div class="row center"><button class="btn primary" data-a="ptnext">Sıradaki test: ${PT.tests[PT.ti][1]} ${PT.tests[PT.ti][2]} ▶</button></div>`); return; }
-  const vals = Object.values(PT.scores), tot = Math.round(vals.reduce((a, b) => a + b, 0) / vals.length); VIEW = 'end';
-  if (!PT.only) { S.pilot.b1 = Math.max(S.pilot.b1 || 0, tot); S.pilot.n1 = (S.pilot.n1 || 0) + 1; }
-  addStar(true, Math.max(1, Math.round(tot / 25))); save(); if (tot >= 70) { confetti(); sfx('win'); }
-  app.innerHTML = `<div class="endcard center"><div class="bigemo">${tot >= 70 ? '🛫' : '🎓'}</div><h2>${PT.only ? PT.tests[0][2] : 'DLR-1'} sonucu: ${tot} puan</h2>
-  <div class="ptres">${Object.entries(PT.scores).map(([k, v]) => { const t = PT_TESTS.find(x => x[0] === k); return `<div><span>${t[1]} ${t[2]}</span><b>${v}</b></div>`; }).join('')}</div>
-  <p>${PT.only ? '' : tot >= 70 ? 'Tebrikler! DLR-1\'i geçtin, artık <b>Yardımcı Pilot</b>sun. Simülatör (DLR-2) açıldı! 🕹️' : '70 puanla geçilir. Biraz daha çalışınca olacak! 💪'}</p>
-  <div class="row center"><button class="btn primary" data-a="pilot">Akademiye dön ✈️</button><button class="btn soft" data-a="home">Ana sayfa 🏠</button></div></div>`;
+  const k = PT.tests[PT.ti], sc = Math.round(PT.ok / ptQN(PT.L) * 100); ptRecord(k, sc); PT.ti++;
+  if (PT.ti < PT.tests.length) { const nk = PT.tests[PT.ti]; ptShell(`<div class="qemo">${sc >= 70 ? '✅' : '💪'}</div><div class="qtext">${PT_ALL[k][1]}: <b>${sc} puan</b></div><div class="row center"><button class="btn primary" data-a="ptnext">Sıradaki: ${PT_ALL[nk][0]} ${PT_ALL[nk][1]} ▶</button></div>`); return; }
+  ptFinish();
 }
-/* DLR-2: uçuş simülatörü (takip + kırmızı ışık + işlem kontrolü) */
+function ptRecord(k, sc) { const P = ptData(); PT.scores[k] = sc; P.t[k] = P.t[k] || {}; P.t[k][PT.L] = Math.max(P.t[k][PT.L] || 0, sc); save(); }
+function ptFinish() {
+  const P = ptData(), vals = Object.values(PT.scores), tot = Math.round(vals.reduce((a, b) => a + b, 0) / vals.length); VIEW = 'end'; app.classList.remove('wide');
+  let up = false; if (!PT.only) { P.best[PT.L] = Math.max(P.best[PT.L] || 0, tot); if (tot >= 70 && PT.L > P.lv) { P.lv = PT.L; up = true; } }
+  addStar(true, Math.max(1, Math.round(tot / 25) + (PT.only ? 0 : Math.floor(PT.L / 3)))); save(); if (tot >= 70) { confetti(); sfx('win'); }
+  app.innerHTML = `<div class="endcard center"><div class="bigemo">${tot >= 70 ? '🛫' : '🎓'}</div><h2>${PT.only ? PT_ALL[PT.tests[0]][1] : 'DLR-' + PT.L} sonucu: ${tot} puan</h2>
+  <div class="ptres">${Object.entries(PT.scores).map(([k, v]) => `<div><span>${PT_ALL[k][0]} ${PT_ALL[k][1]}</span><b>${v}</b></div>`).join('')}</div>
+  <p>${PT.only ? '' : up ? `Tebrikler! Yeni rütben: <b>${PT_RANKS[PT.L - 1]}</b>${PT.L < 10 ? ` · DLR-${PT.L + 1} açıldı!` : ' · Akademinin en zor seviyesini geçtin! 🏆'}` : tot >= 70 ? 'Harika uçuş! ✈️' : '70 puanla geçilir. En düşük puanlı testi tek tek çalışabilirsin! 💪'}</p>
+  <div class="row center"><button class="btn primary" data-a="pilot">Akademiye dön ✈️</button>${!PT.only && tot >= 70 && PT.L < 10 ? `<button class="btn green" data-a="pilotlv" data-v="${PT.L + 1}">DLR-${PT.L + 1}'e geç ▶</button>` : ''}<button class="btn soft" data-a="home">Ana sayfa 🏠</button></div></div>`;
+}
+/* Uçuş simülatörü — seviyeye göre halka küçülür, rüzgâr ve olaylar hızlanır */
 let SIM = null;
-function pilotStart2() {
-  VIEW = 'sim'; app.classList.add('wide'); stopSpeak();
-  app.innerHTML = `<div class="rtop"><button class="btn soft sm" data-a="pilot">← Akademi</button><div class="rtitle">🕹️ DLR-2 Simülatör</div><div class="pill" id="simt">60 sn</div></div>
-  <div class="simwrap"><canvas id="simc" width="960" height="520"></canvas><div class="simhelp">⬅️⬆️➡️⬇️ ile uçağı <b>halkanın içinde</b> tut · 🔴 kırmızı ışık yanınca <b>Boşluk</b> · İşlem çıkınca doğruysa <b>D</b>, yanlışsa <b>Y</b> <button class="btn primary sm" id="simgo">Başla ▶</button></div></div>`;
-  $('#simgo').onclick = () => { $('#simgo').remove(); simRun(); };
+function pilotSim() {
+  VIEW = 'sim'; app.classList.add('wide'); stopSpeak(); const L = PT.L;
+  app.innerHTML = `<div class="rtop"><button class="btn soft sm" data-a="pilot">← Akademi</button><div class="rtitle">🕹️ Uçuş Simülatörü <span class="muted small">DLR-${L}</span></div><div class="pill" id="simt">45 sn</div></div>
+  <div class="simwrap"><canvas id="simc" width="960" height="520"></canvas><div class="simhelp">⬅️⬆️➡️⬇️ ile uçağı <b>halkanın içinde</b> tut · 🔴 kırmızı ışık yanınca <b>Boşluk</b> (yeşilde basma) · İşlem çıkınca doğruysa <b>D</b>, yanlışsa <b>Y</b> <button class="btn primary sm" id="simgo">Başla ▶</button></div></div>`;
+  $('#simgo').onclick = () => { $('#simgo').remove(); simRun(L); };
 }
-function simRun() {
-  const c = $('#simc'), g = c.getContext('2d'), W = c.width, H = c.height;
-  SIM = { x: W / 2, y: H / 2 + H * .28, vx: 0, vy: 0, keys: {}, t0: performance.now(), inT: 0, tot: 0, light: null, nextL: 3000, lHit: 0, lN: 0, math: null, nextM: 7000, mHit: 0, mN: 0, msg: '', msgT: 0 };
+function simRun(L) {
+  const c = $('#simc'), g = c.getContext('2d'), W = c.width, H = c.height, DUR = 45000, R = Math.max(30, 62 - L * 3), SP = .7 + L * .07, WIND = .004 + L * .0009;
+  SIM = { x: W / 2, y: H / 2 + H * .28, vx: 0, vy: 0, keys: {}, t0: performance.now(), inT: 0, tot: 0, light: null, nextL: 3000, lHit: 0, lN: 0, lFalse: 0, math: null, nextM: 6000, mHit: 0, mN: 0, msg: '', msgT: 0 };
+  const mk = () => { if (L <= 4) { const a = rand(2, 15), b = rand(2, 15); return [a + b, `${a} + ${b}`]; } if (L <= 7) { const t = pick(['+', '−', '×']); if (t === '×') { const a = rand(2, 9), b = rand(2, 9); return [a * b, `${a} × ${b}`]; } const a = rand(20, 99), b = rand(5, 40); return t === '+' ? [a + b, `${a} + ${b}`] : [a - b, `${a} − ${b}`]; } const a = rand(3, 12), b = rand(3, 12), cc = rand(2, 20); return [a * b + cc, `${a} × ${b} + ${cc}`]; };
   const kd = e => { if (VIEW !== 'sim') return; const k = e.key.toLowerCase(); if (['arrowup', 'arrowdown', 'arrowleft', 'arrowright', ' '].includes(k)) e.preventDefault(); SIM.keys[k] = true;
-    if (k === ' ' && SIM.light) { if (SIM.light.red) { SIM.lHit++; SIM.msg = '✅ Kırmızıyı yakaladın!'; } else SIM.msg = '❌ Yeşilde basma!'; SIM.light.done = true; SIM.msgT = 1200; }
+    if (k === ' ' && SIM.light && !SIM.light.done) { if (SIM.light.red) { SIM.lHit++; SIM.msg = '✅ Kırmızıyı yakaladın!'; } else { SIM.lFalse++; SIM.msg = '❌ Yeşilde basma!'; } SIM.light.done = true; SIM.msgT = 1200; }
     if ((k === 'd' || k === 'y') && SIM.math && !SIM.math.done) { const ok = (k === 'd') === SIM.math.ok; if (ok) SIM.mHit++; SIM.msg = ok ? '✅ İşlem kontrolü doğru' : '❌ İşlem kontrolü yanlış'; SIM.msgT = 1200; SIM.math.done = true; } };
   const ku = e => { SIM.keys[e.key.toLowerCase()] = false; };
   addEventListener('keydown', kd); addEventListener('keyup', ku);
   let last = performance.now();
   const loop = now => {
     if (VIEW !== 'sim') { removeEventListener('keydown', kd); removeEventListener('keyup', ku); return; }
-    const dt = Math.min(50, now - last); last = now; const el = now - SIM.t0, left = Math.max(0, 60000 - el);
-    // hedef halka
-    const tx = W / 2 + Math.sin(el / 2300) * W * .32 + Math.sin(el / 870) * 40, ty = H / 2 + Math.cos(el / 3100) * H * .28 + Math.sin(el / 1300) * 25, R = 48;
-    // rüzgâr + kontrol
+    const dt = Math.min(50, now - last); last = now; const el = now - SIM.t0, left = Math.max(0, DUR - el), e2 = el * SP;
+    const tx = W / 2 + Math.sin(e2 / 2300) * W * .32 + Math.sin(e2 / 870) * 40, ty = H / 2 + Math.cos(e2 / 3100) * H * .28 + Math.sin(e2 / 1300) * 25;
     const ax = (SIM.keys.arrowright ? 1 : 0) - (SIM.keys.arrowleft ? 1 : 0), ay = (SIM.keys.arrowdown ? 1 : 0) - (SIM.keys.arrowup ? 1 : 0);
-    SIM.vx = (SIM.vx + ax * .045 * dt + Math.sin(el / 1700) * .006 * dt) * .93; SIM.vy = (SIM.vy + ay * .045 * dt + Math.cos(el / 2100) * .006 * dt) * .93;
+    SIM.vx = (SIM.vx + ax * .045 * dt + Math.sin(el / 1700) * WIND * dt) * .93; SIM.vy = (SIM.vy + ay * .045 * dt + Math.cos(el / 2100) * WIND * dt) * .93;
     SIM.x = Math.max(15, Math.min(W - 15, SIM.x + SIM.vx * dt * .03)); SIM.y = Math.max(15, Math.min(H - 49, SIM.y + SIM.vy * dt * .03));
     const inside = Math.hypot(SIM.x - tx, SIM.y - ty) < R; SIM.tot += dt; if (inside) SIM.inT += dt;
-    // ışık
-    SIM.nextL -= dt; if (!SIM.light && SIM.nextL <= 0) { SIM.light = { red: Math.random() < .6, t: 1600 }; if (SIM.light.red) SIM.lN++; }
-    if (SIM.light) { SIM.light.t -= dt; if (SIM.light.t <= 0) { if (SIM.light.red && !SIM.light.done) { SIM.msg = '⏰ Kırmızıyı kaçırdın'; SIM.msgT = 1000; } if (!SIM.light.red && !SIM.light.done) SIM.lHit += 0; SIM.light = null; SIM.nextL = 2500 + Math.random() * 3000; } }
-    // işlem
-    SIM.nextM -= dt; if (!SIM.math && SIM.nextM <= 0) { const a = rand(2, 15), b = rand(2, 15), ok = Math.random() < .5, r = a + b + (ok ? 0 : pick([-2, -1, 1, 2])); SIM.math = { txt: `${a} + ${b} = ${r}`, ok, t: 4000 }; SIM.mN++; }
-    if (SIM.math) { SIM.math.t -= dt; if (SIM.math.t <= 0 || SIM.math.done && SIM.math.t < 3000) { if (!SIM.math.done) { SIM.msg = '⏰ İşlemi kontrol etmedin'; SIM.msgT = 1000; } SIM.math = null; SIM.nextM = 6000 + Math.random() * 3000; } }
-    // çizim
-    g.fillStyle = '#BFE3FF'; g.fillRect(0, 0, W, H); g.fillStyle = '#fff'; for (let i = 0; i < 6; i++) { const cx = ((i * 190 - el * .03) % (W + 200) + W + 200) % (W + 200) - 100; g.beginPath(); g.arc(cx, 60 + (i % 3) * 140, 30, 0, 7); g.arc(cx + 30, 55 + (i % 3) * 140, 38, 0, 7); g.arc(cx + 65, 62 + (i % 3) * 140, 28, 0, 7); g.fill(); }
+    SIM.nextL -= dt; if (!SIM.light && SIM.nextL <= 0) { SIM.light = { red: Math.random() < .6, t: Math.max(900, 1700 - L * 70) }; if (SIM.light.red) SIM.lN++; }
+    if (SIM.light) { SIM.light.t -= dt; if (SIM.light.t <= 0) { if (SIM.light.red && !SIM.light.done) { SIM.msg = '⏰ Kırmızıyı kaçırdın'; SIM.msgT = 1000; } SIM.light = null; SIM.nextL = Math.max(1200, 2800 - L * 120) + Math.random() * 2500; } }
+    SIM.nextM -= dt; if (!SIM.math && SIM.nextM <= 0) { const [v, txt] = mk(), ok = Math.random() < .5; SIM.math = { txt: `${txt} = ${ok ? v : v + pick([-2, -1, 1, 2, 10, -10])}`, ok, t: Math.max(3000, 5000 - L * 150) }; SIM.mN++; }
+    if (SIM.math) { SIM.math.t -= dt; if (SIM.math.t <= 0 || SIM.math.done && SIM.math.t < 2500) { if (!SIM.math.done) { SIM.msg = '⏰ İşlemi kontrol etmedin'; SIM.msgT = 1000; } SIM.math = null; SIM.nextM = Math.max(3500, 7000 - L * 300) + Math.random() * 2500; } }
+    g.fillStyle = '#BFE3FF'; g.fillRect(0, 0, W, H); g.fillStyle = '#fff'; for (let i = 0; i < 6; i++) { const cx = ((i * 190 - el * .03 * SP) % (W + 200) + W + 200) % (W + 200) - 100; g.beginPath(); g.arc(cx, 60 + (i % 3) * 140, 30, 0, 7); g.arc(cx + 30, 55 + (i % 3) * 140, 38, 0, 7); g.arc(cx + 65, 62 + (i % 3) * 140, 28, 0, 7); g.fill(); }
     g.lineWidth = 6; g.strokeStyle = inside ? '#2E7D32' : '#F4B400'; g.setLineDash([12, 8]); g.beginPath(); g.arc(tx, ty, R, 0, 7); g.stroke(); g.setLineDash([]);
     g.font = '40px serif'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.save(); g.translate(SIM.x, SIM.y); g.rotate(Math.PI / 4 + SIM.vx * .15); g.fillText('✈️', 0, 0); g.restore();
     g.beginPath(); g.arc(W - 50, 50, 26, 0, 7); g.fillStyle = SIM.light ? (SIM.light.red ? '#E53935' : '#43A047') : '#666'; g.fill(); g.strokeStyle = '#333'; g.lineWidth = 3; g.stroke();
-    if (SIM.math) { g.fillStyle = 'rgba(255,255,255,.92)'; g.fillRect(20, 20, 250, 60); g.fillStyle = '#2B2550'; g.font = 'bold 26px sans-serif'; g.textAlign = 'left'; g.fillText(SIM.math.txt + ' ?', 34, 50); g.font = '13px sans-serif'; g.fillText('Doğru: D   Yanlış: Y', 34, 72); }
+    if (SIM.math) { g.fillStyle = 'rgba(255,255,255,.92)'; g.fillRect(20, 20, 300, 60); g.fillStyle = '#2B2550'; g.font = 'bold 24px sans-serif'; g.textAlign = 'left'; g.fillText(SIM.math.txt + ' ?', 34, 48); g.font = '13px sans-serif'; g.fillText('Doğru: D   Yanlış: Y', 34, 72); }
     g.fillStyle = 'rgba(0,0,0,.55)'; g.fillRect(0, H - 34, W, 34); g.fillStyle = '#fff'; g.font = 'bold 16px sans-serif'; g.textAlign = 'left'; g.fillText(`Halkada: %${Math.round(SIM.inT / SIM.tot * 100) || 0}   Işık: ${SIM.lHit}/${SIM.lN}   İşlem: ${SIM.mHit}/${SIM.mN}`, 14, H - 12);
     if (SIM.msgT > 0) { SIM.msgT -= dt; g.textAlign = 'center'; g.font = 'bold 22px sans-serif'; g.fillStyle = '#2B2550'; g.fillText(SIM.msg, W / 2, 40); }
     const st = $('#simt'); if (st) st.textContent = Math.ceil(left / 1000) + ' sn';
@@ -1016,10 +1127,10 @@ function simRun() {
   requestAnimationFrame(loop);
 }
 function simEnd() {
-  const tr = SIM.inT / SIM.tot, la = SIM.lN ? SIM.lHit / SIM.lN : 1, ma = SIM.mN ? SIM.mHit / SIM.mN : 1, sc = Math.round(Math.min(1, tr * 1.25) * 60 + la * 20 + ma * 20);
-  S.pilot = S.pilot || {}; S.pilot.b2 = Math.max(S.pilot.b2 || 0, sc); S.pilot.n2 = (S.pilot.n2 || 0) + 1; addStar(true, Math.max(1, Math.round(sc / 25))); save(); VIEW = 'end'; app.classList.remove('wide'); if (sc >= 70) { confetti(); sfx('win'); }
-  app.innerHTML = `<div class="endcard center"><div class="bigemo">${sc >= 70 ? '👨‍✈️' : '🛫'}</div><h2>Simülatör puanın: ${sc}</h2><div class="ptres"><div><span>🎯 Halkada kalma</span><b>%${Math.round(tr * 100)}</b></div><div><span>🔴 Kırmızı ışık</span><b>${SIM.lHit}/${SIM.lN}</b></div><div><span>🧮 İşlem kontrolü</span><b>${SIM.mHit}/${SIM.mN}</b></div></div>
-  <p>${sc >= 70 ? 'Muhteşem! Artık <b>Kaptan Pilot</b>sun! 👨‍✈️' : '70 puanla Kaptan olursun. Uçağı halkada tutmaya odaklan!'}</p><div class="row center"><button class="btn primary" data-a="pilot2">Tekrar uç 🔁</button><button class="btn soft" data-a="pilot">Akademiye dön</button></div></div>`;
+  const tr = SIM.inT / SIM.tot, la = SIM.lN ? Math.max(0, (SIM.lHit - SIM.lFalse * .5) / SIM.lN) : 1, ma = SIM.mN ? SIM.mHit / SIM.mN : 1, sc = Math.round(Math.min(1, tr * 1.25) * 60 + la * 20 + ma * 20);
+  ptRecord('sim', sc); app.classList.remove('wide'); VIEW = 'pilot'; PT.ti++;
+  if (PT.ti < PT.tests.length) { ptShell(`<div class="qemo">🕹️</div><div class="qtext">Simülatör: <b>${sc} puan</b> · halkada %${Math.round(tr * 100)}, ışık ${SIM.lHit}/${SIM.lN}, işlem ${SIM.mHit}/${SIM.mN}</div><div class="row center"><button class="btn primary" data-a="ptnext">Devam ▶</button></div>`); return; }
+  ptFinish();
 }
 
 /* ---------- ustalık: öğrendiği kolay alıştırmaları kapat ---------- */
@@ -2106,7 +2217,7 @@ function balloonEnd() {
 let C = null;
 function carStart() {
   CUR_TOPIC = 'Hece Yarışı'; VIEW = 'car'; stopSpeak(); app.classList.add('wide');
-  app.innerHTML = `<div class="rtop"><button class="btn soft sm" data-a="home">← Çık</button><div class="rtitle">🚗 Hece Yarışı</div><div class="seg"><button data-a="cmode" data-v="hece" class="${(S.carMode || 'hece') === 'hece' ? 'on' : ''}">Hece</button><button data-a="cmode" data-v="kelime" class="${S.carMode === 'kelime' ? 'on' : ''}">Kelime ⭐ İleri</button></div><div class="pill" id="cScore">0 kelime</div><div class="pill" id="cLives">❤️❤️❤️</div></div>
+  app.innerHTML = `<div class="rtop"><button class="btn soft sm" data-a="home">← Çık</button><div class="rtitle">🚗 Hece Yarışı</div><div class="seg"><button data-a="cmode" data-v="hece" class="${(S.carMode || 'hece') === 'hece' ? 'on' : ''}">Hece</button><button data-a="cmode" data-v="kelime" class="${S.carMode === 'kelime' ? 'on' : ''}">Kelime ⭐ İleri</button></div><div class="pill" id="cScore">0 kelime</div><div class="pill" id="cLives">❤️❤️❤️</div><div class="pill" id="cTime">⏱️ ${S.carTime || 90} sn</div></div>
   <div class="gwrap"><div class="gq" id="cWord"></div><div class="glvl" id="cHint"></div><canvas id="cc"></canvas>
   <div class="gover" id="cOver" style="display:none"></div></div>`;
   C = { canvas: $('#cc'), ctx: $('#cc').getContext('2d'), running: false, carX: 0, carY: 0, vx: 0, vy: 0, keys: {}, target: null, spd: 50, v: 0, words: 0, lives: 3, tokens: [], road: 0, smoke: [], sparks: [], word: null, pos: 0, miss: false, last: 0, bump: 0, tilt: 0, light: -1, fog: 0 };
@@ -2117,7 +2228,7 @@ function carResize() { if (!C) return; const w = C.canvas.parentElement.clientWi
 function carRoad() { const W = C.canvas.width, rw = Math.min(W * .84, 1100); return { W, H: C.canvas.height, rw, x0: (W - rw) / 2 }; }
 function carGo() {
   $('#cOver').style.display = 'none';
-  C.mode = S.carMode || 'hece'; C.running = false; C.spd = 50; C.words = 0; C.lives = 3; C.fog = 0; C.v = 0; C.smoke = []; C.sparks = []; C.tokens = []; C.tilt = 0; C.target = null; C.keys = {};
+  C.mode = S.carMode || 'hece'; C.running = false; C.timeLeft = S.carTime || 90; C.timeUp = false; C.spd = 50; C.words = 0; C.lives = 3; C.fog = 0; C.v = 0; C.smoke = []; C.sparks = []; C.tokens = []; C.tilt = 0; C.target = null; C.keys = {};
   C.carX = C.canvas.width / 2; C.carY = C.canvas.height - 130;
   carHud(); $('#cWord').textContent = 'Hazır ol…'; $('#cHint').textContent = C.mode === 'kelime' ? 'İleri seviye: cümleyi kurmak için kelimeleri sırayla topla!' : 'Ok tuşlarıyla arabayı sür, yoldaki doğru heceyi topla!';
   const tok = {}; C.tok = tok;
@@ -2146,6 +2257,8 @@ function carSpawn() {
 function carLoop(t) {
   if (!C || !C.running || VIEW !== 'car') return;
   const dt = Math.min(.05, (t - C.last) / 1000); C.last = t;
+  C.timeLeft -= dt; const ct = $('#cTime'); if (ct) { const sl = Math.max(0, Math.ceil(C.timeLeft)); ct.textContent = '⏱️ ' + sl + ' sn'; ct.classList.toggle('warn', sl <= 10); }
+  if (C.timeLeft <= 0) { C.running = false; C.timeUp = true; sfx('win'); carEnd(); return; }
   const { W, H, rw, x0 } = carRoad();
   // araba hareketi
   let ax = (C.keys.right ? 1 : 0) - (C.keys.left ? 1 : 0), ay = (C.keys.down ? 1 : 0) - (C.keys.up ? 1 : 0);
@@ -2236,7 +2349,7 @@ function carDraw() {
 }
 function carEnd() {
   C.running = false; const rec = C.words > (S.bestCar || 0); if (rec) { S.bestCar = C.words; save(); confetti(); }
-  const o = $('#cOver'); o.style.display = ''; o.innerHTML = `<div class="bigemo">${rec ? '🏆' : C.words >= 5 ? '🌟' : '🚗'}</div><h2>Can bitti! ${C.words} ${C.mode === 'kelime' ? 'cümle' : 'kelime'}</h2><p>${rec ? 'Yeni rekor! 🎉' : `Rekorun: ${S.bestCar || 0} kelime`}</p><div class="row center"><button class="btn primary" data-a="cgo">Tekrar yarış 🔁</button><button class="btn soft" data-a="home">Ana sayfa 🏠</button></div>`;
+  const o = $('#cOver'); o.style.display = ''; o.innerHTML = `<div class="bigemo">${rec ? '🏆' : C.words >= 5 ? '🌟' : '🚗'}</div><h2>${C.timeUp ? '⏱️ Süre bitti!' : 'Can bitti!'} ${C.words} ${C.mode === 'kelime' ? 'cümle' : 'kelime'}</h2><p>${rec ? 'Yeni rekor! 🎉' : `Rekorun: ${S.bestCar || 0} kelime`}</p><div class="row center"><button class="btn primary" data-a="cgo">Tekrar yarış 🔁</button><button class="btn soft" data-a="home">Ana sayfa 🏠</button></div>`;
   speak(rec ? 'Yeni rekor! ' + C.words + ' kelime! Süpersin!' : 'Oyun bitti. ' + C.words + ' kelime tamamladın, aferin!');
 }
 
@@ -2404,7 +2517,7 @@ function settings() {
   <div class="panel"><h2>Ayarlar</h2>
     <div class="field">Çocuğun adı: <input id="sName" value="${esc(S.name)}" maxlength="20"></div>
     <div class="field">Günlük yıldız hedefi: <select id="sGoal">${[5, 10, 15, 20, 30].map(g => `<option ${g === S.goal ? 'selected' : ''}>${g}</option>`).join('')}</select></div>
-    <div class="field"><label><input type="checkbox" id="sLock" ${S.gameLock ? 'checked' : ''}> Oyunlar yıldızla açılsın</label> · Oyun başına: <select id="sCost">${[3, 5, 8, 10, 15].map(c => `<option ${c === S.gameCost ? 'selected' : ''}>${c}</option>`).join('')}</select> ⭐ · Harcanabilir: <b id="wv">${S.wallet || 0}</b> ⭐ <button class="btn soft sm" data-a="walletadd">+5 ⭐ ödül ver</button></div>
+    <div class="field"><label><input type="checkbox" id="sLock" ${S.gameLock ? 'checked' : ''}> Oyunlar yıldızla açılsın</label> · Oyun başına: <select id="sCost">${[3, 5, 8, 10, 15].map(c => `<option ${c === S.gameCost ? 'selected' : ''}>${c}</option>`).join('')}</select> · Hece Yarışı süresi: <select id="sCarTime">${[60, 90, 120, 180].map(v => `<option value="${v}" ${(S.carTime || 90) === v ? 'selected' : ''}>${v} sn</option>`).join('')}</select> ⭐ · Harcanabilir: <b id="wv">${S.wallet || 0}</b> ⭐ <button class="btn soft sm" data-a="walletadd">+5 ⭐ ödül ver</button></div>
     <div class="field"><label><input type="checkbox" id="sSound" ${S.sound ? 'checked' : ''}> Ses efektleri</label></div>
   </div>
   <div class="panel"><h2>📚 Okulda şu an hangi konu işleniyor?</h2>
@@ -2466,7 +2579,7 @@ function settings() {
   $('#sName').addEventListener('input', e => { S.name = e.target.value.trim(); save(); });
   $('#sGoal').addEventListener('change', e => { S.goal = +e.target.value; save(); updateHeader(); });
   $('#sLock').addEventListener('change', e => { S.gameLock = e.target.checked; save(); updateHeader(); });
-  $('#sCost').addEventListener('change', e => { S.gameCost = +e.target.value; save(); });
+  { const ctm = $('#sCarTime'); if (ctm) ctm.addEventListener('change', e => { S.carTime = +e.target.value; save(); }); } $('#sCost').addEventListener('change', e => { S.gameCost = +e.target.value; save(); });
   $('#sSound').addEventListener('change', e => { S.sound = e.target.checked; save(); });
   const wp = $('#wrongPen'); if (wp) wp.addEventListener('change', e => { S.wrongPenalty = e.target.checked; save(); });
   const ac = $('#autoClose'); if (ac) ac.addEventListener('change', e => { S.autoClose = e.target.checked; save(); });
@@ -2517,7 +2630,7 @@ const A = {
   buyacc: v => { const a = ACCS.find(x => x[0] === v); if (!a || (S.wallet || 0) < a[3]) return; S.wallet -= a[3]; S.avatar.owned = [...(S.avatar.owned || []), v]; S.avatar.wear = v; save(); updateHeader(); sfx('win'); toast(a[1] + ' ' + a[2] + ' Bilge\'ye çok yakıştı!'); badgesView(); },
   wear: v => { S.avatar.wear = v; save(); updateHeader(); badgesView(); },
   books: () => booksHome(), profile: () => profilePicker(), mini: v => miniPlay(v), openbook: v => openBook(v),
-  pilot: () => pilotHome(), pilot1: () => payGame(() => pilotStart1(), 'Pilot Akademisi'), pilot2: () => payGame(pilotStart2, 'Uçuş Simülatörü'), pilotone: v => pilotStart1(v), pilotlock: () => toast('🔒 Simülatör için önce DLR-1 testlerinden 70 puan almalısın!'),
+  pilot: () => pilotHome(), pilotlv: v => payGame(() => pilotStartLevel(+v), 'Pilot Akademisi DLR-' + v), pilotone: v => pilotStartLevel(Math.min(10, ptData().lv + 1), v), pilotlock: v => toast(`🔒 DLR-${v} için önce DLR-${v - 1}'de 70 puan almalısın!`), ptcell: v => ptCell(v),
   ptgo: () => ptQ(), ptnext: () => ptIntro(), ptpick: v => ptAnswer(v === PT.ans, 'Doğrusu ' + PT.ans), ptdig: v => { if (PT.answered) return; PT.typed = v === 'del' ? PT.typed.slice(0, -1) : PT.typed + v; const L = PT.ans.length; $('#rmst').textContent = PT.typed.padEnd(L, '＿'); if (PT.typed.length >= L) ptAnswer(PT.typed === PT.ans, 'Doğrusu ' + PT.ans.split('').join(' ')); },
   balloon: () => balloonStart(), bgo: () => payGame(balloonGo, 'Balon Avı'), car: () => payGame(carStart, 'Hece Yarışı'), cgo: () => payGame(carGo, 'Hece Yarışı'),
   okufilt: v => okumaHome(v),
