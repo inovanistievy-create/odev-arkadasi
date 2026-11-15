@@ -140,6 +140,7 @@ th{color:var(--muted);font-size:15px}
 .antcard{width:100%;margin-top:14px}
 .bsrow{display:flex;gap:10px;justify-content:center;align-items:center;flex-wrap:wrap;margin:12px 0;font-size:20px}.bscell{width:72px;height:72px;border:2px solid #D9D2BF;border-radius:10px;background:#fff;display:inline-flex;align-items:center;justify-content:center}.bscell.big{width:auto;height:auto;padding:6px}.bscell.q{font-size:34px;font-weight:800;color:#E53935;border-style:dashed}.bssep{margin:0 10px;color:#888;font-size:15px}.bsmat{display:grid;gap:6px;justify-content:center;margin:12px 0}.bsopts{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:14px}.bsopt{position:relative;background:#FFF8EC;border:3px solid #EADFC8;border-radius:16px;padding:14px 6px 8px;cursor:pointer;display:flex;justify-content:center;align-items:center;min-height:96px;font-family:inherit}.bsopt:hover{border-color:#B9A7F5}.bsopt.ok{border-color:#2E9E55;background:#E3F6E8}.bsopt.no{border-color:#E53935;background:#FFE2E2}.bsl{position:absolute;top:4px;left:8px;font-weight:800;color:#888;font-size:13px}.bsn{font-size:24px}.bsnum{display:flex;gap:26px;justify-content:center;font-size:30px;font-weight:800;margin:14px 0;flex-wrap:wrap}.bsnum .q{color:#E53935}.bsmirror{width:8px;height:110px;background:linear-gradient(90deg,#B3E5FC,#fff,#81D4FA);border:1px solid #4FC3F7;border-radius:3px}@media(max-width:700px){.bsopts{grid-template-columns:repeat(2,1fr)}}
 .paperhint{background:#FFF3C4;border:2px dashed #E0A800;border-radius:12px;padding:8px 14px;margin:0 auto 12px;font-size:17px;max-width:560px;animation:shk .6s 1}
+.ptab{width:100%;border-collapse:collapse;margin:8px 0}.ptab th,.ptab td{text-align:left;padding:7px 8px;border-bottom:1px solid #eee;font-size:15px}.ptab th{font-size:13px;color:#777}
 .unitchip{border:2px solid var(--line);background:#fff;border-radius:99px;padding:8px 14px;font-weight:700;font-size:15px;cursor:pointer}.unitchip:hover{background:#FFF1C9}
 .onb{background:#fff;border-radius:28px;padding:26px;margin-bottom:22px;display:flex;gap:18px;align-items:center;flex-wrap:wrap;box-shadow:0 6px 0 rgba(43,42,76,.07)}
 .onb input{font:inherit;font-size:22px;font-weight:800;border:3px solid var(--line);border-radius:16px;padding:12px 16px;min-width:220px}
@@ -300,7 +301,7 @@ const shuffle = a => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { c
 let VIEW = 'home';
 
 /* ---------- kayıt ---------- */
-const APP_VERSION = '20261115.1329';
+const APP_VERSION = '20261115.1336';
 const BASEKEY = 'odev-arkadasi-v1', PKEY = 'odev-arkadasi-profiles', SHKEY = 'odev-arkadasi-shared';
 const SHARED = ['owlVoice', 'owlPitch', 'usage', 'budget', 'apiKey', 'model', 'voice', 'rate', 'sound', 'autoRead', 'links', 'bookNames', 'unitAutoDone'];
 function lsGet(k) { try { return JSON.parse(localStorage.getItem(k)); } catch (e) { return null; } }
@@ -1543,6 +1544,30 @@ function needsPaper(it) { if (!it || it.kind !== 'mcq' || it.mod !== 'math') ret
 const PAPER_HTML = '<div class="paperhint">✏️ <b>Bu soru için kalem kâğıt kullan!</b> İşlemi kâğıda yaz, öyle çöz.</div>';
 function paperHint() { if (VIEW !== 'round' || !R || S.paperHint === false || !needsPaper(cur())) return; const q = document.querySelector('.qcard'); if (!q || q.querySelector('.paperhint')) return; q.insertAdjacentHTML('afterbegin', PAPER_HTML); if (!R.paperSaid) { R.paperSaid = true; setTimeout(() => { try { if (VIEW === 'round' && !speechSynthesis.speaking) speak('Bu soru için kalem kâğıt kullan.'); } catch (e) {} }, 400); } }
 
+/* ---------- 🧭 gelişim profili (IQ değildir; uygulamanın kendi seviye ölçeği) ---------- */
+function profNow() {
+  const B = (S.bilsem || {}), bt = B.t || {}, P = (S.pilot || {}), pt = P.t || {};
+  const acc = ks => { let o = 0, n = 0; ks.forEach(k => { if (bt[k]) { o += bt[k][0]; n += bt[k][1]; } }); return n >= 6 ? Math.round(o / n * 100) : null; };
+  const pmax = ks => Math.max(0, ...ks.map(k => Math.max(0, ...Object.entries(pt[k] || {}).filter(([, v]) => v >= 70).map(([L]) => +L))));
+  const reads = Object.values(S.read || {}).map(r => r.best || 0).filter(Boolean);
+  return { sayisal: glv(), sayisalMax: GLV_MAX, sekil: acc(['seri', 'matris', 'analoji', 'sinif', 'farkli']), uzamsal: acc(['dondur', 'ayna', 'katla']), sozel: acc(['sozel']), sayiIliski: acc(['sayi']), bilsemLv: B.lv || 1, hafiza: pmax(['rms', 'vmc', 'owt']), uzamsalPilot: pmax(['vlr', 'rot', 'kup', 'ppt']), pilotLv: P.lv || 0, okuma: reads.length ? Math.max(...reads) : null };
+}
+function profSnap() { if (MINI) return; const d = new Date(), wk = d.getFullYear() + '-H' + Math.ceil(((d - new Date(d.getFullYear(), 0, 1)) / 864e5 + 1) / 7); S.prof = S.prof || {}; S.prof[wk] = profNow(); const ks = Object.keys(S.prof); if (ks.length > 16) delete S.prof[ks[0]]; save(); }
+function profHTML() {
+  const N = profNow(), ks = Object.keys(S.prof || {}), old = ks.length > 1 ? S.prof[ks[Math.max(0, ks.length - 5)]] : null;
+  const tr = (k, hi) => { if (!old || old[k] == null || N[k] == null || old[k] === N[k]) return ''; return N[k] > old[k] ? ' <span style="color:#2E7D32">▲</span>' : ' <span style="color:#C62828">▼</span>'; };
+  const gl = L => L <= 3 ? '2. sınıf konuları' : L <= 5 ? '3. sınıf konuları' : L <= 7 ? '4. sınıf konuları' : '5. sınıf düzeyi problemler';
+  const pc = v => v == null ? '<span class="muted">yeterli veri yok</span>' : '%' + v;
+  return `<table class="ptab"><tr><th>Alan</th><th>Şu an</th><th>Ne anlama geliyor</th></tr>
+  <tr><td>🔢 Sayısal akıl yürütme</td><td><b>Seviye ${N.sayisal}/${N.sayisalMax}</b>${tr('sayisal')}</td><td>Seviye Antrenmanı: ${gl(N.sayisal)}</td></tr>
+  <tr><td>🔲 Şekil-mantık</td><td><b>${pc(N.sekil)}</b>${tr('sekil')}</td><td>BİLSEM seviye ${N.bilsemLv}/6'daki dizi, matris, analoji, sınıflama</td></tr>
+  <tr><td>🔄 Uzamsal düşünme</td><td><b>${pc(N.uzamsal)}</b>${tr('uzamsal')}${N.uzamsalPilot ? ' · pilot S' + N.uzamsalPilot : ''}</td><td>Döndürme, ayna, kâğıt katlama</td></tr>
+  <tr><td>💬 Sözel ilişkiler</td><td><b>${pc(N.sozel)}</b>${tr('sozel')}</td><td>Kelime analojisi, farklı kelime</td></tr>
+  <tr><td>🧠 Hafıza ve dikkat</td><td><b>${N.hafiza ? 'Pilot seviye ' + N.hafiza + '/10' : '<span class="muted">yeterli veri yok</span>'}</b>${tr('hafiza')}</td><td>Sayı hafızası, görsel hafıza, gösterge okuma (10. seviye ≈ 5. sınıf)</td></tr>
+  <tr><td>📖 Okuma akıcılığı</td><td><b>${N.okuma ? N.okuma + ' kelime/dk' : '<span class="muted">yeterli veri yok</span>'}</b>${tr('okuma')}</td><td>Sesli okumadaki en iyi hız</td></tr></table>
+  <p class="muted small">▲▼ işaretleri yaklaşık 4 hafta öncesine göre değişimi gösterir (${ks.length} haftalık kayıt var).</p>`;
+}
+
 /* ---------- ustalık: öğrendiği kolay alıştırmaları kapat ---------- */
 const MASTER_NEXT = { 'tr:hece': 'tr:yazim', 'tr:yazim': 'bank:turkce:0', 'math:topla': 'math:cikar', 'math:cikar': 'math:carp', 'math:carp': 'math:bol', 'math:bol': 'math:esitlik', 'math:eksik': 'math:esitlik', 'math:esitlik': 'fas:problem', 'math:sayilar': 'math:eksik', 'math:geo': 'math:sekil', 'math:sekil': 'bank:matematik:0', 'math:olcme': 'bank:matematik:0', 'math:veri': 'bank:matematik:0', 'math:atolye-cikar': 'math:cikar', 'math:atolye-carp': 'math:carp', 'fas:alt': 'fas:ayir', 'fas:ayir': 'fas:problem', 'fas:esle': 'fas:buyuk', 'fas:buyuk': 'fas:problem', 'fas:tahmin': 'fas:problem', 'fas:problem': 'fas:hikaye', 'fas:hikaye': 'fas:beceri', 'fas:beceri': 'fas:test', 'ing:0': 'bank:ingilizce:0', 'ing:abc': 'ing:spell', 'ing:spell': 'ing:0', 'bilgi:hayat': 'bank:hayat_bilgisi:0' };
 const MASTER_OK = .85;
@@ -1716,6 +1741,7 @@ function endRound() {
   if (!R.review) recordMastery(R.replay, R.ok, R.n0);
   if (R.replay === 'gorev') { markGorev(0); coreAdd('bank'); }
   if (R.replay === 'ant') { antEnd(R.ok, R.n0); coreAdd('bank'); }
+  try { profSnap(); } catch (e) {}
   VIEW = 'end'; const n = R.n0 || R.items.length, k = R.ok, great = k / n >= .7;
   if (great) { confetti(); sfx('win'); }
   app.innerHTML = `<div class="endcard center"><div class="bigemo">${k === n ? '🏆' : great ? '🌟' : '💪'}</div>
@@ -2956,6 +2982,10 @@ function settings() {
     <p class="muted small">Seçili konudan sonraki konu için Mete'ye ana sayfada "Okulda işlediniz mi?" diye sorulur; "Evet" derse konu kendiliğinden ilerler, günlük görev de okuldaki konulara göre hazırlanır.</p>
     <div id="unitinfo" class="muted small"></div>
   </div>
+  <div class="panel"><h2>🧭 Gelişim profili</h2>
+    ${profHTML()}
+    <p class="muted small"><b>Bu bir IQ puanı değildir.</b> IQ, binlerce çocukla yaşa göre ölçeklenmiş bir testin (ör. WISC) uzman tarafından birebir uygulanmasıyla bulunur; BİLSEM'in ikinci aşamasında (bireysel değerlendirme) bu tür testler kullanılır. Bu uygulamadaki soruların böyle bir yaş ölçeği yok ve aynı tipleri tekrar çözmek sonucu yükseltir. Buradaki tablo yalnızca ${S.name || 'çocuğun'} hangi alanda ne kadar ilerlediğini ve hangi alanın daha çok çalışma istediğini gösterir. Seviye-sınıf eşleştirmesi uygulamanın kendi tasarımıdır.</p>
+  </div>
   <div class="panel"><h2>🧠 BİLSEM Hazırlık</h2>
     ${(() => { const B = bsData(); return `<p>Seviye ${B.lv}/6${(B.log || []).length ? ' · son denemeler: ' + B.log.slice(-5).map(x => 'S' + x.L + ' %' + x.p).join(', ') : ' · henüz deneme çözülmedi'}</p><p>${Object.entries(BS_TYPES).map(([k, [e, t]]) => { const st = B.t[k]; return st && st[1] ? `${e} ${t}: %${Math.round(st[0] / st[1] * 100)} (${st[1]})` : ''; }).filter(Boolean).join(' · ') || ''}</p>`; })()}
     <p class="muted small">Sorular gerçek sınav soruları değildir; BİLSEM ön değerlendirmesinde ve yurt dışındaki benzer yetenek taramalarında (CogAT, NNAT, Raven) kullanılan soru <b>tiplerine</b> göre uygulamanın kendi ürettiği özgün sorulardır. Resmî örnek için: <a href="https://www.meb.gov.tr/22-mart-2015-tarihli-ozel-egitim-ve-rehberlik-hizmetleri-genel-mudurlugu-bilim-ve-sanat-merkezleri-ogrenci-secme-sinavi-sorulari-ve-cevap-anahtari/duyuru/8329/tr" target="_blank" rel="noopener">MEB 2015 BİLSEM soruları ve cevap anahtarı</a>. Adaylığı sınıf öğretmeni e-Okul üzerinden yapar.</p>
@@ -3145,7 +3175,7 @@ document.addEventListener('keydown', e => {
 });
 try { speechSynthesis.getVoices(); speechSynthesis.onvoiceschanged = () => { if (VIEW === 'settings') settings(); }; } catch (e) {}
 { const _rq = renderQ; renderQ = function (k) { _rq(k); paperHint(); }; ['problem', 'hikaye', 'alt', 'tahmin'].forEach(k => { const f = FAS[k]; if (f) FAS[k] = function (host, cb) { f(host, cb); if (S.paperHint !== false && (k === 'problem' || k === 'hikaye')) host.insertAdjacentHTML('afterbegin', PAPER_HTML); }; }); }
-updateHeader(); home(); loadBank(); refreshHaveBooks();
+updateHeader(); home(); loadBank(); refreshHaveBooks(); try { profSnap(); } catch (e) {}
 /* sürüm kontrolü: sunucuda yeni sürüm varsa şerit göster */
 (async function checkUpdate() {
   if (!/^https?:/.test(location.protocol)) return;
